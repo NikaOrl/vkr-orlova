@@ -3,16 +3,16 @@
 /tmp
 /out-tsc
 
- # dependencies
+# dependencies
 /node_modules
 server/node_modules
 app/node_modules
 
- # profiling files
+# profiling files
 chrome-profiler-events.json
 speed-measure-plugin.json
 
- # IDEs and editors
+# IDEs and editors
 /.idea
 .project
 .classpath
@@ -21,7 +21,7 @@ speed-measure-plugin.json
 .settings/
 *.sublime-workspace
 
- # IDE - VSCode
+# IDE - VSCode
 .vscode/*
 !.vscode/settings.json
 !.vscode/tasks.json
@@ -29,7 +29,7 @@ speed-measure-plugin.json
 !.vscode/extensions.json
 .history/*
 
- # misc
+# misc
 /.sass-cache
 /connect.lock
 /coverage
@@ -39,6 +39,6 @@ yarn-error.log
 testem.log
 /typings
 
- # System Files
+# System Files
 .DS_Store
 Thumbs.db
