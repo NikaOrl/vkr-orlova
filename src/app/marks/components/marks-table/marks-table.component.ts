@@ -1,8 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { MarksApiService } from 'src/app/marks/services/api.service';
-import { DataSource } from '@angular/cdk/collections';
-import { Observable } from 'rxjs';
 
 export interface PeriodicElement {
   firstName: string;
@@ -14,17 +12,6 @@ export interface PeriodicElement {
   registrationDate?: Date;
   groupNumber: number;
   headStudent: boolean;
-}
-export class StudentsDataSource extends DataSource<any> {
-  constructor(private api: MarksApiService) {
-    super();
-  }
-
-  connect() {
-    return this.api.getStudents();
-  }
-
-  disconnect() {}
 }
 
 @Component({
@@ -43,25 +30,25 @@ export class MarksTableComponent implements OnInit {
     'email',
   ];
 
-  dataSource = new StudentsDataSource(this.api);
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
 
-  // applyFilter(filterValue: string) {
-  //   this.dataSource.filter = filterValue.trim().toLowerCase();
-  // }
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
   ngOnInit() {
     this.api.getStudents().subscribe(
       res => {
         console.log(res);
         this.ELEMENT_DATA = res;
+        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
       },
       err => {
         console.log(err);
       },
     );
-
-    // this.dataSource.sort = this.sort;
   }
 }
