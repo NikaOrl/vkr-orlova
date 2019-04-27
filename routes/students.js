@@ -24,9 +24,6 @@ router.get('/', function(req, res, next) {
     .catch(err => {
       console.log(err);
       throw err;
-    })
-    .finally(() => {
-      knex.destroy();
     });
 });
 

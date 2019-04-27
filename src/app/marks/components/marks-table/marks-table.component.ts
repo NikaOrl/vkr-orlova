@@ -1,5 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { MarksApiService } from 'src/app/marks/services/api.service';
+import { DataSource } from '@angular/cdk/collections';
+import { Observable } from 'rxjs';
 
 export interface PeriodicElement {
   firstName: string;
@@ -12,49 +15,17 @@ export interface PeriodicElement {
   groupNumber: number;
   headStudent: boolean;
 }
+export class StudentsDataSource extends DataSource<any> {
+  constructor(private api: MarksApiService) {
+    super();
+  }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    id: 1,
-    firstName: 'Ivan',
-    lastName: 'Ivanov',
-    numberInList: 1,
-    email: 'ivan@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: true,
-  },
-  {
-    id: 2,
-    firstName: 'Petr',
-    lastName: 'Petrov',
-    numberInList: 2,
-    email: 'petr@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: false,
-  },
-  {
-    id: 3,
-    firstName: 'Vasia',
-    lastName: 'Vasiliev',
-    numberInList: 3,
-    email: 'vasia@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: false,
-  },
-  {
-    id: 4,
-    firstName: 'Sergei',
-    lastName: 'Sergeev',
-    numberInList: 4,
-    email: 'serg@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: false,
-  },
-];
+  connect() {
+    return this.api.getStudents();
+  }
+
+  disconnect() {}
+}
 
 @Component({
   selector: 'app-marks-table',
@@ -62,22 +33,35 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./marks-table.component.scss'],
 })
 export class MarksTableComponent implements OnInit {
-  constructor() {}
+  ELEMENT_DATA: PeriodicElement[] = [];
+  constructor(private api: MarksApiService) {}
+
   displayedColumns: string[] = [
     'numberInList',
     'firstName',
     'lastName',
     'email',
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+
+  dataSource = new StudentsDataSource(this.api);
 
   @ViewChild(MatSort) sort: MatSort;
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  // applyFilter(filterValue: string) {
+  //   this.dataSource.filter = filterValue.trim().toLowerCase();
+  // }
 
   ngOnInit() {
-    this.dataSource.sort = this.sort;
+    this.api.getStudents().subscribe(
+      res => {
+        console.log(res);
+        this.ELEMENT_DATA = res;
+      },
+      err => {
+        console.log(err);
+      },
+    );
+
+    // this.dataSource.sort = this.sort;
   }
 }
