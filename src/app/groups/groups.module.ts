@@ -6,14 +6,13 @@ import { MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
-import { CdkTableModule } from '@angular/cdk/table';
 
-import { MarksTableComponent } from './components/marks-table/marks-table.component';
-import { MarksPageComponent } from './components/marks-page/marks-page.component';
-import { MarksRoutingModule } from './marks-routing.module';
+import { GroupPageComponent } from './components/group-page/group-page.component';
+import { GroupTableComponent } from './components/group-table/group-table.component';
+import { GroupsRoutingModule } from './groups-routing.module';
 
 @NgModule({
-  declarations: [MarksTableComponent, MarksPageComponent],
+  declarations: [GroupPageComponent, GroupTableComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -22,9 +21,8 @@ import { MarksRoutingModule } from './marks-routing.module';
     BrowserAnimationsModule,
     MatSortModule,
     HttpClientModule,
-    CdkTableModule,
-    MarksRoutingModule,
+    GroupsRoutingModule,
   ],
-  exports: [MarksPageComponent],
+  exports: [GroupPageComponent],
 })
-export class MarksModule {}
+export class GroupsModule {}
