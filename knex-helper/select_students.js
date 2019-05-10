@@ -1,13 +1,4 @@
-const options = {
-  client: 'mysql2',
-  connection: {
-    host: '127.0.0.1',
-    user: 'root',
-    password: 'root',
-    database: 'vkr_db',
-  },
-};
-
+const options = require('../env/db.config');
 const knex = require('knex')(options);
 
 knex

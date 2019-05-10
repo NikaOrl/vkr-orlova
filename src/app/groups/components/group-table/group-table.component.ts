@@ -41,7 +41,6 @@ export class GroupTableComponent implements OnInit {
   ngOnInit() {
     this.api.getStudents().subscribe(
       res => {
-        console.log(res);
         this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
