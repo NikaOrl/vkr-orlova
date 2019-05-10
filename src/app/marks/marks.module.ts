@@ -6,7 +6,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
-import { MarksPageComponent } from './marks-page/marks-page.component';
+import { MarksPageComponent } from './components/marks-page/marks-page.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [MarksTableComponent, MarksPageComponent],
@@ -17,6 +18,7 @@ import { MarksPageComponent } from './marks-page/marks-page.component';
     MatInputModule,
     BrowserAnimationsModule,
     MatSortModule,
+    HttpClientModule,
   ],
   exports: [MarksPageComponent],
 })

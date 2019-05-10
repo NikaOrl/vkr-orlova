@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { MarksApiService } from 'src/app/marks/services/api.service';
 
 export interface PeriodicElement {
   firstName: string;
@@ -13,63 +14,23 @@ export interface PeriodicElement {
   headStudent: boolean;
 }
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {
-    id: 1,
-    firstName: 'Ivan',
-    lastName: 'Ivanov',
-    numberInList: 1,
-    email: 'ivan@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: true,
-  },
-  {
-    id: 2,
-    firstName: 'Petr',
-    lastName: 'Petrov',
-    numberInList: 2,
-    email: 'petr@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: false,
-  },
-  {
-    id: 3,
-    firstName: 'Vasia',
-    lastName: 'Vasiliev',
-    numberInList: 3,
-    email: 'vasia@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: false,
-  },
-  {
-    id: 4,
-    firstName: 'Sergei',
-    lastName: 'Sergeev',
-    numberInList: 4,
-    email: 'serg@stud.com',
-    hashPassword: '123',
-    groupNumber: 5381,
-    headStudent: false,
-  },
-];
-
 @Component({
   selector: 'app-marks-table',
   templateUrl: './marks-table.component.html',
   styleUrls: ['./marks-table.component.scss'],
 })
 export class MarksTableComponent implements OnInit {
-  constructor() {}
+  ELEMENT_DATA: PeriodicElement[] = [];
+  constructor(private api: MarksApiService) {}
+
   displayedColumns: string[] = [
     'numberInList',
     'firstName',
     'lastName',
     'email',
   ];
-  dataSource = new MatTableDataSource(ELEMENT_DATA);
+
+  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -78,6 +39,16 @@ export class MarksTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.dataSource.sort = this.sort;
+    this.api.getStudents().subscribe(
+      res => {
+        console.log(res);
+        this.ELEMENT_DATA = res;
+        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
+      },
+      err => {
+        console.log(err);
+      },
+    );
   }
 }
