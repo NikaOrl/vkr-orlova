@@ -21,6 +21,10 @@ export interface PeriodicElement {
 })
 export class GroupTableComponent implements OnInit {
   ELEMENT_DATA: PeriodicElement[] = [];
+  selectedGroup: string;
+  groups = ['5381', '5382', '5383', '3462', '5281', '5678', '3451'];
+  filteredGroups: string[];
+
   constructor(private api: GroupsApiService) {}
 
   displayedColumns: string[] = [
@@ -48,6 +52,20 @@ export class GroupTableComponent implements OnInit {
       err => {
         console.log(err);
       },
+    );
+    // set groups
+    // set group from url or default:
+    this.selectedGroup = this.groups[0];
+    this.filteredGroups = this.groups;
+  }
+
+  filterGroups(e) {
+    if (!this.groups) {
+      return;
+    }
+    const search = e ? e.toLowerCase() : '';
+    this.filteredGroups = this.groups.filter(
+      group => group.indexOf(search) !== -1,
     );
   }
 }

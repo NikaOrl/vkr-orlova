@@ -41,6 +41,15 @@ const marksKeys = ['01.01', '01.02'];
 })
 export class MarksTableComponent implements OnInit {
   ELEMENT_DATA: PeriodicElement[] = [];
+
+  selectedGroup: string;
+  groups = ['5381', '5382', '5383', '3462', '5281', '5678', '3451'];
+  filteredGroups: string[];
+
+  selectedDiscipline: string;
+  disciplines = ['oop', 'abc', 'one more discipline'];
+  filteredDisciplines: string[];
+
   constructor(private api: MarksApiService) {}
 
   displayedColumns: string[];
@@ -81,5 +90,34 @@ export class MarksTableComponent implements OnInit {
       'studentName',
       ...this.columns.map(x => x.columnDef),
     ];
+    // set groups
+    // set group from url or default:
+    this.selectedGroup = this.groups[0];
+    this.filteredGroups = this.groups;
+
+    // set disciplines
+    // set discipline from url or default:
+    this.selectedDiscipline = this.disciplines[0];
+    this.filteredDisciplines = this.disciplines;
+  }
+
+  filterGroups(e) {
+    if (!this.groups) {
+      return;
+    }
+    const search = e ? e.toLowerCase() : '';
+    this.filteredGroups = this.groups.filter(
+      group => group.indexOf(search) !== -1,
+    );
+  }
+
+  filterDisciplines(e) {
+    if (!this.disciplines) {
+      return;
+    }
+    const search = e ? e.toLowerCase() : '';
+    this.filteredDisciplines = this.disciplines.filter(
+      discipline => discipline.indexOf(search) !== -1,
+    );
   }
 }
