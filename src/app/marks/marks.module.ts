@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -19,7 +18,6 @@ import { MarksRoutingModule } from './marks-routing.module';
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
-    BrowserAnimationsModule,
     MatSortModule,
     HttpClientModule,
     CdkTableModule,
