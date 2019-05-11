@@ -1,10 +1,47 @@
-<mat-form-field>
-  <input
-    matInput
-    (keyup)="applyFilter($event.target.value)"
-    placeholder="Filter"
-  />
-</mat-form-field>
+<div class="filters-container">
+  <mat-form-field class="students-filter">
+    <input
+      matInput
+      (keyup)="applyFilter($event.target.value)"
+      placeholder="Students filter"
+    />
+  </mat-form-field>
+  <mat-form-field class="groups-filter">
+    <mat-label>Select group</mat-label>
+    <mat-select [(ngModel)]="selectedGroup">
+      <mat-option>
+        <ngx-mat-select-search
+          [placeholderLabel]="'Search'"
+          [noEntriesFoundLabel]="'The search has no results'"
+          ngModel
+          (ngModelChange)="filterGroups($event)"
+        ></ngx-mat-select-search>
+      </mat-option>
+      <mat-option *ngFor="let group of filteredGroups" [value]="group">
+        {{ group }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field class="disciplines-filter">
+    <mat-label>Select discipline</mat-label>
+    <mat-select [(ngModel)]="selectedDiscipline">
+      <mat-option>
+        <ngx-mat-select-search
+          [placeholderLabel]="'Search'"
+          [noEntriesFoundLabel]="'The search has no results'"
+          ngModel
+          (ngModelChange)="filterDisciplines($event)"
+        ></ngx-mat-select-search>
+      </mat-option>
+      <mat-option
+        *ngFor="let discipline of filteredDisciplines"
+        [value]="discipline"
+      >
+        {{ discipline }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
   <!-- numberInList Column -->

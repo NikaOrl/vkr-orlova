@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material';
+import { MatInputModule, MatSelectModule } from '@angular/material';
 import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -10,6 +10,8 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { MarksTableComponent } from './components/marks-table/marks-table.component';
 import { MarksPageComponent } from './components/marks-page/marks-page.component';
 import { MarksRoutingModule } from './marks-routing.module';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [MarksTableComponent, MarksPageComponent],
@@ -17,10 +19,13 @@ import { MarksRoutingModule } from './marks-routing.module';
     CommonModule,
     MatTableModule,
     MatFormFieldModule,
+    MatSelectModule,
+    NgxMatSelectSearchModule,
     MatInputModule,
     MatSortModule,
     HttpClientModule,
     CdkTableModule,
+    FormsModule,
     MarksRoutingModule,
   ],
   exports: [MarksPageComponent],

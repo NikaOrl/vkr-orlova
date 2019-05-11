@@ -10,7 +10,23 @@ th {
   }
 }
 
-.mat-form-field {
-  font-size: 14px;
-  width: 100%;
+.filters-container {
+  display: flex;
+
+  & .mat-form-field {
+    font-size: 14px;
+  }
+
+  & .students-filter {
+    margin-right: auto;
+  }
+
+  & .groups-filter {
+    position: relative;
+    margin-right: 12px;
+  }
+
+  & .disciplines-filter {
+    position: relative;
+  }
 }
