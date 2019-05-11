@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { LoginModule } from './login/login.module';
+import { MatButtonModule } from '@angular/material';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { LoginModule } from './login/login.module';
     BrowserAnimationsModule,
     CoreModule,
     MatToolbarModule,
+    MatButtonModule,
     // always the last one
     AppRoutingModule,
   ],
