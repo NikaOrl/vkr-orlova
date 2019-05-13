@@ -3,17 +3,17 @@ import { Observable, of, throwError } from 'rxjs';
 import {
   HttpClient,
   HttpHeaders,
-  HttpErrorResponse,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
 };
-const apiUrl = '/api';
+const apiUrl = '/api/students';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class GroupsApiService {
   constructor(private http: HttpClient) {}
@@ -26,7 +26,7 @@ export class GroupsApiService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`,
+        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
       );
     }
     // return an observable with a user-facing error message
@@ -41,7 +41,7 @@ export class GroupsApiService {
   getStudents(): Observable<any> {
     return this.http.get(apiUrl, httpOptions).pipe(
       map(this.extractData),
-      catchError(this.handleError),
+      catchError(this.handleError)
     );
   }
 }

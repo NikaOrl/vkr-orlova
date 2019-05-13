@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { GroupsApiService } from 'src/app/groups/services/api.service';
+import { GroupsApiService } from 'src/app/groups/services/groups-api.service';
 
 export interface PeriodicElement {
   firstName: string;
@@ -17,7 +17,7 @@ export interface PeriodicElement {
 @Component({
   selector: 'app-group-table',
   templateUrl: './group-table.component.html',
-  styleUrls: ['./group-table.component.scss'],
+  styleUrls: ['./group-table.component.scss']
 })
 export class GroupTableComponent implements OnInit {
   ELEMENT_DATA: PeriodicElement[] = [];
@@ -31,7 +31,7 @@ export class GroupTableComponent implements OnInit {
     'numberInList',
     'firstName',
     'lastName',
-    'email',
+    'email'
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -51,7 +51,7 @@ export class GroupTableComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
     // set groups
     // set group from url or default:
@@ -65,7 +65,7 @@ export class GroupTableComponent implements OnInit {
     }
     const search = e ? e.toLowerCase() : '';
     this.filteredGroups = this.groups.filter(
-      group => group.indexOf(search) !== -1,
+      group => group.indexOf(search) !== -1
     );
   }
 }

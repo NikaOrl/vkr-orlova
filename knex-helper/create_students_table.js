@@ -12,7 +12,7 @@ knex.schema
     table.integer('groupNumber');
     table.boolean('headStudent');
   })
-  .then(() => console.log('table created'))
+  .then(() => console.log('table students created'))
   .catch(err => {
     console.log(err);
     throw err;

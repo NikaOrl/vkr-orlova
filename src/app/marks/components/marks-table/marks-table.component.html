@@ -8,7 +8,10 @@
   </mat-form-field>
   <mat-form-field class="groups-filter">
     <mat-label>Select group</mat-label>
-    <mat-select [(ngModel)]="selectedGroup">
+    <mat-select
+      [(ngModel)]="selectedGroup"
+      (selectionChange)="onSelectedGroupChange()"
+    >
       <mat-option>
         <ngx-mat-select-search
           [placeholderLabel]="'Search'"
@@ -24,7 +27,10 @@
   </mat-form-field>
   <mat-form-field class="disciplines-filter">
     <mat-label>Select discipline</mat-label>
-    <mat-select [(ngModel)]="selectedDiscipline">
+    <mat-select
+      [(ngModel)]="selectedDiscipline"
+      (selectionChange)="onSelectedDisciplineChange()"
+    >
       <mat-option>
         <ngx-mat-select-search
           [placeholderLabel]="'Search'"
