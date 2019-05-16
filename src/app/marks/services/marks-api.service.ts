@@ -3,17 +3,17 @@ import { Observable, of, throwError } from 'rxjs';
 import {
   HttpClient,
   HttpHeaders,
-  HttpErrorResponse
+  HttpErrorResponse,
 } from '@angular/common/http';
 import { catchError, tap, map } from 'rxjs/operators';
 
 const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
 const apiUrl = '/api/marks';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MarksApiService {
   constructor(private http: HttpClient) {}
@@ -26,7 +26,7 @@ export class MarksApiService {
       // The backend returned an unsuccessful response code.
       // The response body may contain clues as to what went wrong,
       console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
+        `Backend returned code ${error.status}, ` + `body was: ${error.error}`,
       );
     }
     // return an observable with a user-facing error message
@@ -38,12 +38,12 @@ export class MarksApiService {
     return body || {};
   }
 
-  getMarks(group, discipline): Promise<any> {
+  getMarks(disciplineId): Promise<any> {
     return this.http
-      .get(`${apiUrl}/marks/${group}/${discipline}`, httpOptions)
+      .get(`${apiUrl}/discipline/${disciplineId}`, httpOptions)
       .pipe(
         map(this.extractData),
-        catchError(this.handleError)
+        catchError(this.handleError),
       )
       .toPromise();
   }
@@ -63,7 +63,7 @@ export class MarksApiService {
       .get(`${apiUrl}/disciplines/${group}`, httpOptions)
       .pipe(
         map(this.extractData),
-        catchError(this.handleError)
+        catchError(this.handleError),
       )
       .toPromise();
   }
@@ -71,7 +71,7 @@ export class MarksApiService {
   getMarksPageStartedData(): Observable<any> {
     return this.http.get(`${apiUrl}/marks-page-data`, httpOptions).pipe(
       map(this.extractData),
-      catchError(this.handleError)
+      catchError(this.handleError),
     );
   }
 }

@@ -2,13 +2,12 @@ const options = require('../env/db.config');
 const knex = require('knex')(options);
 
 knex.schema
-  .createTable('marks', table => {
+  .createTable('students-disciplines', table => {
     table.increments('id');
-    table.string('studentId');
-    table.string('jobId');
-    table.integer('markValue');
+    table.integer('studentId');
+    table.integer('disciplineId');
   })
-  .then(() => console.log('table marks created'))
+  .then(() => console.log('table students-disciplines created'))
   .catch(err => {
     console.log(err);
     throw err;

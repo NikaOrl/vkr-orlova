@@ -1,29 +1,31 @@
 const options = require('../env/db.config');
 const knex = require('knex')(options);
 
-const marks = [
+const studentsDisciplines = [
   {
     id: 1,
     studentId: 1,
-    jobId: 1,
-    markValue: '2',
+    disciplineId: 1,
   },
   {
     id: 2,
     studentId: 2,
-    jobId: 1,
-    markValue: '3',
+    disciplineId: 1,
   },
   {
     id: 3,
+    studentId: 1,
+    disciplineId: 2,
+  },
+  {
+    id: 4,
     studentId: 3,
-    jobId: 1,
-    markValue: '5',
+    disciplineId: 1,
   },
 ];
 
-knex('marks')
-  .insert(marks)
+knex('students-disciplines')
+  .insert(studentsDisciplines)
   .then(() => console.log('data inserted'))
   .catch(err => {
     console.log(err);

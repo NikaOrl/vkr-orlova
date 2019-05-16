@@ -4,7 +4,7 @@ const options = require('../env/db.config');
 const knex = require('knex')(options);
 
 /* GET students page. */
-router.get('/students/:group', function(req, res, next) {
+router.get('/students/group/:group', function(req, res, next) {
   knex
     .from('students')
     .select('*')
@@ -19,14 +19,55 @@ router.get('/students/:group', function(req, res, next) {
 });
 
 /* GET marks table. */
-router.get('/marks/:group/:discipline', function(req, res, next) {
+router.get('/marks/discipline/:disciplineId', function(req, res, next) {
   knex
-    .from('students')
-    .select('*')
-    .where('groupNumber', req.params.group)
-    .where(/*...*/)
+    .from('students-disciplines')
+    .select('studentId')
+    .where('disciplineId', req.params.disciplineId)
     .then(result => {
-      res.send({ result });
+      const studentsIds = result.map(st => st.studentId);
+      knex
+        .from('students')
+        .select('*')
+        .whereIn('id', studentsIds)
+        .then(studentsResult => {
+          knex
+            .from('jobs')
+            .select('*')
+            .where('disciplineId', req.params.disciplineId)
+            .then(jobsResult => {
+              return { jobsResult, studentsResult };
+            })
+            .then(({ jobsResult, studentsResult }) => {
+              const jodsIds = jobsResult.map(job => job.id);
+              knex
+                .from('marks')
+                .select('*')
+                .whereIn('jobId', jodsIds)
+                .then(marksResult => {
+                  return { studentsResult, jobsResult, marksResult };
+                })
+                .then(({ studentsResult, jobsResult, marksResult }) => {
+                  res.send({
+                    students: studentsResult,
+                    jobs: jobsResult,
+                    marks: marksResult,
+                  });
+                })
+                .catch(err => {
+                  console.log(err);
+                  throw err;
+                });
+            })
+            .catch(err => {
+              console.log(err);
+              throw err;
+            });
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
     })
     .catch(err => {
       console.log(err);
@@ -35,20 +76,20 @@ router.get('/marks/:group/:discipline', function(req, res, next) {
 });
 
 /* GET marks started page. */
-router.get('/marks-page-data', function(req, res, next) {
-  /** should return groups, disciplines for the first group and marks */
-  knex
-    .from('students')
-    .select('*')
-    .where(/*...*/)
-    .then(result => {
-      res.send({ result });
-    })
-    .catch(err => {
-      console.log(err);
-      throw err;
-    });
-});
+// router.get('/marks-page-data', function(req, res, next) {
+//   /** should return groups, disciplines for the first group and marks */
+//   knex
+//     .from('students')
+//     .select('*')
+//     .where(/*...*/)
+//     .then(result => {
+//       res.send({ result });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       throw err;
+//     });
+// });
 
 /* GET all groups */
 // router.get('/groups', function(req, res, next) {
@@ -80,19 +121,19 @@ router.get('/marks-page-data', function(req, res, next) {
 // });
 
 /* GET disciplines for group */
-router.post('/disciplines/:group', function(req, res, next) {
-  knex
-    .from('disciplines')
-    .select('*')
-    .where(/*...*/)
-    .then(result => {
-      res.send({ result });
-    })
-    .catch(err => {
-      console.log(err);
-      throw err;
-    });
-});
+// router.post('/disciplines/:group', function(req, res, next) {
+//   knex
+//     .from('disciplines')
+//     .select('*')
+//     .where(/*...*/)
+//     .then(result => {
+//       res.send({ result });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       throw err;
+//     });
+// });
 
 // router.post('/login', (req, res, next) => {
 //   const username = req.body.username;
