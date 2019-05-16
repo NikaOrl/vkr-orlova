@@ -17,13 +17,13 @@ export interface PeriodicElement {
 @Component({
   selector: 'app-group-table',
   templateUrl: './group-table.component.html',
-  styleUrls: ['./group-table.component.scss']
+  styleUrls: ['./group-table.component.scss'],
 })
 export class GroupTableComponent implements OnInit {
   ELEMENT_DATA: PeriodicElement[] = [];
-  selectedGroup: string;
-  groups = ['5381', '5382', '5383', '3462', '5281', '5678', '3451'];
-  filteredGroups: string[];
+  selectedGroup: any;
+  groups: any[];
+  filteredGroups: any[];
 
   constructor(private api: GroupsApiService) {}
 
@@ -31,7 +31,7 @@ export class GroupTableComponent implements OnInit {
     'numberInList',
     'firstName',
     'lastName',
-    'email'
+    'email',
   ];
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -43,20 +43,18 @@ export class GroupTableComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.api.getStudents().subscribe(
+    this.api.getGroups().then(
       res => {
-        this.ELEMENT_DATA = res;
-        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-        this.dataSource.sort = this.sort;
+        this.groups = res.result;
+        this.selectedGroup = this.groups[0];
+        this.filteredGroups = this.groups;
+
+        this.getStudents(this.selectedGroup.id);
       },
       err => {
         console.log(err);
-      }
+      },
     );
-    // set groups
-    // set group from url or default:
-    this.selectedGroup = this.groups[0];
-    this.filteredGroups = this.groups;
   }
 
   filterGroups(e) {
@@ -65,7 +63,23 @@ export class GroupTableComponent implements OnInit {
     }
     const search = e ? e.toLowerCase() : '';
     this.filteredGroups = this.groups.filter(
-      group => group.indexOf(search) !== -1
+      group => `${group.groupNumber}`.indexOf(search) !== -1,
+    );
+  }
+
+  onSelectedGroupChange() {
+    this.getStudents(this.selectedGroup.id);
+  }
+
+  getStudents(groupId) {
+    this.api.getStudents(groupId).then(
+      res => {
+        this.ELEMENT_DATA = res.result;
+        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+      },
+      err => {
+        console.log(err);
+      },
     );
   }
 }

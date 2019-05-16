@@ -48,30 +48,13 @@ export class MarksApiService {
       .toPromise();
   }
 
-  // getAllGroups(): Promise<any> {
-  //   return this.http
-  //     .get(`${apiUrl}/groups`, httpOptions)
-  //     .pipe(
-  //       map(this.extractData),
-  //       catchError(this.handleError)
-  //     )
-  //     .toPromise();
-  // }
-
-  getDisciplinesByGroup(group): Promise<any> {
+  getDisciplines(): Promise<any> {
     return this.http
-      .get(`${apiUrl}/disciplines/${group}`, httpOptions)
+      .get(`${apiUrl}/disciplines`, httpOptions)
       .pipe(
         map(this.extractData),
         catchError(this.handleError),
       )
       .toPromise();
-  }
-
-  getMarksPageStartedData(): Observable<any> {
-    return this.http.get(`${apiUrl}/marks-page-data`, httpOptions).pipe(
-      map(this.extractData),
-      catchError(this.handleError),
-    );
   }
 }

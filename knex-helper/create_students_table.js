@@ -9,7 +9,7 @@ knex.schema
     table.integer('numberInList');
     table.string('email');
     table.string('hashPassword');
-    table.integer('groupNumber');
+    table.integer('groupId');
     table.boolean('headStudent');
   })
   .then(() => console.log('table students created'))

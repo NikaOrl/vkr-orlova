@@ -8,9 +8,9 @@ router.get('/students/group/:group', function(req, res, next) {
   knex
     .from('students')
     .select('*')
-    .where('groupNumber', req.params.group)
+    .where('groupId', req.params.group)
     .then(result => {
-      res.send(result);
+      res.send({ result });
     })
     .catch(err => {
       console.log(err);
@@ -75,65 +75,33 @@ router.get('/marks/discipline/:disciplineId', function(req, res, next) {
     });
 });
 
-/* GET marks started page. */
-// router.get('/marks-page-data', function(req, res, next) {
-//   /** should return groups, disciplines for the first group and marks */
-//   knex
-//     .from('students')
-//     .select('*')
-//     .where(/*...*/)
-//     .then(result => {
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
-
 /* GET all groups */
-// router.get('/groups', function(req, res, next) {
-//   knex
-//     .from('groups')
-//     .select('*')
-//     .then(result => {
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
+router.get('/students/groups', function(req, res, next) {
+  knex
+    .from('groups')
+    .select('*')
+    .then(result => {
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
 
-/* GET groups for discipline */
-// router.get('/groups/:discipline', function(req, res, next) {
-//   knex
-//     .from('groups')
-//     .select('*')
-//     .where(/*...*/)
-//     .then(result => {
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
-
-/* GET disciplines for group */
-// router.post('/disciplines/:group', function(req, res, next) {
-//   knex
-//     .from('disciplines')
-//     .select('*')
-//     .where(/*...*/)
-//     .then(result => {
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
+/* GET disciplines */
+router.get('/marks/disciplines', function(req, res, next) {
+  knex
+    .from('disciplines')
+    .select('*')
+    .then(result => {
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
 
 // router.post('/login', (req, res, next) => {
 //   const username = req.body.username;

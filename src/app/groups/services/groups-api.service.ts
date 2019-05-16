@@ -10,7 +10,7 @@ import { catchError, tap, map } from 'rxjs/operators';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
-const apiUrl = '/api/students/group';
+const apiUrl = '/api/students';
 
 @Injectable({
   providedIn: 'root',
@@ -38,10 +38,23 @@ export class GroupsApiService {
     return body || {};
   }
 
-  getStudents(): Observable<any> {
-    return this.http.get(apiUrl, httpOptions).pipe(
-      map(this.extractData),
-      catchError(this.handleError),
-    );
+  getStudents(groupId): Promise<any> {
+    return this.http
+      .get(`${apiUrl}/group/${groupId}`, httpOptions)
+      .pipe(
+        map(this.extractData),
+        catchError(this.handleError),
+      )
+      .toPromise();
+  }
+
+  getGroups(): Promise<any> {
+    return this.http
+      .get(`${apiUrl}/groups`, httpOptions)
+      .pipe(
+        map(this.extractData),
+        catchError(this.handleError),
+      )
+      .toPromise();
   }
 }
