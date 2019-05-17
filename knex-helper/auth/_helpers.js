@@ -15,12 +15,6 @@ function createUser(req) {
 }
 
 function getUser(email) {
-  console.log(
-    2,
-    knex('teachers')
-      .where({ email })
-      .first(),
-  );
   return knex('teachers')
     .where({ email })
     .first();
