@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 
-import { GroupsApiService } from './api.service';
+import { GroupsApiService } from './groups-api.service';
 
 describe('GroupsApiService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

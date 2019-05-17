@@ -10,7 +10,7 @@ import { catchError, tap, map } from 'rxjs/operators';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
-const apiUrl = '/api';
+const apiUrl = '/api/marks';
 
 @Injectable({
   providedIn: 'root',
@@ -38,10 +38,23 @@ export class MarksApiService {
     return body || {};
   }
 
-  getStudents(): Observable<any> {
-    return this.http.get(apiUrl, httpOptions).pipe(
-      map(this.extractData),
-      catchError(this.handleError),
-    );
+  getMarks(disciplineId): Promise<any> {
+    return this.http
+      .get(`${apiUrl}/discipline/${disciplineId}`, httpOptions)
+      .pipe(
+        map(this.extractData),
+        catchError(this.handleError),
+      )
+      .toPromise();
+  }
+
+  getDisciplines(): Promise<any> {
+    return this.http
+      .get(`${apiUrl}/disciplines`, httpOptions)
+      .pipe(
+        map(this.extractData),
+        catchError(this.handleError),
+      )
+      .toPromise();
   }
 }

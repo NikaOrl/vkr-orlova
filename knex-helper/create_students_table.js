@@ -9,10 +9,10 @@ knex.schema
     table.integer('numberInList');
     table.string('email');
     table.string('hashPassword');
-    table.integer('groupNumber');
+    table.integer('groupId');
     table.boolean('headStudent');
   })
-  .then(() => console.log('table created'))
+  .then(() => console.log('table students created'))
   .catch(err => {
     console.log(err);
     throw err;

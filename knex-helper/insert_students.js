@@ -9,7 +9,7 @@ const students = [
     numberInList: 1,
     email: 'ivan@stud.com',
     hashPassword: '123',
-    groupNumber: 5381,
+    groupId: 1,
     headStudent: true,
   },
   {
@@ -19,7 +19,7 @@ const students = [
     numberInList: 2,
     email: 'petr@stud.com',
     hashPassword: '123',
-    groupNumber: 5381,
+    groupId: 1,
     headStudent: false,
   },
   {
@@ -29,7 +29,7 @@ const students = [
     numberInList: 3,
     email: 'vasia@stud.com',
     hashPassword: '123',
-    groupNumber: 5381,
+    groupId: 1,
     headStudent: false,
   },
   {
@@ -39,7 +39,7 @@ const students = [
     numberInList: 4,
     email: 'serg@stud.com',
     hashPassword: '123',
-    groupNumber: 5381,
+    groupId: 2,
     headStudent: false,
   },
 ];

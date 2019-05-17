@@ -1,38 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { MarksApiService } from 'src/app/marks/services/api.service';
-
-export interface PeriodicElement {
-  studentName: string;
-  '01.01': string;
-  '01.02': string;
-}
-
-// example of data from back
-export const marksAndstudentName = [
-  {
-    studentName: 'Ivan',
-    '01.01': '5',
-    '01.02': '2',
-  },
-  {
-    studentName: 'Petr',
-    '01.01': '4',
-    '01.02': '3',
-  },
-  {
-    studentName: 'Vasia',
-    '01.01': '4',
-    '01.02': '3',
-  },
-  {
-    studentName: 'Sergei',
-    '01.01': '4',
-    '01.02': 'н/з',
-  },
-];
-
-const marksKeys = ['01.01', '01.02'];
+import { MarksApiService } from 'src/app/marks/services/marks-api.service';
 
 @Component({
   selector: 'app-marks-table',
@@ -40,75 +8,32 @@ const marksKeys = ['01.01', '01.02'];
   styleUrls: ['./marks-table.component.scss'],
 })
 export class MarksTableComponent implements OnInit {
-  ELEMENT_DATA: PeriodicElement[] = [];
+  ELEMENT_DATA: any[] = [];
 
-  selectedGroup: string;
-  groups = ['5381', '5382', '5383', '3462', '5281', '5678', '3451'];
-  filteredGroups: string[];
+  selectedDiscipline: any;
+  disciplines: any[];
+  filteredDisciplines: any[];
 
-  selectedDiscipline: string;
-  disciplines = ['oop', 'abc', 'one more discipline'];
-  filteredDisciplines: string[];
-
-  constructor(private api: MarksApiService) {}
-
+  columns: any[];
   displayedColumns: string[];
-
-  columns = marksKeys.map(row => {
-    return {
-      columnDef: `${row}`,
-      header: `${row}`,
-      cell: cellRow => `${cellRow[`${row}`]}`,
-    };
-  });
 
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
 
-  applyFilter(filterValue: string) {
-    console.log('k');
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  constructor(private api: MarksApiService) {}
 
   ngOnInit() {
-    // this.api.getStudents().subscribe(
-    //   res => {
-    //     console.log(res);
-    //     this.ELEMENT_DATA = res;
-    //     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-    //     this.dataSource.sort = this.sort;
-    //   },
-    //   err => {
-    //     console.log(err);
-    //   },
-    // );
-    this.ELEMENT_DATA = marksAndstudentName;
-    this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-    this.dataSource.sort = this.sort;
-    this.displayedColumns = [
-      'studentName',
-      ...this.columns.map(x => x.columnDef),
-    ];
-    // set groups
-    // set group from url or default:
-    this.selectedGroup = this.groups[0];
-    this.filteredGroups = this.groups;
-
-    // set disciplines
-    // set discipline from url or default:
-    this.selectedDiscipline = this.disciplines[0];
-    this.filteredDisciplines = this.disciplines;
+    this.api.getDisciplines().then(res => {
+      this.disciplines = res.result;
+      this.selectedDiscipline = this.disciplines[0];
+      this.filteredDisciplines = this.disciplines;
+      this.getMarks(this.selectedDiscipline.id);
+    });
   }
 
-  filterGroups(e) {
-    if (!this.groups) {
-      return;
-    }
-    const search = e ? e.toLowerCase() : '';
-    this.filteredGroups = this.groups.filter(
-      group => group.indexOf(search) !== -1,
-    );
+  applyFilter(filterValue: string) {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   filterDisciplines(e) {
@@ -117,7 +42,56 @@ export class MarksTableComponent implements OnInit {
     }
     const search = e ? e.toLowerCase() : '';
     this.filteredDisciplines = this.disciplines.filter(
-      discipline => discipline.indexOf(search) !== -1,
+      discipline => discipline.disciplineValue.indexOf(search) !== -1,
+    );
+  }
+
+  onSelectedDisciplineChange() {
+    this.getMarks(this.selectedDiscipline.id);
+  }
+
+  parseGetMarksResult(result): any[] {
+    const marksAndStudents = result.students.map(student => {
+      const studentMarks = result.marks.filter(mark => {
+        return +mark.studentId === +student.id;
+      });
+      const markObject = {};
+      studentMarks.forEach(mark => {
+        const jobValue = result.jobs.find(job => +mark.jobId === +job.id)
+          .jobValue;
+        markObject[jobValue] = `${mark.markValue}`;
+      });
+      return {
+        studentName: `${student.firstName} ${student.lastName}`,
+        ...markObject,
+      };
+    });
+    return marksAndStudents;
+  }
+
+  getMarks(disciplineId) {
+    this.api.getMarks(disciplineId).then(
+      res => {
+        this.ELEMENT_DATA = this.parseGetMarksResult(res);
+        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.columns = res.jobs
+          .map(job => job.jobValue)
+          .map(row => {
+            return {
+              columnDef: `${row}`,
+              header: `${row}`,
+              cell: cellRow => `${cellRow[`${row}`]}`,
+            };
+          });
+        this.displayedColumns = [
+          'studentName',
+          ...this.columns.map(x => x.columnDef),
+        ];
+        this.dataSource.sort = this.sort;
+      },
+      err => {
+        console.log(err);
+      },
     );
   }
 }
