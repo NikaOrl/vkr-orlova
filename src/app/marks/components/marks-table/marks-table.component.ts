@@ -30,7 +30,6 @@ export class MarksTableComponent implements OnInit {
       this.filteredDisciplines = this.disciplines;
       this.getMarks(this.selectedDiscipline.id);
     });
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(filterValue: string) {
@@ -84,11 +83,11 @@ export class MarksTableComponent implements OnInit {
               cell: cellRow => `${cellRow[`${row}`]}`,
             };
           });
-
         this.displayedColumns = [
           'studentName',
           ...this.columns.map(x => x.columnDef),
         ];
+        this.dataSource.sort = this.sort;
       },
       err => {
         console.log(err);

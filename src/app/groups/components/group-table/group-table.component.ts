@@ -76,6 +76,7 @@ export class GroupTableComponent implements OnInit {
       res => {
         this.ELEMENT_DATA = res.result;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
       },
       err => {
         console.log(err);
