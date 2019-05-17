@@ -9,7 +9,7 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
-  username: string;
+  email: string;
   password: string;
   returnUrl: string;
 
@@ -28,7 +28,7 @@ export class LoginPageComponent implements OnInit {
 
   login(): void {
     this.authenticationService
-      .login(this.username, this.password)
+      .login(this.email, this.password)
       .pipe(first())
       .subscribe(
         data => {
@@ -36,7 +36,7 @@ export class LoginPageComponent implements OnInit {
         },
         error => {
           // should show error message
-          alert(error);
+          alert(error.error);
         },
       );
   }
