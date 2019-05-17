@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router, CanLoad } from '@angular/router';
+
 import { CoreModule } from '../core.module';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { CoreModule } from '../core.module';
 export class AuthGuard implements CanActivate, CanLoad {
   constructor(private router: Router) {}
 
-  canActivate() {
+  canActivate(): boolean {
     return this.checkLogin();
   }
 

@@ -1,18 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
-import { GroupsApiService } from 'src/app/groups/services/groups-api.service';
 
-export interface PeriodicElement {
-  firstName: string;
-  lastName: string;
-  id: number;
-  numberInList: number;
-  email: string;
-  hashPassword: string;
-  registrationDate?: Date;
-  groupNumber: number;
-  headStudent: boolean;
-}
+import { GroupsApiService } from 'src/app/groups/services/groups-api.service';
+import { Student } from '../../models/student.model';
 
 @Component({
   selector: 'app-group-table',
@@ -20,27 +10,21 @@ export interface PeriodicElement {
   styleUrls: ['./group-table.component.scss'],
 })
 export class GroupTableComponent implements OnInit {
-  ELEMENT_DATA: PeriodicElement[] = [];
+  ELEMENT_DATA: Student[] = [];
   selectedGroup: any;
   groups: any[];
   filteredGroups: any[];
-
-  constructor(private api: GroupsApiService) {}
-
   displayedColumns: string[] = [
     'numberInList',
     'firstName',
     'lastName',
     'email',
   ];
-
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
 
-  applyFilter(filterValue: string) {
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
+  constructor(private api: GroupsApiService) {}
 
   ngOnInit() {
     this.api.getGroups().then(
@@ -57,7 +41,11 @@ export class GroupTableComponent implements OnInit {
     );
   }
 
-  filterGroups(e) {
+  applyFilter(filterValue: string): void {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  filterGroups(e): void {
     if (!this.groups) {
       return;
     }
@@ -67,11 +55,11 @@ export class GroupTableComponent implements OnInit {
     );
   }
 
-  onSelectedGroupChange() {
+  onSelectedGroupChange(): void {
     this.getStudents(this.selectedGroup.id);
   }
 
-  getStudents(groupId) {
+  getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
       res => {
         this.ELEMENT_DATA = res.result;

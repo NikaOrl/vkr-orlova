@@ -9,12 +9,13 @@ import {
 } from '@angular/material';
 import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { GroupPageComponent } from './components/group-page/group-page.component';
 import { GroupTableComponent } from './components/group-table/group-table.component';
 import { GroupsRoutingModule } from './groups-routing.module';
-import { FormsModule } from '@angular/forms';
 import { GroupsEditComponent } from './components/groups-edit/groups-edit.component';
 
 @NgModule({

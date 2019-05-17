@@ -10,12 +10,13 @@ import {
 import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
 import { CdkTableModule } from '@angular/cdk/table';
+import { FormsModule } from '@angular/forms';
+
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 import { MarksTableComponent } from './components/marks-table/marks-table.component';
 import { MarksPageComponent } from './components/marks-page/marks-page.component';
 import { MarksRoutingModule } from './marks-routing.module';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-import { FormsModule } from '@angular/forms';
 import { MarksEditComponent } from './components/marks-edit/marks-edit.component';
 
 @NgModule({

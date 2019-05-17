@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
 import {
   HttpClient,
   HttpHeaders,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { catchError, tap, map } from 'rxjs/operators';
+
+import { throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -38,7 +39,7 @@ export class GroupsApiService {
     return body || {};
   }
 
-  getStudents(groupId): Promise<any> {
+  getStudents(groupId: number): Promise<any> {
     return this.http
       .get(`${apiUrl}/group/${groupId}`, httpOptions)
       .pipe(

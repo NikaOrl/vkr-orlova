@@ -1,19 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { GroupsApiService } from '../../services/groups-api.service';
 import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute } from '@angular/router';
 
-export interface PeriodicElement {
-  firstName: string;
-  lastName: string;
-  id: number;
-  numberInList: number;
-  email: string;
-  hashPassword: string;
-  registrationDate?: Date;
-  groupNumber: number;
-  headStudent: boolean;
-}
+import { GroupsApiService } from '../../services/groups-api.service';
+import { Student } from '../../models/student.model';
 
 @Component({
   selector: 'app-groups-edit',
@@ -21,26 +11,24 @@ export interface PeriodicElement {
   styleUrls: ['./groups-edit.component.scss'],
 })
 export class GroupsEditComponent implements OnInit {
-  ELEMENT_DATA: PeriodicElement[] = [];
+  ELEMENT_DATA: Student[] = [];
   selectedGroupId: number;
-
-  constructor(private route: ActivatedRoute, private api: GroupsApiService) {}
-
   displayedColumns: string[] = [
     'numberInList',
     'firstName',
     'lastName',
     'email',
   ];
-
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+
+  constructor(private route: ActivatedRoute, private api: GroupsApiService) {}
 
   ngOnInit() {
     this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
     this.getStudents(this.selectedGroupId);
   }
 
-  getStudents(groupId) {
+  getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
       res => {
         this.ELEMENT_DATA = res.result;

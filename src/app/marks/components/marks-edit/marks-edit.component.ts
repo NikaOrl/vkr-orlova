@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
-import { MarksApiService } from '../../services/marks-api.service';
 import { ActivatedRoute } from '@angular/router';
+
+import { MarksApiService } from '../../services/marks-api.service';
+import { StudentMarks } from '../../models/student-marks.model';
 
 @Component({
   selector: 'app-marks-edit',
@@ -9,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./marks-edit.component.scss'],
 })
 export class MarksEditComponent implements OnInit {
-  ELEMENT_DATA: any[] = [];
+  ELEMENT_DATA: StudentMarks[] = [];
   selectedDisciplineId: number;
   columns: any[];
   displayedColumns: string[];
@@ -43,7 +45,7 @@ export class MarksEditComponent implements OnInit {
     return marksAndStudents;
   }
 
-  getMarks(disciplineId) {
+  getMarks(disciplineId: number): void {
     this.api.getMarks(disciplineId).then(
       res => {
         this.ELEMENT_DATA = this.parseGetMarksResult(res);
