@@ -6,6 +6,16 @@
       placeholder="Students filter"
     />
   </mat-form-field>
+  <div class="edit-button">
+    <button
+      *ngIf="selectedDiscipline"
+      mat-raised-button
+      color="primary"
+      routerLink="/marks/edit/{{ selectedDiscipline.id }}"
+    >
+      Edit marks
+    </button>
+  </div>
   <mat-form-field class="disciplines-filter">
     <mat-label>Select discipline</mat-label>
     <mat-select
@@ -31,7 +41,7 @@
 </div>
 
 <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
-  <!-- numberInList Column -->
+  <!-- studentName Column -->
   <ng-container matColumnDef="studentName">
     <th mat-header-cell *matHeaderCellDef mat-sort-header>Student name</th>
     <td mat-cell *matCellDef="let element">{{ element.studentName }}</td>
