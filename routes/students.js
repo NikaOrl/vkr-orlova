@@ -148,4 +148,43 @@ router.post('/register', (req, res, next) => {
     });
 });
 
+router.put('/students/update', (req, res, next) => {
+  Promise.all(
+    req.body.map(student => {
+      return knex('students')
+        .where('id', student.id)
+        .update(student)
+        .then(result => {
+          console.log(`student was updated`);
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    }),
+  )
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
+// router.post('/students/add', (req, res, next) => {
+//   return knex('students')
+//     .insert(req.body)
+//     .then(result => {
+//       console.log(`students were added`);
+//       res.send({ result });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       throw err;
+//     });
+// });
+
 module.exports = router;

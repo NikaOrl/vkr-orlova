@@ -7,6 +7,7 @@ import {
 
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { Student } from '../models/student.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -56,6 +57,13 @@ export class GroupsApiService {
         map(this.extractData),
         catchError(this.handleError),
       )
+      .toPromise();
+  }
+
+  updateStudents(students: Student[]): Promise<any> {
+    return this.http
+      .put<Student[]>(`${apiUrl}/update`, students, httpOptions)
+      .pipe(catchError(this.handleError))
       .toPromise();
   }
 }
