@@ -3,6 +3,9 @@ var router = express.Router();
 const options = require('../env/db.config');
 const knex = require('knex')(options);
 
+const localAuth = require('../knex-helper/auth/local');
+const authHelpers = require('../knex-helper/auth/_helpers');
+
 /* GET students page. */
 router.get('/students/group/:group', function(req, res, next) {
   knex
@@ -103,29 +106,48 @@ router.get('/marks/disciplines', function(req, res, next) {
     });
 });
 
-// router.post('/login', (req, res, next) => {
-//   const username = req.body.username;
-//   const password = req.body.password;
-//   return authHelpers
-//     .getUser(username)
-//     .then(response => {
-//       authHelpers.comparePass(password, response.password);
-//       return response;
-//     })
-//     .then(response => {
-//       return localAuth.encodeToken(response);
-//     })
-//     .then(token => {
-//       res.status(200).json({
-//         status: 'success',
-//         token: token
-//       });
-//     })
-//     .catch(err => {
-//       res.status(500).json({
-//         status: 'error'
-//       });
-//     });
-// });
+router.post('/login', (req, res, next) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  return authHelpers
+    .getUser(email)
+    .then(response => {
+      authHelpers.comparePass(password, response.password);
+      return response;
+    })
+    .then(response => {
+      return localAuth.encodeToken(response);
+    })
+    .then(token => {
+      res.status(200).json({
+        status: 'success',
+        token: token,
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 'error',
+      });
+    });
+});
+
+router.post('/register', (req, res, next) => {
+  return authHelpers
+    .createUser(req)
+    .then(user => {
+      return localAuth.encodeToken(user[0]);
+    })
+    .then(token => {
+      res.status(200).json({
+        status: 'success',
+        token: token,
+      });
+    })
+    .catch(err => {
+      res.status(500).json({
+        status: 'error',
+      });
+    });
+});
 
 module.exports = router;

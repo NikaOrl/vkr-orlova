@@ -9,10 +9,10 @@ import { of } from 'rxjs';
 export class AuthenticationService {
   constructor(private http: HttpClient) {}
 
-  login(username: string, password: string) {
+  login(email: string, password: string) {
     // return this.http
-    //   .post<any>(`/users/authenticate`, {
-    //     username: username,
+    //   .post<any>(`/teachers/authenticate`, {
+    //     email: email,
     //     password: password,
     //   })
     //   .pipe(
@@ -28,12 +28,9 @@ export class AuthenticationService {
     //   );
 
     // temporary while there is no backend:
-    if (username === 'admin' && password === 'admin') {
+    if (email === 'admin' && password === 'admin') {
       // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem(
-        'currentUser',
-        JSON.stringify({ username: username }),
-      );
+      localStorage.setItem('currentUser', JSON.stringify({ email: email }));
     }
     return of(null);
   }
