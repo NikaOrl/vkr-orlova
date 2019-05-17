@@ -125,9 +125,7 @@ router.post('/login', (req, res, next) => {
       });
     })
     .catch(err => {
-      res.status(500).json({
-        status: 'error',
-      });
+      res.status(500).send('Wrong credentials');
     });
 });
 

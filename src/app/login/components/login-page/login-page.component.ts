@@ -36,7 +36,7 @@ export class LoginPageComponent implements OnInit {
         },
         error => {
           // should show error message
-          alert(error);
+          alert(error.error);
         },
       );
   }
