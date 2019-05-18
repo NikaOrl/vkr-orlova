@@ -4,9 +4,9 @@ const knex = require('knex')(options);
 knex.schema
   .createTable('marks', table => {
     table.increments('id');
-    table.string('studentId');
-    table.string('jobId');
-    table.integer('markValue');
+    table.integer('studentId');
+    table.integer('jobId');
+    table.string('markValue');
     table.boolean('deleted');
   })
   .then(() => console.log('table marks created'))

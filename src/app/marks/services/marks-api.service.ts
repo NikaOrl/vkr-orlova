@@ -83,11 +83,33 @@ export class MarksApiService {
       .toPromise();
   }
 
-  addJobs(jobs: Jobs[]): Promise<any> {
-    return this.http
-      .post<any[]>(`/api/jobs/add`, jobs, httpOptions)
-      .pipe(catchError(this.handleError))
-      .toPromise();
+  addJobsAndMarks(jobs: Jobs[], marks: Marks[]): Promise<any> {
+    return Promise.all([
+      jobs.forEach(job => {
+        const jobMarks = [];
+        marks.forEach(mark => {
+          if (mark.jobId === job.id) {
+            jobMarks.push(mark);
+          }
+        });
+        job.id = null;
+        this.http
+          .post<any[]>(`/api/jobs/add`, job, httpOptions)
+          .pipe(catchError(this.handleError))
+          .toPromise()
+          .then(result => {
+            const jobId = JSON.parse(JSON.stringify(result)).result[0];
+            jobMarks.forEach(mark => {
+              mark.jobId = jobId;
+              return mark;
+            });
+            this.http
+              .post<any[]>(`/api/marks/add`, jobMarks, httpOptions)
+              .pipe(catchError(this.handleError))
+              .toPromise();
+          });
+      }),
+    ]);
   }
 
   deleteJobs(jobsIds: Set<number>): Promise<any> {

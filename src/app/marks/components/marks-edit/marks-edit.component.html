@@ -1,4 +1,4 @@
-<form (ngSubmit)="save()">
+<form (ngSubmit)="save()" ngNativeValidate>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <!-- studentName Column -->
     <ng-container matColumnDef="studentName">
@@ -21,6 +21,8 @@
         }"
       >
         <input
+          required
+          minlength="2"
           type="text"
           [ngModel]="column.header"
           (ngModelChange)="jobChange($event, i)"
@@ -36,9 +38,11 @@
         }"
       >
         <input
+          required
+          minlength="1"
           type="text"
           [ngModel]="column.cell(row)"
-          (ngModelChange)="markChange($event, column.markId(row))"
+          (ngModelChange)="markChange($event, column.mark(row))"
           name="row-{{ ind }}-{{ i }}"
         />
       </td>
@@ -66,6 +70,10 @@
           This student will be deleted after save.
           <a (click)="cancelDelete(column.jobId)" class="cancel">Cancel</a>
         </div>
+        <div class="message" *ngIf="isAdded(column.jobId)">
+          This student will be added after save.
+          <a (click)="cancelAdd(column.jobId)" class="cancel">Cancel</a>
+        </div>
       </td>
     </ng-container>
 
@@ -73,6 +81,10 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
   </table>
+
+  <button (click)="add()" type="button" class="btn btn-success">
+    Add job
+  </button>
 
   <div class="save-button">
     <button mat-raised-button color="primary" type="submit">

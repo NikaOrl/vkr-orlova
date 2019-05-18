@@ -6,6 +6,7 @@ import { MarksApiService } from '../../services/marks-api.service';
 import { StudentMarks } from '../../models/student-marks.model';
 import { Marks } from '../../models/marks.model';
 import { Jobs } from '../../models/jobs.model';
+import { Student } from 'src/app/groups/models/student.model';
 
 @Component({
   selector: 'app-marks-edit',
@@ -21,9 +22,14 @@ export class MarksEditComponent implements OnInit {
 
   marks: Marks[];
   jobs: Jobs[];
+  students: Student[];
+
+  marksWithAdded: Marks[];
+  jobsWithAdded: Jobs[];
   deletedJobsIds: Set<number> = new Set();
   oldMarksJSON: string[];
   oldJobsJSON: string[];
+  addedJobsNumber = 0;
 
   constructor(
     private router: Router,
@@ -61,25 +67,16 @@ export class MarksEditComponent implements OnInit {
   getMarks(disciplineId: number): void {
     this.api.getMarks(disciplineId).then(
       res => {
-        this.ELEMENT_DATA = this.parseGetMarksResult(res);
-        this.marks = res.marks;
-        this.jobs = res.jobs;
+        this.marks = [...res.marks];
+        this.jobs = [...res.jobs];
+
+        this.students = res.students;
+        this.marksWithAdded = [...res.marks];
+        this.jobsWithAdded = [...res.jobs];
+
         this.oldJobsJSON = this.jobs.map(value => JSON.stringify(value));
         this.oldMarksJSON = this.marks.map(value => JSON.stringify(value));
-        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-        this.columns = res.jobs.map(row => {
-          return {
-            columnDef: `${row.jobValue}`,
-            header: `${row.jobValue}`,
-            cell: cellRow => `${cellRow[`${row.id}`].markValue}`,
-            markId: cellRow => `${cellRow[`${row.id}`].id}`,
-            jobId: row.id,
-          };
-        });
-        this.displayedColumns = [
-          'studentName',
-          ...this.columns.map(x => x.columnDef),
-        ];
+        this.updateTableData(res);
       },
       err => {
         console.log(err);
@@ -87,10 +84,15 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  markChange(e: string, markId: number) {
+  markChange(e: string, mark: Marks) {
     this.marks.forEach((value, index) => {
-      if (+value.id === +markId) {
+      if (+value.id === +mark.id) {
         this.marks[index].markValue = e;
+      }
+    });
+    this.marksWithAdded.forEach((value, index) => {
+      if (JSON.stringify(value) === JSON.stringify(mark)) {
+        this.marksWithAdded[index].markValue = e;
       }
     });
   }
@@ -121,28 +123,18 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  // addJobs(addedJobs: Jobs[]) {
-  //   this.api.addJobs(addedJobs).then(
-  //     res => {
-  //       console.log('jobs were added');
-  //     },
-  //     err => {
-  //       console.log(err);
-  //     },
-  //   );
-  //   // get added marks
-  //   const addedMarks = [];
-  //   this.api.addMarks(addedMarks).then(
-  //     res => {
-  //       console.log('marks were added');
-  //     },
-  //     err => {
-  //       console.log(err);
-  //     },
-  //   );
-  // }
+  addJobsAndMarks(addedJobs: Jobs[], addedMarks: Marks[]) {
+    this.api.addJobsAndMarks(addedJobs, addedMarks).then(
+      res => {
+        console.log('jobs and marks were added');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
 
-  deleteJobs() {
+  deleteJobsAndMarks() {
     this.api.deleteJobs(this.deletedJobsIds).then(
       res => {
         console.log('jobs ands their marks were deleted');
@@ -166,10 +158,24 @@ export class MarksEditComponent implements OnInit {
         newJobs.push(value);
       }
     });
+
+    const addedJobs = [];
+    this.jobsWithAdded.forEach(value => {
+      if (value.id < 0) {
+        addedJobs.push(value);
+      }
+    });
+    const addedMarks = [];
+    this.marksWithAdded.forEach(value => {
+      if (value.id === null) {
+        addedMarks.push(value);
+      }
+    });
     if (
       newMarks.length > 0 ||
       newJobs.length > 0 ||
-      this.deletedJobsIds.size > 0
+      this.deletedJobsIds.size > 0 ||
+      addedJobs.length > 0
     ) {
       if (newMarks.length > 0) {
         this.updateMarks(newMarks);
@@ -178,7 +184,10 @@ export class MarksEditComponent implements OnInit {
         this.updateJobs(newJobs);
       }
       if (this.deletedJobsIds.size > 0) {
-        this.deleteJobs();
+        this.deleteJobsAndMarks();
+      }
+      if (addedJobs.length > 0) {
+        this.addJobsAndMarks(addedJobs, addedMarks);
       }
       this.router.navigate(['/marks']);
     } else {
@@ -195,37 +204,79 @@ export class MarksEditComponent implements OnInit {
   }
 
   isAdded(row): boolean {
-    // if (row.id === null) {
-    //   return true;
-    // } else {
-    //   return false;
-    // }
-    return false;
+    if (row < 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   delete(e) {
     this.deletedJobsIds.add(e);
   }
 
-  // add() {
-  //   this.jobs.push({
-  //     id: null,
-  //     disciplineId: this.selectedDisciplineId,
-  //     jobValue: '',
-  //     deleted: false,
-  //   });
-  //   this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-  // }
+  add() {
+    this.addedJobsNumber++;
+    this.jobsWithAdded.push({
+      id: -this.addedJobsNumber,
+      disciplineId: this.selectedDisciplineId,
+      jobValue: `${this.addedJobsNumber}`,
+      deleted: false,
+    });
+    this.students.forEach(student => {
+      this.marksWithAdded.push({
+        id: null,
+        studentId: student.id,
+        jobId: -this.addedJobsNumber,
+        markValue: '',
+        deleted: false,
+      });
+    });
+    this.updateTableData({
+      students: this.students,
+      marks: this.marksWithAdded,
+      jobs: this.jobsWithAdded,
+    });
+  }
 
   cancelDelete(e) {
     this.deletedJobsIds.delete(e);
   }
 
-  // cancelAdd(e) {
-  //   const index = this.ELEMENT_DATA.findIndex(
-  //     v => JSON.stringify(v) === JSON.stringify(e),
-  //   );
-  //   this.ELEMENT_DATA.splice(index, 1);
-  //   this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-  // }
+  cancelAdd(e) {
+    const index = this.jobsWithAdded.findIndex(v => v.id === e);
+    this.jobsWithAdded.splice(index, 1);
+    const markIndexes = [];
+    this.marksWithAdded.forEach((value, i) => {
+      if (value.jobId === e) {
+        markIndexes.push(i);
+      }
+    });
+    for (let i = markIndexes.length - 1; i >= 0; i--) {
+      this.marksWithAdded.splice(markIndexes[i], 1);
+    }
+    this.updateTableData({
+      students: this.students,
+      marks: this.marksWithAdded,
+      jobs: this.jobsWithAdded,
+    });
+  }
+
+  private updateTableData(dataObj) {
+    this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
+    this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+    this.columns = this.jobsWithAdded.map(row => {
+      return {
+        columnDef: `${row.jobValue}`,
+        header: `${row.jobValue}`,
+        cell: cellRow => `${cellRow[`${row.id}`].markValue}`,
+        mark: cellRow => cellRow[`${row.id}`],
+        jobId: row.id,
+      };
+    });
+    this.displayedColumns = [
+      'studentName',
+      ...this.columns.map(x => x.columnDef),
+    ];
+  }
 }

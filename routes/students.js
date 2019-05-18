@@ -201,31 +201,31 @@ router.post('/students/add', (req, res, next) => {
     });
 });
 
-// router.post('/marks/add', (req, res, next) => {
-//   return knex('marks')
-//     .insert(req.body)
-//     .then(result => {
-//       console.log(`marks were added`);
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
+router.post('/marks/add', (req, res, next) => {
+  return knex('marks')
+    .insert(req.body)
+    .then(result => {
+      console.log(`marks were added`);
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
 
-// router.post('/jobs/add', (req, res, next) => {
-//   return knex('jobs')
-//     .insert(req.body)
-//     .then(result => {
-//       console.log(`jobs were added`);
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
+router.post('/jobs/add', (req, res, next) => {
+  return knex('jobs')
+    .insert(req.body)
+    .then(result => {
+      console.log(`jobs were added`, result);
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
 
 router.delete('/students/delete', (req, res, next) => {
   let ids = req.query.id;
