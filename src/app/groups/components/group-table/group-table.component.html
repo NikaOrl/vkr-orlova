@@ -6,6 +6,16 @@
       placeholder="Students filter"
     />
   </mat-form-field>
+  <div class="edit-button">
+    <button
+      *ngIf="selectedGroup"
+      mat-raised-button
+      color="primary"
+      routerLink="/groups/edit/{{ selectedGroup.id }}"
+    >
+      Edit group
+    </button>
+  </div>
   <mat-form-field class="groups-filter">
     <mat-label>Select group</mat-label>
     <mat-select

@@ -1,0 +1,60 @@
+<form (ngSubmit)="save()">
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- numberInList Column -->
+    <ng-container matColumnDef="numberInList">
+      <th mat-header-cell *matHeaderCellDef>No.</th>
+      <td mat-cell *matCellDef="let element">
+        <input
+          type="number"
+          [(ngModel)]="element.numberInList"
+          name="numberInList-{{ element.id }}"
+        />
+      </td>
+    </ng-container>
+
+    <!-- firstName Column -->
+    <ng-container matColumnDef="firstName">
+      <th mat-header-cell *matHeaderCellDef>First name</th>
+      <td mat-cell *matCellDef="let element">
+        <input
+          type="email"
+          [(ngModel)]="element.firstName"
+          name="firstName-{{ element.id }}"
+        />
+      </td>
+    </ng-container>
+
+    <!-- lastName Column -->
+    <ng-container matColumnDef="lastName">
+      <th mat-header-cell *matHeaderCellDef>Last name</th>
+      <td mat-cell *matCellDef="let element">
+        <input
+          type="text"
+          [(ngModel)]="element.lastName"
+          name="lastName-{{ element.id }}"
+        />
+      </td>
+    </ng-container>
+
+    <!-- email Column -->
+    <ng-container matColumnDef="email">
+      <th mat-header-cell *matHeaderCellDef>Email</th>
+      <td mat-cell *matCellDef="let element">
+        <input
+          type="text"
+          [(ngModel)]="element.email"
+          name="email-{{ element.id }}"
+        />
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="save-button">
+    <button mat-raised-button color="primary" type="submit">
+      Save
+    </button>
+  </div>
+</form>

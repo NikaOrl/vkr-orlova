@@ -1,19 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { MarksPageComponent } from './marks-page.component';
+import { MarksEditComponent } from './marks-edit.component';
 
-describe('MarksPageComponent', () => {
-  let component: MarksPageComponent;
-  let fixture: ComponentFixture<MarksPageComponent>;
+describe('MarksEditComponent', () => {
+  let component: MarksEditComponent;
+  let fixture: ComponentFixture<MarksEditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MarksPageComponent],
-    }).compileComponents();
+      declarations: [ MarksEditComponent ]
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MarksPageComponent);
+    fixture = TestBed.createComponent(MarksEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

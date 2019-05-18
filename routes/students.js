@@ -106,6 +106,97 @@ router.get('/marks/disciplines', function(req, res, next) {
     });
 });
 
+router.put('/students/update', (req, res, next) => {
+  Promise.all(
+    req.body.map(student => {
+      return knex('students')
+        .where('id', student.id)
+        .update(student)
+        .then(result => {
+          console.log(`student was updated`);
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    }),
+  )
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
+router.put('/marks/update', (req, res, next) => {
+  Promise.all(
+    req.body.map(mark => {
+      return knex('marks')
+        .where('id', mark.id)
+        .update(mark)
+        .then(result => {
+          console.log(`mark was updated`);
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    }),
+  )
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
+router.put('/jobs/update', (req, res, next) => {
+  Promise.all(
+    req.body.map(job => {
+      return knex('jobs')
+        .where('id', job.id)
+        .update(job)
+        .then(result => {
+          console.log(`job was updated`);
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    }),
+  )
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
+// router.post('/students/add', (req, res, next) => {
+//   return knex('students')
+//     .insert(req.body)
+//     .then(result => {
+//       console.log(`students were added`);
+//       res.send({ result });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       throw err;
+//     });
+// });
+
 router.post('/login', (req, res, next) => {
   const email = req.body.email;
   const password = req.body.password;

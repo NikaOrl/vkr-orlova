@@ -1,14 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { LoginPageComponent } from './components/login-page/login-page.component';
 import { FormsModule } from '@angular/forms';
-import { LoginRoutingModule } from './login-routing.module';
 import {
   MatButtonModule,
   MatCardModule,
   MatInputModule,
   MatProgressSpinnerModule,
 } from '@angular/material';
+
+import { LoginPageComponent } from './components/login-page/login-page.component';
+import { LoginRoutingModule } from './login-routing.module';
 
 @NgModule({
   declarations: [LoginPageComponent],

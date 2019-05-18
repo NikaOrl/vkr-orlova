@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
 import {
   HttpClient,
   HttpHeaders,
   HttpErrorResponse,
 } from '@angular/common/http';
-import { catchError, tap, map } from 'rxjs/operators';
+
+import { throwError } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Student } from '../models/student.model';
 
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
@@ -38,7 +40,7 @@ export class GroupsApiService {
     return body || {};
   }
 
-  getStudents(groupId): Promise<any> {
+  getStudents(groupId: number): Promise<any> {
     return this.http
       .get(`${apiUrl}/group/${groupId}`, httpOptions)
       .pipe(
@@ -55,6 +57,13 @@ export class GroupsApiService {
         map(this.extractData),
         catchError(this.handleError),
       )
+      .toPromise();
+  }
+
+  updateStudents(students: Student[]): Promise<any> {
+    return this.http
+      .put<Student[]>(`${apiUrl}/update`, students, httpOptions)
+      .pipe(catchError(this.handleError))
       .toPromise();
   }
 }

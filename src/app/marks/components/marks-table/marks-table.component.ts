@@ -1,6 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+
 import { MarksApiService } from 'src/app/marks/services/marks-api.service';
+import { StudentMarks } from '../../models/student-marks.model';
 
 @Component({
   selector: 'app-marks-table',
@@ -8,15 +10,12 @@ import { MarksApiService } from 'src/app/marks/services/marks-api.service';
   styleUrls: ['./marks-table.component.scss'],
 })
 export class MarksTableComponent implements OnInit {
-  ELEMENT_DATA: any[] = [];
-
+  ELEMENT_DATA: StudentMarks[] = [];
   selectedDiscipline: any;
   disciplines: any[];
   filteredDisciplines: any[];
-
   columns: any[];
   displayedColumns: string[];
-
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;
@@ -32,11 +31,11 @@ export class MarksTableComponent implements OnInit {
     });
   }
 
-  applyFilter(filterValue: string) {
+  applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  filterDisciplines(e) {
+  filterDisciplines(e): void {
     if (!this.disciplines) {
       return;
     }
@@ -46,7 +45,7 @@ export class MarksTableComponent implements OnInit {
     );
   }
 
-  onSelectedDisciplineChange() {
+  onSelectedDisciplineChange(): void {
     this.getMarks(this.selectedDiscipline.id);
   }
 
