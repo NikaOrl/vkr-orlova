@@ -40,6 +40,7 @@ router.get('/marks/discipline/:disciplineId', function(req, res, next) {
             .from('jobs')
             .select('*')
             .where('disciplineId', req.params.disciplineId)
+            .andWhere('deleted', false) // in case of deleted flag
             .then(jobsResult => {
               return { jobsResult, studentsResult };
             })
@@ -49,6 +50,7 @@ router.get('/marks/discipline/:disciplineId', function(req, res, next) {
                 .from('marks')
                 .select('*')
                 .whereIn('jobId', jodsIds)
+                .andWhere('deleted', false) // in case of deleted flag
                 .then(marksResult => {
                   return { studentsResult, jobsResult, marksResult };
                 })
@@ -199,34 +201,93 @@ router.post('/students/add', (req, res, next) => {
     });
 });
 
+// router.post('/marks/add', (req, res, next) => {
+//   return knex('marks')
+//     .insert(req.body)
+//     .then(result => {
+//       console.log(`marks were added`);
+//       res.send({ result });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       throw err;
+//     });
+// });
+
+// router.post('/jobs/add', (req, res, next) => {
+//   return knex('jobs')
+//     .insert(req.body)
+//     .then(result => {
+//       console.log(`jobs were added`);
+//       res.send({ result });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       throw err;
+//     });
+// });
+
 router.delete('/students/delete', (req, res, next) => {
   let ids = req.query.id;
   if (!Array.isArray(ids)) {
     ids = [ids];
   }
-  // in case of real deleting:
-  // return knex('students')
-  //   .whereIn('id', ids)
-  //   .del()
-  //   .then(result => {
-  //     console.log(`students were deleted`);
-  //     res.send({ result });
-  //   })
-  //   .catch(err => {
-  //     console.log(err);
-  //     throw err;
-  //   });
-  return knex('students')
-    .whereIn('id', ids)
-    .update('deleted', true)
-    .then(result => {
-      console.log(`students were deleted`);
-      res.send({ result });
-    })
-    .catch(err => {
-      console.log(err);
-      throw err;
-    });
+  return (
+    knex('students')
+      .whereIn('id', ids)
+      // .del() // in case of real deleting
+      .update('deleted', true) // in case of deleted flag
+      .then(result => {
+        console.log(`students were deleted`);
+        res.send({ result });
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
+  );
+});
+
+router.delete('/marks/delete', (req, res, next) => {
+  let jobIds = req.query.id;
+  if (!Array.isArray(jobIds)) {
+    jobIds = [jobIds];
+  }
+  return (
+    knex('marks')
+      .whereIn('jobId', jobIds)
+      // .del() // in case of real deleting
+      .update('deleted', true) // in case of deleted flag
+      .then(result => {
+        console.log(`marks were deleted`);
+        res.send({ result });
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
+  );
+});
+
+router.delete('/jobs/delete', (req, res, next) => {
+  let ids = req.query.id;
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+  return (
+    knex('jobs')
+      .whereIn('id', ids)
+      // .del() // in case of real deleting
+      .update('deleted', true) // in case of deleted flag
+      .then(result => {
+        console.log(`jobs were deleted`);
+        res.send({ result });
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
+  );
 });
 
 router.post('/login', (req, res, next) => {

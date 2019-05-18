@@ -6,6 +6,7 @@ knex.schema
     table.increments('id');
     table.integer('disciplineId');
     table.string('jobValue');
+    table.boolean('deleted');
   })
   .then(() => console.log('table jobs created'))
   .catch(err => {

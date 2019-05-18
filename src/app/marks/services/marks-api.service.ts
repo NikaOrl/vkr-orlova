@@ -8,6 +8,9 @@ import {
 import { throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
+import { Jobs } from '../models/jobs.model';
+import { Marks } from '../models/marks.model';
+
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
 };
@@ -59,17 +62,49 @@ export class MarksApiService {
       .toPromise();
   }
 
-  updateMarks(marks: any[]): Promise<any> {
+  updateMarks(marks: Marks[]): Promise<any> {
     return this.http
       .put<any[]>(`${apiUrl}/update`, marks, httpOptions)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
 
-  updateJobs(jobs: any[]): Promise<any> {
+  updateJobs(jobs: Jobs[]): Promise<any> {
     return this.http
       .put<any[]>(`/api/jobs/update`, jobs, httpOptions)
       .pipe(catchError(this.handleError))
       .toPromise();
+  }
+
+  addMarks(marks: Marks[]): Promise<any> {
+    return this.http
+      .post<any[]>(`${apiUrl}/add`, marks, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
+
+  addJobs(jobs: Jobs[]): Promise<any> {
+    return this.http
+      .post<any[]>(`/api/jobs/add`, jobs, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
+
+  deleteJobs(jobsIds: Set<number>): Promise<any> {
+    let urlParams = '';
+    jobsIds.forEach(id => {
+      urlParams += 'id=' + id + '&';
+    });
+    urlParams = urlParams.substring(0, urlParams.length - 1);
+    return Promise.all([
+      this.http
+        .delete(`${apiUrl}/delete?${urlParams}`, httpOptions)
+        .pipe(catchError(this.handleError))
+        .toPromise(),
+      this.http
+        .delete(`/api/jobs/delete?${urlParams}`, httpOptions)
+        .pipe(catchError(this.handleError))
+        .toPromise(),
+    ]);
   }
 }

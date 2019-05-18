@@ -1,3 +1,17 @@
 table {
   width: 100%;
 }
+
+.delete-td {
+  padding-right: 5px;
+  width: 200px;
+
+  & .message {
+    font-size: 10px;
+
+    & .cancel {
+      cursor: pointer;
+      color: red;
+    }
+  }
+}

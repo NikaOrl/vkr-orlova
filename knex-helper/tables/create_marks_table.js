@@ -7,6 +7,7 @@ knex.schema
     table.string('studentId');
     table.string('jobId');
     table.integer('markValue');
+    table.boolean('deleted');
   })
   .then(() => console.log('table marks created'))
   .catch(err => {
