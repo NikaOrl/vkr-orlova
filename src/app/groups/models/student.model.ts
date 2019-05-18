@@ -5,6 +5,7 @@ export interface Student {
   numberInList: number;
   email: string;
   registrationDate?: Date;
-  groupNumber: number;
+  groupId: number;
   headStudent: boolean;
+  deleted: boolean;
 }

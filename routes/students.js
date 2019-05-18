@@ -12,6 +12,7 @@ router.get('/students/group/:group', function(req, res, next) {
     .from('students')
     .select('*')
     .where('groupId', req.params.group)
+    .andWhere('deleted', false) // in case of deleted flag
     .then(result => {
       res.send({ result });
     })
@@ -33,6 +34,7 @@ router.get('/marks/discipline/:disciplineId', function(req, res, next) {
         .from('students')
         .select('*')
         .whereIn('id', studentsIds)
+        .andWhere('deleted', false) // in case of deleted flag
         .then(studentsResult => {
           knex
             .from('jobs')
@@ -184,18 +186,48 @@ router.put('/jobs/update', (req, res, next) => {
     });
 });
 
-// router.post('/students/add', (req, res, next) => {
-//   return knex('students')
-//     .insert(req.body)
-//     .then(result => {
-//       console.log(`students were added`);
-//       res.send({ result });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       throw err;
-//     });
-// });
+router.post('/students/add', (req, res, next) => {
+  return knex('students')
+    .insert(req.body)
+    .then(result => {
+      console.log(`students were added`);
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
+router.delete('/students/delete', (req, res, next) => {
+  let ids = req.query.id;
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+  // in case of real deleting:
+  // return knex('students')
+  //   .whereIn('id', ids)
+  //   .del()
+  //   .then(result => {
+  //     console.log(`students were deleted`);
+  //     res.send({ result });
+  //   })
+  //   .catch(err => {
+  //     console.log(err);
+  //     throw err;
+  //   });
+  return knex('students')
+    .whereIn('id', ids)
+    .update('deleted', true)
+    .then(result => {
+      console.log(`students were deleted`);
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
 
 router.post('/login', (req, res, next) => {
   const email = req.body.email;

@@ -10,6 +10,7 @@ knex.schema
     table.string('email');
     table.integer('groupId');
     table.boolean('headStudent');
+    table.boolean('deleted');
   })
   .then(() => console.log('table students created'))
   .catch(err => {
