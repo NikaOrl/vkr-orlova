@@ -58,4 +58,18 @@ export class MarksApiService {
       )
       .toPromise();
   }
+
+  updateMarks(marks: any[]): Promise<any> {
+    return this.http
+      .put<any[]>(`${apiUrl}/update`, marks, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
+
+  updateJobs(jobs: any[]): Promise<any> {
+    return this.http
+      .put<any[]>(`/api/jobs/update`, jobs, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
 }

@@ -55,14 +55,18 @@ export class GroupsEditComponent implements OnInit {
         newStudents.push(value);
       }
     });
-    this.api.updateStudents(newStudents).then(
-      res => {
-        console.log('students were updated');
-        this.router.navigate(['/groups']);
-      },
-      err => {
-        console.log(err);
-      },
-    );
+    if (newStudents.length > 0) {
+      this.api.updateStudents(newStudents).then(
+        res => {
+          console.log('students were updated');
+          this.router.navigate(['/groups']);
+        },
+        err => {
+          console.log(err);
+        },
+      );
+    } else {
+      alert('no changes to save!');
+    }
   }
 }
