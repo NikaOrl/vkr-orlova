@@ -8,7 +8,9 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "create-tables": "cd knex-helper/tables && node create_disciplines_table.js && node create_groups_table.js && node create_jobs_table.js && node create_marks_table.js && node create_students_disciplines_table.js && node create_students_table.js && node create_teachers_table.js",
+    "insert-tables": "cd knex-helper/tables && node insert_disciplines.js && node insert_groups.js && node insert_jobs.js && node insert_marks.js && node insert_students_disciplines.js && node insert_students.js && node insert_teachers.js"
   },
   "dependencies": {
     "@angular/animations": "^7.2.14",

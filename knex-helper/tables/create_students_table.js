@@ -1,4 +1,4 @@
-const options = require('../env/db.config');
+const options = require('../../env/db.config');
 const knex = require('knex')(options);
 
 knex.schema
