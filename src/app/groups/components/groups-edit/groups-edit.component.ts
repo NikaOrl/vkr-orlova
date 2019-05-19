@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Observable } from 'rxjs';
+
 import { GroupsApiService } from '../../services/groups-api.service';
 import { Student } from '../../models/student.model';
+import { DialogService } from 'src/app/core/services/dialog.service';
 
 @Component({
   selector: 'app-groups-edit',
@@ -11,12 +14,6 @@ import { Student } from '../../models/student.model';
   styleUrls: ['./groups-edit.component.scss'],
 })
 export class GroupsEditComponent implements OnInit {
-  ELEMENT_DATA: Student[] = [];
-  students: Student[] = [];
-  deletedStudentsIds: Set<number> = new Set();
-
-  oldStudentsJSON: string[];
-  selectedGroupId: number;
   displayedColumns: string[] = [
     'numberInList',
     'firstName',
@@ -24,66 +21,27 @@ export class GroupsEditComponent implements OnInit {
     'email',
     'delete',
   ];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource([]);
+
+  private ELEMENT_DATA: Student[] = [];
+  private students: Student[] = [];
+  private deletedStudentsIds: Set<number> = new Set();
+
+  private oldStudentsJSON: string[];
+  private selectedGroupId: number;
+
+  private saved = true;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: GroupsApiService,
+    private dialogService: DialogService,
   ) {}
 
   ngOnInit() {
     this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
     this.getStudents(this.selectedGroupId);
-  }
-
-  getStudents(groupId: number): void {
-    this.api.getStudents(groupId).then(
-      res => {
-        this.ELEMENT_DATA = res.result;
-        this.students = [...res.result];
-        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-        this.oldStudentsJSON = this.ELEMENT_DATA.map(value =>
-          JSON.stringify(value),
-        );
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  updateStudents(newStudents: Student[]) {
-    this.api.updateStudents(newStudents).then(
-      res => {
-        console.log('students were updated');
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  addStudents(addedStudents) {
-    this.api.addStudents(addedStudents).then(
-      res => {
-        console.log('students were added');
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  deleteStudents() {
-    this.api.deleteStudents(this.deletedStudentsIds).then(
-      res => {
-        console.log('students were deleted');
-      },
-      err => {
-        console.log(err);
-      },
-    );
   }
 
   save() {
@@ -114,33 +72,20 @@ export class GroupsEditComponent implements OnInit {
       if (this.deletedStudentsIds.size > 0) {
         this.deleteStudents();
       }
+      this.saved = true;
       this.router.navigate(['/groups']);
     } else {
       alert('no changes to save!');
     }
   }
 
-  isDeleted(row): boolean {
-    if (this.deletedStudentsIds.has(row.id)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  isAdded(row): boolean {
-    if (row.id === null) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   delete(e) {
+    this.saved = false;
     this.deletedStudentsIds.add(e.id);
   }
 
   add() {
+    this.saved = false;
     this.ELEMENT_DATA.push({
       id: null,
       firstName: '',
@@ -164,5 +109,81 @@ export class GroupsEditComponent implements OnInit {
     );
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  }
+
+  isDeleted(row): boolean {
+    if (this.deletedStudentsIds.has(row.id)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isAdded(row): boolean {
+    if (row.id === null) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  unsaved() {
+    this.saved = false;
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    if (this.saved) {
+      return true;
+    }
+    return this.dialogService.confirm('Discard changes?');
+  }
+
+  private getStudents(groupId: number): void {
+    this.api.getStudents(groupId).then(
+      res => {
+        this.ELEMENT_DATA = res.result;
+        this.students = [...res.result];
+        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.oldStudentsJSON = this.ELEMENT_DATA.map(value =>
+          JSON.stringify(value),
+        );
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private updateStudents(newStudents: Student[]) {
+    this.api.updateStudents(newStudents).then(
+      res => {
+        console.log('students were updated');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private addStudents(addedStudents) {
+    this.api.addStudents(addedStudents).then(
+      res => {
+        console.log('students were added');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private deleteStudents() {
+    this.api.deleteStudents(this.deletedStudentsIds).then(
+      res => {
+        console.log('students were deleted');
+      },
+      err => {
+        console.log(err);
+      },
+    );
   }
 }

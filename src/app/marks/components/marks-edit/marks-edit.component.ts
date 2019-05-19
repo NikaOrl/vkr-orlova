@@ -2,11 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { Observable } from 'rxjs';
+
 import { MarksApiService } from '../../services/marks-api.service';
 import { StudentMarks } from '../../models/student-marks.model';
 import { Marks } from '../../models/marks.model';
 import { Jobs } from '../../models/jobs.model';
 import { Student } from 'src/app/groups/models/student.model';
+import { DialogService } from 'src/app/core/services/dialog.service';
 
 @Component({
   selector: 'app-marks-edit',
@@ -14,27 +17,31 @@ import { Student } from 'src/app/groups/models/student.model';
   styleUrls: ['./marks-edit.component.scss'],
 })
 export class MarksEditComponent implements OnInit {
-  ELEMENT_DATA: StudentMarks[] = [];
-  selectedDisciplineId: number;
   columns: any[];
   displayedColumns: string[];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  dataSource = new MatTableDataSource([]);
 
-  marks: Marks[];
-  jobs: Jobs[];
-  students: Student[];
+  private ELEMENT_DATA: StudentMarks[] = [];
+  private selectedDisciplineId: number;
 
-  marksWithAdded: Marks[];
-  jobsWithAdded: Jobs[];
-  deletedJobsIds: Set<number> = new Set();
-  oldMarksJSON: string[];
-  oldJobsJSON: string[];
-  addedJobsNumber = 0;
+  private marks: Marks[];
+  private jobs: Jobs[];
+  private students: Student[];
+
+  private marksWithAdded: Marks[];
+  private jobsWithAdded: Jobs[];
+  private deletedJobsIds: Set<number> = new Set();
+  private oldMarksJSON: string[];
+  private oldJobsJSON: string[];
+  private addedJobsNumber = 0;
+
+  private saved = true;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
+    private dialogService: DialogService,
   ) {}
 
   ngOnInit() {
@@ -44,47 +51,8 @@ export class MarksEditComponent implements OnInit {
     this.getMarks(this.selectedDisciplineId);
   }
 
-  parseGetMarksResult(result): any[] {
-    const marksAndStudents = result.students.map(student => {
-      const studentMarks = result.marks.filter(
-        mark => +mark.studentId === +student.id,
-      );
-      const markObject = {};
-      studentMarks.forEach(mark => {
-        const jobV = result.jobs.find(job => +mark.jobId === +job.id);
-        if (jobV) {
-          markObject[jobV.id] = mark;
-        }
-      });
-      return {
-        studentName: `${student.firstName} ${student.lastName}`,
-        ...markObject,
-      };
-    });
-    return marksAndStudents;
-  }
-
-  getMarks(disciplineId: number): void {
-    this.api.getMarks(disciplineId).then(
-      res => {
-        this.marks = [...res.marks];
-        this.jobs = [...res.jobs];
-
-        this.students = res.students;
-        this.marksWithAdded = [...res.marks];
-        this.jobsWithAdded = [...res.jobs];
-
-        this.oldJobsJSON = this.jobs.map(value => JSON.stringify(value));
-        this.oldMarksJSON = this.marks.map(value => JSON.stringify(value));
-        this.updateTableData(res);
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
   markChange(e: string, mark: Marks) {
+    this.saved = false;
     this.marks.forEach((value, index) => {
       if (+value.id === +mark.id) {
         this.marks[index].markValue = e;
@@ -98,51 +66,8 @@ export class MarksEditComponent implements OnInit {
   }
 
   jobChange(e, jobNumber: number) {
+    this.saved = false;
     this.jobs[jobNumber].jobValue = e;
-  }
-
-  updateMarks(newMarks: Marks[]) {
-    this.api.updateMarks(newMarks).then(
-      res => {
-        console.log('marks were updated');
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  updateJobs(newJobs: Jobs[]) {
-    this.api.updateJobs(newJobs).then(
-      res => {
-        console.log('jobs were updated');
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  addJobsAndMarks(addedJobs: Jobs[], addedMarks: Marks[]) {
-    this.api.addJobsAndMarks(addedJobs, addedMarks).then(
-      res => {
-        console.log('jobs and marks were added');
-      },
-      err => {
-        console.log(err);
-      },
-    );
-  }
-
-  deleteJobsAndMarks() {
-    this.api.deleteJobs(this.deletedJobsIds).then(
-      res => {
-        console.log('jobs ands their marks were deleted');
-      },
-      err => {
-        console.log(err);
-      },
-    );
   }
 
   save() {
@@ -189,33 +114,20 @@ export class MarksEditComponent implements OnInit {
       if (addedJobs.length > 0) {
         this.addJobsAndMarks(addedJobs, addedMarks);
       }
+      this.saved = true;
       this.router.navigate(['/marks']);
     } else {
       alert('no changes to save!');
     }
   }
 
-  isDeleted(e): boolean {
-    if (this.deletedJobsIds.has(e)) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  isAdded(row): boolean {
-    if (row < 0) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   delete(e) {
+    this.saved = false;
     this.deletedJobsIds.add(e);
   }
 
   add() {
+    this.saved = false;
     this.addedJobsNumber++;
     this.jobsWithAdded.push({
       id: -this.addedJobsNumber,
@@ -260,6 +172,113 @@ export class MarksEditComponent implements OnInit {
       marks: this.marksWithAdded,
       jobs: this.jobsWithAdded,
     });
+  }
+
+  isDeleted(e): boolean {
+    if (this.deletedJobsIds.has(e)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  isAdded(row): boolean {
+    if (row < 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+    if (this.saved) {
+      return true;
+    }
+    return this.dialogService.confirm('Discard changes?');
+  }
+
+  private getMarks(disciplineId: number): void {
+    this.api.getMarks(disciplineId).then(
+      res => {
+        this.marks = [...res.marks];
+        this.jobs = [...res.jobs];
+
+        this.students = res.students;
+        this.marksWithAdded = [...res.marks];
+        this.jobsWithAdded = [...res.jobs];
+
+        this.oldJobsJSON = this.jobs.map(value => JSON.stringify(value));
+        this.oldMarksJSON = this.marks.map(value => JSON.stringify(value));
+        this.updateTableData(res);
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private updateMarks(newMarks: Marks[]) {
+    this.api.updateMarks(newMarks).then(
+      res => {
+        console.log('marks were updated');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private updateJobs(newJobs: Jobs[]) {
+    this.api.updateJobs(newJobs).then(
+      res => {
+        console.log('jobs were updated');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private addJobsAndMarks(addedJobs: Jobs[], addedMarks: Marks[]) {
+    this.api.addJobsAndMarks(addedJobs, addedMarks).then(
+      res => {
+        console.log('jobs and marks were added');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private deleteJobsAndMarks() {
+    this.api.deleteJobs(this.deletedJobsIds).then(
+      res => {
+        console.log('jobs ands their marks were deleted');
+      },
+      err => {
+        console.log(err);
+      },
+    );
+  }
+
+  private parseGetMarksResult(result): any[] {
+    const marksAndStudents = result.students.map(student => {
+      const studentMarks = result.marks.filter(
+        mark => +mark.studentId === +student.id,
+      );
+      const markObject = {};
+      studentMarks.forEach(mark => {
+        const jobV = result.jobs.find(job => +mark.jobId === +job.id);
+        if (jobV) {
+          markObject[jobV.id] = mark;
+        }
+      });
+      return {
+        studentName: `${student.firstName} ${student.lastName}`,
+        ...markObject,
+      };
+    });
+    return marksAndStudents;
   }
 
   private updateTableData(dataObj) {

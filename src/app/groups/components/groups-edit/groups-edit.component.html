@@ -17,6 +17,7 @@
           type="number"
           [(ngModel)]="element.numberInList"
           name="numberInList-{{ i }}"
+          (change)="unsaved()"
         />
       </td>
     </ng-container>
@@ -38,6 +39,7 @@
           type="text"
           [(ngModel)]="element.firstName"
           name="firstName-{{ i }}"
+          (change)="unsaved()"
         />
       </td>
     </ng-container>
@@ -59,6 +61,7 @@
           type="text"
           [(ngModel)]="element.lastName"
           name="lastName-{{ i }}"
+          (change)="unsaved()"
         />
       </td>
     </ng-container>
@@ -80,6 +83,7 @@
           type="email"
           [(ngModel)]="element.email"
           name="email-{{ i }}"
+          (change)="unsaved()"
         />
       </td>
     </ng-container>
