@@ -51,14 +51,15 @@ export class MarksTableComponent implements OnInit {
 
   parseGetMarksResult(result): any[] {
     const marksAndStudents = result.students.map(student => {
-      const studentMarks = result.marks.filter(mark => {
-        return +mark.studentId === +student.id;
-      });
+      const studentMarks = result.marks.filter(
+        mark => +mark.studentId === +student.id,
+      );
       const markObject = {};
       studentMarks.forEach(mark => {
-        const jobValue = result.jobs.find(job => +mark.jobId === +job.id)
-          .jobValue;
-        markObject[jobValue] = `${mark.markValue}`;
+        const jobV = result.jobs.find(job => +mark.jobId === +job.id);
+        if (jobV) {
+          markObject[jobV.id] = mark;
+        }
       });
       return {
         studentName: `${student.firstName} ${student.lastName}`,
@@ -73,15 +74,18 @@ export class MarksTableComponent implements OnInit {
       res => {
         this.ELEMENT_DATA = this.parseGetMarksResult(res);
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-        this.columns = res.jobs
-          .map(job => job.jobValue)
-          .map(row => {
-            return {
-              columnDef: index => `${row}-${index}`,
-              header: `${row}`,
-              cell: cellRow => `${cellRow[`${row}`]}`,
-            };
-          });
+        this.columns = res.jobs.map(row => {
+          return {
+            columnDef: index => `${row.jobValue}-${index}`,
+            header: `${row.jobValue}`,
+            cell: cellRow => {
+              if (cellRow[`${row.id}`] === undefined) {
+                return '';
+              }
+              return `${cellRow[`${row.id}`].markValue}`;
+            },
+          };
+        });
         this.displayedColumns = [
           'studentName',
           ...this.columns.map((x, i) => x.columnDef(i)),
