@@ -146,7 +146,6 @@ router.put('/marks/update', (req, res, next) => {
           .insert(mark)
           .then(result => {
             console.log(`marks were added`);
-            res.send({ result });
           })
           .catch(err => {
             console.log(err);

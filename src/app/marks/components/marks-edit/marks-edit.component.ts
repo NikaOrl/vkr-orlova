@@ -72,7 +72,10 @@ export class MarksEditComponent implements OnInit {
     const newMarks = [];
     const addedMarks = [];
     this.marks.forEach((value, index) => {
-      if (this.oldMarksJSON[index] !== JSON.stringify(value)) {
+      if (
+        this.oldMarksJSON[index] &&
+        this.oldMarksJSON[index] !== JSON.stringify(value)
+      ) {
         newMarks.push(value);
       }
       if (value.id === null) {
@@ -82,7 +85,10 @@ export class MarksEditComponent implements OnInit {
     const newJobs = [];
     const addedJobs = [];
     this.jobs.forEach((value, index) => {
-      if (this.oldJobsJSON[index] !== JSON.stringify(value)) {
+      if (
+        this.oldJobsJSON[index] &&
+        this.oldJobsJSON[index] !== JSON.stringify(value)
+      ) {
         newJobs.push(value);
       }
       if (value.id < 0) {
@@ -280,20 +286,25 @@ export class MarksEditComponent implements OnInit {
         columnDef: index => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
         cell: (cellRow, studentIndex) => {
+          const jobId = row.id;
+          const jsonMarks = this.marks.map(mark => JSON.stringify(mark));
+          const newMark = {
+            id: null,
+            studentId: this.students[studentIndex].id,
+            jobId: jobId,
+            markValue: '',
+            deleted: false,
+          };
           if (cellRow[`${row.id}`] === undefined) {
-            const jobId = row.id;
-            this.marks.push({
-              id: null,
-              studentId: this.students[studentIndex].id,
-              jobId: jobId,
-              markValue: '',
-              deleted: false,
-            });
-            this.updateTableData({
-              students: this.students,
-              marks: this.marks,
-              jobs: this.jobs,
-            });
+            if (jsonMarks.indexOf(JSON.stringify(newMark)) === -1) {
+              this.marks.push(newMark);
+              this.oldMarksJSON.push('undefined');
+              this.updateTableData({
+                students: this.students,
+                marks: this.marks,
+                jobs: this.jobs,
+              });
+            }
             return '';
           }
           return `${cellRow[`${row.id}`].markValue}`;
