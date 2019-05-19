@@ -6,16 +6,19 @@ const jobs = [
     id: 1,
     disciplineId: 1,
     jobValue: '01.01',
+    deleted: false,
   },
   {
     id: 2,
     disciplineId: 1,
     jobValue: '01',
+    deleted: false,
   },
   {
     id: 3,
     disciplineId: 2,
     jobValue: '02/02',
+    deleted: false,
   },
 ];
 

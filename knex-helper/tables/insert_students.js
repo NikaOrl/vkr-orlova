@@ -10,6 +10,7 @@ const students = [
     email: 'ivan@stud.com',
     groupId: 1,
     headStudent: true,
+    deleted: false,
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ const students = [
     email: 'petr@stud.com',
     groupId: 1,
     headStudent: false,
+    deleted: false,
   },
   {
     id: 3,
@@ -28,6 +30,7 @@ const students = [
     email: 'vasia@stud.com',
     groupId: 1,
     headStudent: false,
+    deleted: false,
   },
   {
     id: 4,
@@ -37,6 +40,7 @@ const students = [
     email: 'serg@stud.com',
     groupId: 2,
     headStudent: false,
+    deleted: false,
   },
 ];
 

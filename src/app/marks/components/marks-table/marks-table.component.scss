@@ -1,7 +1,22 @@
 $black: #000;
 
+.scroll-table {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 15px 15px 15px 0;
+}
+
 table {
   width: 100%;
+
+  & .mark-cell {
+    min-width: 80px;
+    padding: 0 8px;
+  }
+
+  & .student-cell {
+    min-width: 120px;
+  }
 }
 
 th {
@@ -22,8 +37,8 @@ th {
   }
 
   & .edit-button {
-    position: relative;
     margin-right: 12px;
+    position: relative;
   }
 
   & .disciplines-filter {

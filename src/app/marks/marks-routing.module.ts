@@ -5,6 +5,7 @@ import { MarksPageComponent } from './components/marks-page/marks-page.component
 import { AuthGuard } from '../core/guards/auth.guard';
 import { MarksEditComponent } from './components/marks-edit/marks-edit.component';
 import { MarksTableComponent } from './components/marks-table/marks-table.component';
+import { CanDeactivateGuard } from '../core/guards/can-deactivate.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
       {
         path: 'edit/:disciplineId',
         component: MarksEditComponent,
+        canDeactivate: [CanDeactivateGuard],
       },
       {
         path: '',

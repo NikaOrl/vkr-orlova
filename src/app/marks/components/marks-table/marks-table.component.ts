@@ -77,14 +77,14 @@ export class MarksTableComponent implements OnInit {
           .map(job => job.jobValue)
           .map(row => {
             return {
-              columnDef: `${row}`,
+              columnDef: index => `${row}-${index}`,
               header: `${row}`,
               cell: cellRow => `${cellRow[`${row}`]}`,
             };
           });
         this.displayedColumns = [
           'studentName',
-          ...this.columns.map(x => x.columnDef),
+          ...this.columns.map((x, i) => x.columnDef(i)),
         ];
         this.dataSource.sort = this.sort;
       },

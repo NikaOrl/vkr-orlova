@@ -2,6 +2,10 @@ $black: #000;
 
 table {
   width: 100%;
+
+  & .cell {
+    padding: 0 8px;
+  }
 }
 
 th {
@@ -22,8 +26,8 @@ th {
   }
 
   & .edit-button {
-    position: relative;
     margin-right: 12px;
+    position: relative;
   }
 
   & .groups-filter {

@@ -66,4 +66,23 @@ export class GroupsApiService {
       .pipe(catchError(this.handleError))
       .toPromise();
   }
+
+  addStudents(students: Student[]): Promise<any> {
+    return this.http
+      .post<Student[]>(`${apiUrl}/add`, students, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
+
+  deleteStudents(studentsIds: Set<number>): Promise<any> {
+    let urlParams = '';
+    studentsIds.forEach(id => {
+      urlParams += 'id=' + id + '&';
+    });
+    urlParams = urlParams.substring(0, urlParams.length - 1);
+    return this.http
+      .delete(`${apiUrl}/delete?${urlParams}`, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
 }
