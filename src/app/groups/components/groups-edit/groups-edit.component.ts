@@ -25,12 +25,9 @@ export class GroupsEditComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   private ELEMENT_DATA: Student[] = [];
-  private students: Student[] = [];
   private deletedStudentsIds: Set<number> = new Set();
-
   private oldStudentsJSON: string[];
   private selectedGroupId: number;
-
   private saved = true;
 
   constructor(
@@ -51,14 +48,11 @@ export class GroupsEditComponent implements OnInit {
 
   save() {
     const newStudents = [];
-    this.students.forEach((value, index) => {
+    const addedStudents = [];
+    this.ELEMENT_DATA.forEach((value, index) => {
       if (this.oldStudentsJSON[index] !== JSON.stringify(value)) {
         newStudents.push(value);
       }
-    });
-
-    const addedStudents = [];
-    this.ELEMENT_DATA.forEach(value => {
       if (value.id === null) {
         addedStudents.push(value);
       }
@@ -149,7 +143,6 @@ export class GroupsEditComponent implements OnInit {
     this.api.getStudents(groupId).then(
       res => {
         this.ELEMENT_DATA = res.result;
-        this.students = [...res.result];
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
         this.oldStudentsJSON = this.ELEMENT_DATA.map(value =>

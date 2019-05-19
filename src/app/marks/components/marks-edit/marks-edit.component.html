@@ -90,14 +90,14 @@
             class="message input-cell--content"
             *ngIf="isDeleted(column.jobId) && !isAdded(column.jobId)"
           >
-            This student will be deleted after save.
+            This job will be deleted after save.
             <a (click)="cancelDelete(column.jobId)" class="cancel">Cancel</a>
           </div>
           <div
             class="message input-cell--content"
             *ngIf="isAdded(column.jobId)"
           >
-            This student will be added after save.
+            This job will be added after save.
             <a (click)="cancelAdd(column.jobId)" class="cancel">Cancel</a>
           </div>
         </td>

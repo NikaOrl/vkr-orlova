@@ -29,8 +29,6 @@ export class MarksEditComponent implements OnInit {
   private jobs: Jobs[];
   private students: Student[];
 
-  private marksWithAdded: Marks[];
-  private jobsWithAdded: Jobs[];
   private deletedJobsIds: Set<number> = new Set();
   private oldMarksJSON: string[];
   private oldJobsJSON: string[];
@@ -59,13 +57,8 @@ export class MarksEditComponent implements OnInit {
   markChange(e: string, mark: Marks) {
     this.saved = false;
     this.marks.forEach((value, index) => {
-      if (+value.id === +mark.id) {
-        this.marks[index].markValue = e;
-      }
-    });
-    this.marksWithAdded.forEach((value, index) => {
       if (JSON.stringify(value) === JSON.stringify(mark)) {
-        this.marksWithAdded[index].markValue = e;
+        this.marks[index].markValue = e;
       }
     });
   }
@@ -77,28 +70,23 @@ export class MarksEditComponent implements OnInit {
 
   save() {
     const newMarks = [];
+    const addedMarks = [];
     this.marks.forEach((value, index) => {
       if (this.oldMarksJSON[index] !== JSON.stringify(value)) {
         newMarks.push(value);
       }
+      if (value.id === null) {
+        addedMarks.push(value);
+      }
     });
     const newJobs = [];
+    const addedJobs = [];
     this.jobs.forEach((value, index) => {
       if (this.oldJobsJSON[index] !== JSON.stringify(value)) {
         newJobs.push(value);
       }
-    });
-
-    const addedJobs = [];
-    this.jobsWithAdded.forEach(value => {
       if (value.id < 0) {
         addedJobs.push(value);
-      }
-    });
-    const addedMarks = [];
-    this.marksWithAdded.forEach(value => {
-      if (value.id === null) {
-        addedMarks.push(value);
       }
     });
     if (
@@ -134,14 +122,14 @@ export class MarksEditComponent implements OnInit {
   add() {
     this.saved = false;
     this.addedJobsNumber++;
-    this.jobsWithAdded.push({
+    this.jobs.push({
       id: -this.addedJobsNumber,
       disciplineId: this.selectedDisciplineId,
       jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
     });
     this.students.forEach(student => {
-      this.marksWithAdded.push({
+      this.marks.push({
         id: null,
         studentId: student.id,
         jobId: -this.addedJobsNumber,
@@ -151,8 +139,8 @@ export class MarksEditComponent implements OnInit {
     });
     this.updateTableData({
       students: this.students,
-      marks: this.marksWithAdded,
-      jobs: this.jobsWithAdded,
+      marks: this.marks,
+      jobs: this.jobs,
     });
   }
 
@@ -161,21 +149,21 @@ export class MarksEditComponent implements OnInit {
   }
 
   cancelAdd(e) {
-    const index = this.jobsWithAdded.findIndex(v => v.id === e);
-    this.jobsWithAdded.splice(index, 1);
+    const index = this.jobs.findIndex(v => v.id === e);
+    this.jobs.splice(index, 1);
     const markIndexes = [];
-    this.marksWithAdded.forEach((value, i) => {
+    this.marks.forEach((value, i) => {
       if (value.jobId === e) {
         markIndexes.push(i);
       }
     });
     for (let i = markIndexes.length - 1; i >= 0; i--) {
-      this.marksWithAdded.splice(markIndexes[i], 1);
+      this.marks.splice(markIndexes[i], 1);
     }
     this.updateTableData({
       students: this.students,
-      marks: this.marksWithAdded,
-      jobs: this.jobsWithAdded,
+      marks: this.marks,
+      jobs: this.jobs,
     });
   }
 
@@ -207,10 +195,7 @@ export class MarksEditComponent implements OnInit {
       res => {
         this.marks = [...res.marks];
         this.jobs = [...res.jobs];
-
         this.students = res.students;
-        this.marksWithAdded = [...res.marks];
-        this.jobsWithAdded = [...res.jobs];
 
         this.oldJobsJSON = this.jobs.map(value => JSON.stringify(value));
         this.oldMarksJSON = this.marks.map(value => JSON.stringify(value));
@@ -258,7 +243,7 @@ export class MarksEditComponent implements OnInit {
   private deleteJobsAndMarks() {
     this.api.deleteJobs(this.deletedJobsIds).then(
       res => {
-        console.log('jobs ands their marks were deleted');
+        console.log('jobs and their marks were deleted');
       },
       err => {
         console.log(err);
@@ -290,7 +275,7 @@ export class MarksEditComponent implements OnInit {
     this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
-    this.columns = this.jobsWithAdded.map(row => {
+    this.columns = this.jobs.map(row => {
       return {
         columnDef: index => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
