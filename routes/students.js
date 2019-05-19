@@ -46,10 +46,12 @@ router.get('/marks/discipline/:disciplineId', function(req, res, next) {
             })
             .then(({ jobsResult, studentsResult }) => {
               const jodsIds = jobsResult.map(job => job.id);
+              const studentsIds = studentsResult.map(st => st.id);
               knex
                 .from('marks')
                 .select('*')
                 .whereIn('jobId', jodsIds)
+                .whereIn('studentId', studentsIds)
                 .andWhere('deleted', false) // in case of deleted flag
                 .then(marksResult => {
                   return { studentsResult, jobsResult, marksResult };

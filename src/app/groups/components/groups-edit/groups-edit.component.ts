@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatSort } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -22,6 +22,7 @@ export class GroupsEditComponent implements OnInit {
     'delete',
   ];
   dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) sort: MatSort;
 
   private ELEMENT_DATA: Student[] = [];
   private students: Student[] = [];
@@ -42,6 +43,10 @@ export class GroupsEditComponent implements OnInit {
   ngOnInit() {
     this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
     this.getStudents(this.selectedGroupId);
+  }
+
+  applyFilter(filterValue: string): void {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   save() {
@@ -97,6 +102,7 @@ export class GroupsEditComponent implements OnInit {
       deleted: false,
     });
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+    this.dataSource.sort = this.sort;
   }
 
   cancelDelete(e) {
@@ -109,6 +115,7 @@ export class GroupsEditComponent implements OnInit {
     );
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+    this.dataSource.sort = this.sort;
   }
 
   isDeleted(row): boolean {
@@ -144,6 +151,7 @@ export class GroupsEditComponent implements OnInit {
         this.ELEMENT_DATA = res.result;
         this.students = [...res.result];
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+        this.dataSource.sort = this.sort;
         this.oldStudentsJSON = this.ELEMENT_DATA.map(value =>
           JSON.stringify(value),
         );

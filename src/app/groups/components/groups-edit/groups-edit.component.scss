@@ -3,7 +3,7 @@ $red: #f00;
 .scroll-table {
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 15px;
+  padding: 10px 15px 15px 15px;
 }
 
 table {
@@ -54,4 +54,9 @@ input {
     position: relative;
     width: 100px;
   }
+}
+
+.students-filter {
+  font-size: 14px;
+  margin: 0 20px;
 }

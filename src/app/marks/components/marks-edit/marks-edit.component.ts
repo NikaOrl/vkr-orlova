@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatTableDataSource, MatSort } from '@angular/material';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -20,6 +20,7 @@ export class MarksEditComponent implements OnInit {
   columns: any[];
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) sort: MatSort;
 
   private ELEMENT_DATA: StudentMarks[] = [];
   private selectedDisciplineId: number;
@@ -49,6 +50,10 @@ export class MarksEditComponent implements OnInit {
       'disciplineId',
     );
     this.getMarks(this.selectedDisciplineId);
+  }
+
+  applyFilter(filterValue: string): void {
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
   markChange(e: string, mark: Marks) {
@@ -284,6 +289,7 @@ export class MarksEditComponent implements OnInit {
   private updateTableData(dataObj) {
     this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+    this.dataSource.sort = this.sort;
     this.columns = this.jobsWithAdded.map(row => {
       return {
         columnDef: index => `${row.jobValue}-${index}`,
