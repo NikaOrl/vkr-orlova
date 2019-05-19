@@ -1,4 +1,4 @@
-const options = require('../env/db.config');
+const options = require('../../env/db.config');
 const knex = require('knex')(options);
 
 const teachers = [
@@ -38,7 +38,7 @@ const teachers = [
 
 knex('teachers')
   .insert(teachers)
-  .then(() => console.log('data inserted'))
+  .then(() => console.log('teachers inserted'))
   .catch(err => {
     console.log(err);
     throw err;
