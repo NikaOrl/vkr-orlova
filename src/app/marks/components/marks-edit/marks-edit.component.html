@@ -1,93 +1,119 @@
 <form (ngSubmit)="save()" ngNativeValidate>
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <!-- studentName Column -->
-    <ng-container matColumnDef="studentName">
-      <th mat-header-cell *matHeaderCellDef>Students Jobs</th>
-      <td mat-cell *matCellDef="let element">{{ element.studentName }}</td>
-      <td mat-footer-cell *matFooterCellDef></td>
-    </ng-container>
+  <div class="scroll-table">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+      <!-- studentName Column -->
+      <ng-container matColumnDef="studentName" sticky>
+        <th mat-header-cell *matHeaderCellDef class="students-cell">
+          Students Jobs
+        </th>
+        <td mat-cell *matCellDef="let element" class="students-cell">
+          {{ element.studentName }}
+        </td>
+        <td mat-footer-cell *matFooterCellDef class="students-cell"></td>
+      </ng-container>
 
-    <!-- Generic column definition -->
-    <ng-container
-      *ngFor="let column of columns; let i = index"
-      [cdkColumnDef]="column.columnDef"
+      <!-- Generic column definition -->
+      <ng-container
+        *ngFor="let column of columns; let i = index"
+        [cdkColumnDef]="column.columnDef(i)"
+      >
+        <th
+          md-header-cell
+          *cdkHeaderCellDef
+          [ngClass]="{
+            'alert-danger': isDeleted(column.jobId),
+            'alert-success': isAdded(column.jobId)
+          }"
+          class="input-cell"
+        >
+          <input
+            required
+            minlength="2"
+            type="text"
+            class="input-cell--content"
+            [ngModel]="column.header"
+            (ngModelChange)="jobChange($event, i)"
+            name="header-{{ i }}"
+          />
+        </th>
+        <td
+          md-cell
+          *cdkCellDef="let row; let ind = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(column.jobId),
+            'alert-success': isAdded(column.jobId)
+          }"
+          class="input-cell"
+        >
+          <input
+            required
+            minlength="1"
+            type="text"
+            class="input-cell--content"
+            [ngModel]="column.cell(row)"
+            (ngModelChange)="markChange($event, column.mark(row))"
+            name="row-{{ ind }}-{{ i }}"
+          />
+        </td>
+        <td
+          md-footer-cell
+          *cdkFooterCellDef
+          [ngClass]="{
+            'alert-danger': isDeleted(column.jobId),
+            'alert-success': isAdded(column.jobId)
+          }"
+          class="delete-td input-cell"
+        >
+          <button
+            *ngIf="!isDeleted(column.jobId) && !isAdded(column.jobId)"
+            (click)="delete(column.jobId)"
+            type="button"
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
+          <div
+            class="message input-cell--content"
+            *ngIf="isDeleted(column.jobId) && !isAdded(column.jobId)"
+          >
+            This student will be deleted after save.
+            <a (click)="cancelDelete(column.jobId)" class="cancel">Cancel</a>
+          </div>
+          <div
+            class="message input-cell--content"
+            *ngIf="isAdded(column.jobId)"
+          >
+            This student will be added after save.
+            <a (click)="cancelAdd(column.jobId)" class="cancel">Cancel</a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+    </table>
+  </div>
+
+  <div class="buttons">
+    <button (click)="add()" type="button" class="add-button btn btn-success">
+      Add job
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      routerLink="/marks"
+      class="router-button"
     >
-      <th
-        md-header-cell
-        *cdkHeaderCellDef
-        [ngClass]="{
-          'alert alert-danger': isDeleted(column.jobId),
-          'alert alert-success': isAdded(column.jobId)
-        }"
-      >
-        <input
-          required
-          minlength="2"
-          type="text"
-          [ngModel]="column.header"
-          (ngModelChange)="jobChange($event, i)"
-          name="header-{{ i }}"
-        />
-      </th>
-      <td
-        md-cell
-        *cdkCellDef="let row; let ind = index"
-        [ngClass]="{
-          'alert alert-danger': isDeleted(column.jobId),
-          'alert alert-success': isAdded(column.jobId)
-        }"
-      >
-        <input
-          required
-          minlength="1"
-          type="text"
-          [ngModel]="column.cell(row)"
-          (ngModelChange)="markChange($event, column.mark(row))"
-          name="row-{{ ind }}-{{ i }}"
-        />
-      </td>
-      <td
-        md-footer-cell
-        *cdkFooterCellDef
-        [ngClass]="{
-          'alert alert-danger': isDeleted(column.jobId),
-          'alert alert-success': isAdded(column.jobId)
-        }"
-        class="delete-td"
-      >
-        <button
-          *ngIf="!isDeleted(column.jobId) && !isAdded(column.jobId)"
-          (click)="delete(column.jobId)"
-          type="button"
-          class="btn btn-danger"
-        >
-          Delete
-        </button>
-        <div
-          class="message"
-          *ngIf="isDeleted(column.jobId) && !isAdded(column.jobId)"
-        >
-          This student will be deleted after save.
-          <a (click)="cancelDelete(column.jobId)" class="cancel">Cancel</a>
-        </div>
-        <div class="message" *ngIf="isAdded(column.jobId)">
-          This student will be added after save.
-          <a (click)="cancelAdd(column.jobId)" class="cancel">Cancel</a>
-        </div>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
-  </table>
-
-  <button (click)="add()" type="button" class="btn btn-success">
-    Add job
-  </button>
-
-  <div class="save-button">
-    <button mat-raised-button color="primary" type="submit">
+      Back
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="router-button"
+    >
       Save
     </button>
   </div>

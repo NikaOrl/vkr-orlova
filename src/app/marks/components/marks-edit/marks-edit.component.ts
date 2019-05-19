@@ -132,7 +132,7 @@ export class MarksEditComponent implements OnInit {
     this.jobsWithAdded.push({
       id: -this.addedJobsNumber,
       disciplineId: this.selectedDisciplineId,
-      jobValue: `${this.addedJobsNumber}`,
+      jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
     });
     this.students.forEach(student => {
@@ -286,7 +286,7 @@ export class MarksEditComponent implements OnInit {
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.columns = this.jobsWithAdded.map(row => {
       return {
-        columnDef: `${row.jobValue}`,
+        columnDef: index => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
         cell: cellRow => `${cellRow[`${row.id}`].markValue}`,
         mark: cellRow => cellRow[`${row.id}`],
@@ -295,7 +295,7 @@ export class MarksEditComponent implements OnInit {
     });
     this.displayedColumns = [
       'studentName',
-      ...this.columns.map(x => x.columnDef),
+      ...this.columns.map((x, i) => x.columnDef(i)),
     ];
   }
 }
