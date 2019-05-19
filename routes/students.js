@@ -141,16 +141,29 @@ router.put('/students/update', (req, res, next) => {
 router.put('/marks/update', (req, res, next) => {
   Promise.all(
     req.body.map(mark => {
-      return knex('marks')
-        .where('id', mark.id)
-        .update(mark)
-        .then(result => {
-          console.log(`mark was updated`);
-        })
-        .catch(err => {
-          console.log(err);
-          throw err;
-        });
+      if (mark.id === null) {
+        return knex('marks')
+          .insert(mark)
+          .then(result => {
+            console.log(`marks were added`);
+            res.send({ result });
+          })
+          .catch(err => {
+            console.log(err);
+            throw err;
+          });
+      } else {
+        return knex('marks')
+          .where('id', mark.id)
+          .update(mark)
+          .then(result => {
+            console.log(`mark was updated`);
+          })
+          .catch(err => {
+            console.log(err);
+            throw err;
+          });
+      }
     }),
   )
     .then(() => {

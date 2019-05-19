@@ -64,7 +64,7 @@
             minlength="1"
             type="text"
             class="input-cell--content"
-            [ngModel]="column.cell(row)"
+            [ngModel]="column.cell(row, ind)"
             (ngModelChange)="markChange($event, column.mark(row))"
             name="row-{{ ind }}-{{ i }}"
           />

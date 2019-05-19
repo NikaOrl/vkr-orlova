@@ -279,7 +279,25 @@ export class MarksEditComponent implements OnInit {
       return {
         columnDef: index => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
-        cell: cellRow => `${cellRow[`${row.id}`].markValue}`,
+        cell: (cellRow, studentIndex) => {
+          if (cellRow[`${row.id}`] === undefined) {
+            const jobId = row.id;
+            this.marks.push({
+              id: null,
+              studentId: this.students[studentIndex].id,
+              jobId: jobId,
+              markValue: '',
+              deleted: false,
+            });
+            this.updateTableData({
+              students: this.students,
+              marks: this.marks,
+              jobs: this.jobs,
+            });
+            return '';
+          }
+          return `${cellRow[`${row.id}`].markValue}`;
+        },
         mark: cellRow => cellRow[`${row.id}`],
         jobId: row.id,
       };
