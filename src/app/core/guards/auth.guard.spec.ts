@@ -1,15 +1,54 @@
-import { TestBed, async, inject } from '@angular/core/testing';
-
 import { AuthGuard } from './auth.guard';
+import { AuthenticationService } from 'src/app/login/services/authentication/authentication.service';
 
-describe('AuthGuard', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [AuthGuard]
-    });
+class MockRouter {
+  navigate(path) {}
+}
+
+class MockAuthenticationService {
+  login() {
+    localStorage.setItem('currentUser', JSON.stringify('mocUser'));
+  }
+
+  logout(): void {
+    localStorage.removeItem('currentUser');
+  }
+}
+
+describe('AuthGuard canActivate', () => {
+  let authGuard: AuthGuard;
+  let router;
+  let authenticationService;
+
+  it('should return true for a logged in user', () => {
+    router = new MockRouter();
+    authGuard = new AuthGuard(router);
+    authenticationService = new MockAuthenticationService();
+    expect(authGuard.canActivate()).toEqual(false);
+
+    authenticationService.login();
+    expect(authGuard.canActivate()).toEqual(true);
+
+    authenticationService.logout();
+    expect(authGuard.canActivate()).toEqual(false);
   });
+});
 
-  it('should ...', inject([AuthGuard], (guard: AuthGuard) => {
-    expect(guard).toBeTruthy();
-  }));
+describe('AuthGuard canLoad', () => {
+  let authGuard: AuthGuard;
+  let router;
+  let authenticationService;
+
+  it('should return true for a logged in user', () => {
+    router = new MockRouter();
+    authGuard = new AuthGuard(router);
+    authenticationService = new MockAuthenticationService();
+    expect(authGuard.canLoad()).toEqual(false);
+
+    authenticationService.login();
+    expect(authGuard.canLoad()).toEqual(true);
+
+    authenticationService.logout();
+    expect(authGuard.canLoad()).toEqual(false);
+  });
 });
