@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MarksPageComponent } from './marks-page.component';
+import { Component } from '@angular/core';
+
+// tslint:disable-next-line:component-selector
+@Component({ selector: 'router-outlet', template: '' })
+class RouterOutletStubComponent {}
 
 describe('MarksPageComponent', () => {
   let component: MarksPageComponent;
@@ -8,7 +13,7 @@ describe('MarksPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [MarksPageComponent],
+      declarations: [MarksPageComponent, RouterOutletStubComponent],
     }).compileComponents();
   }));
 

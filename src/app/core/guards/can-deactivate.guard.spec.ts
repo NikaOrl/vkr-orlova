@@ -16,7 +16,7 @@ describe('CanDeactivateGuard CanDeactivate', () => {
   let canDeactivateGuard: CanDeactivateGuard;
   let mockComponent: MockComponent;
 
-  it('should return true for a logged in user', () => {
+  it('should work correctly with canDeactivate', () => {
     mockComponent = new MockComponent();
     canDeactivateGuard = new CanDeactivateGuard();
     mockComponent.returnValue = true;

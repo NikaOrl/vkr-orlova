@@ -1,13 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { GroupTableComponent } from './group-table.component';
 import { Component, Directive, Input, forwardRef } from '@angular/core';
 import {
   FormsModule,
   NG_VALUE_ACCESSOR,
-  ControlValueAccessor
+  ControlValueAccessor,
 } from '@angular/forms';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+
+import { GroupTableComponent } from './group-table.component';
+import { GroupsApiService } from '../../services/groups-api.service';
 
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-form-field', template: '' })
@@ -25,9 +26,9 @@ class MatLabelStubComponent {}
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => MatSelectStubComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 class MatSelectStubComponent implements ControlValueAccessor {
   value;
@@ -63,9 +64,9 @@ class MatOptionStubComponent {
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => NgxMatSelectSearchStubComponent),
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 })
 class NgxMatSelectSearchStubComponent {
   value;
@@ -91,7 +92,7 @@ class NgxMatSelectSearchStubComponent {
   // tslint:disable-next-line:directive-selector
   selector: '[routerLink]',
   // tslint:disable-next-line:use-host-property-decorator
-  host: { '(click)': 'onClick()' }
+  host: { '(click)': 'onClick()' },
 })
 class RouterLinkStubDirective {
   @Input('routerLink') linkParams: any;
@@ -103,7 +104,7 @@ class RouterLinkStubDirective {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[placeholderLabel]'
+  selector: '[placeholderLabel]',
 })
 class PlaceholderLabelStubDirective {
   @Input('placeholderLabel') linkParams: any;
@@ -111,7 +112,7 @@ class PlaceholderLabelStubDirective {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[noEntriesFoundLabel]'
+  selector: '[noEntriesFoundLabel]',
 })
 class NoEntriesFoundLabelStubDirective {
   @Input('noEntriesFoundLabel') linkParams: any;
@@ -119,7 +120,7 @@ class NoEntriesFoundLabelStubDirective {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[dataSource]'
+  selector: '[dataSource]',
 })
 class DataSourceStubDirective {
   @Input('dataSource') linkParams: any;
@@ -127,7 +128,7 @@ class DataSourceStubDirective {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[matHeaderRowDef]'
+  selector: '[matHeaderRowDef]',
 })
 class MatHeaderRowDefStubDirective {
   @Input('matHeaderRowDef') linkParams: any;
@@ -135,11 +136,26 @@ class MatHeaderRowDefStubDirective {
 
 @Directive({
   // tslint:disable-next-line:directive-selector
-  selector: '[matRowDefColumns]'
+  selector: '[matRowDefColumns]',
 })
 class MatRowDefColumnsStubDirective {
   @Input('matRowDefColumns') linkParams: any;
 }
+
+const GroupsApiServiceStub = {
+  getStudents: (groupId: number): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: 'students' }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  },
+  getGroups: (): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: 'groups' }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  },
+};
 
 describe('GroupTableComponent', () => {
   let component: GroupTableComponent;
@@ -159,10 +175,14 @@ describe('GroupTableComponent', () => {
         NoEntriesFoundLabelStubDirective,
         DataSourceStubDirective,
         MatHeaderRowDefStubDirective,
-        MatRowDefColumnsStubDirective
+        MatRowDefColumnsStubDirective,
       ],
       imports: [FormsModule],
-      providers: [HttpClient, HttpHandler]
+      providers: [
+        HttpClient,
+        HttpHandler,
+        { provide: GroupsApiService, useValue: GroupsApiServiceStub },
+      ],
     }).compileComponents();
   }));
 
@@ -174,5 +194,19 @@ describe('GroupTableComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should change dataSource.filter', () => {
+    component.applyFilter('a');
+    expect(component.dataSource.filter).toBe('a');
+  });
+
+  it('should filter groups', () => {
+    component.filterGroups('a');
+    expect(component.filteredGroups).toBe(undefined);
+
+    component.groups = [{ groupNumber: 'a' }, { groupNumber: 'b' }];
+    component.filterGroups('a');
+    expect(component.filteredGroups).toEqual([{ groupNumber: 'a' }]);
   });
 });

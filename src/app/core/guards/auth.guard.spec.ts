@@ -24,6 +24,7 @@ describe('AuthGuard canActivate', () => {
     router = new MockRouter();
     authGuard = new AuthGuard(router);
     authenticationService = new MockAuthenticationService();
+    authenticationService.logout();
     expect(authGuard.canActivate()).toEqual(false);
 
     authenticationService.login();
