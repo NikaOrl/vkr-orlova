@@ -73,7 +73,7 @@ export class GroupsEditComponent implements OnInit {
         this.deleteStudents();
       }
       this.saved = true;
-      this.router.navigate(['/groups']);
+      this.router.navigate([`/groups/${this.selectedGroupId}`]);
     } else {
       alert('no changes to save!');
     }

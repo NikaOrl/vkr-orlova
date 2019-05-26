@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { GroupsApiService } from 'src/app/groups/services/groups-api.service';
 import { Student } from '../../models/student.model';
@@ -25,13 +26,20 @@ export class GroupTableComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private api: GroupsApiService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private api: GroupsApiService,
+  ) {}
 
   ngOnInit() {
     this.api.getGroups().then(
       res => {
         this.groups = res.result;
-        this.selectedGroup = this.groups[0];
+        const selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
+        this.selectedGroup = selectedGroupId
+          ? this.groups.find(group => group.id === selectedGroupId)
+          : this.groups[0];
         this.filteredGroups = this.groups;
 
         this.getStudents(this.selectedGroup.id);
@@ -57,6 +65,7 @@ export class GroupTableComponent implements OnInit {
   }
 
   onSelectedGroupChange(): void {
+    this.router.navigate([`/groups/${this.selectedGroup.id}`]);
     this.getStudents(this.selectedGroup.id);
   }
 

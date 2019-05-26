@@ -19,6 +19,10 @@ const routes: Routes = [
         canDeactivate: [CanDeactivateGuard],
       },
       {
+        path: ':disciplineId',
+        component: MarksTableComponent,
+      },
+      {
         path: '',
         component: MarksTableComponent,
       },

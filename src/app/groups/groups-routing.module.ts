@@ -19,6 +19,10 @@ const routes: Routes = [
         canDeactivate: [CanDeactivateGuard],
       },
       {
+        path: ':groupId',
+        component: GroupTableComponent,
+      },
+      {
         path: '',
         component: GroupTableComponent,
       },

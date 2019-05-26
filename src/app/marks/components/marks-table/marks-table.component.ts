@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
+import { Router, ActivatedRoute } from '@angular/router';
 
 import { MarksApiService } from 'src/app/marks/services/marks-api.service';
 import { StudentMarks } from '../../models/student-marks.model';
@@ -20,12 +21,21 @@ export class MarksTableComponent implements OnInit {
 
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(private api: MarksApiService) {}
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private api: MarksApiService,
+  ) {}
 
   ngOnInit() {
     this.api.getDisciplines().then(res => {
       this.disciplines = res.result;
-      this.selectedDiscipline = this.disciplines[0];
+      const selectedDisciplineId = +this.route.snapshot.paramMap.get(
+        'disciplineId',
+      );
+      this.selectedDiscipline = selectedDisciplineId
+        ? this.disciplines.find(d => d.id === selectedDisciplineId)
+        : this.disciplines[0];
       this.filteredDisciplines = this.disciplines;
       this.getMarks(this.selectedDiscipline.id);
     });
@@ -46,6 +56,7 @@ export class MarksTableComponent implements OnInit {
   }
 
   onSelectedDisciplineChange(): void {
+    this.router.navigate([`/marks/${this.selectedDiscipline.id}`]);
     this.getMarks(this.selectedDiscipline.id);
   }
 
