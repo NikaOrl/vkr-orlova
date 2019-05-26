@@ -1,0 +1,27 @@
+.mat-card {
+  box-shadow: 3px 4px 20px 10px rgba(0, 0, 0, 0.2),
+    4px 6px 4px 0px rgba(0, 0, 0, 0.14), 3px 4px 13px 3px rgba(0, 0, 0, 0.12);
+}
+
+.jumbotron {
+  background-color: inherit;
+  padding: 12rem 2rem;
+}
+
+.mat-form-field {
+  width: 280px;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-card-actions {
+  margin: 0;
+}
+
+.mat-card-header {
+  & .mat-card-title {
+    font-size: 30px;
+  }
+}
