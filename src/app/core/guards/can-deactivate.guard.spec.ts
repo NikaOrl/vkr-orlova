@@ -1,15 +1,30 @@
-import { TestBed, async, inject } from '@angular/core/testing';
+import { Component } from '@angular/core';
+
+import { Observable } from 'rxjs';
 
 import { CanDeactivateGuard } from './can-deactivate.guard';
+import { CanComponentDeactivate } from '../interfaces/can-component-deactivate.interface';
 
-describe('CanDeactivateGuard', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [CanDeactivateGuard]
-    });
+@Component({})
+export class MockComponent implements CanComponentDeactivate {
+  returnValue: boolean | Observable<boolean>;
+
+  canDeactivate(): boolean | Observable<boolean> {
+    return this.returnValue;
+  }
+}
+
+describe('CanDeactivateGuard CanDeactivate', () => {
+  let canDeactivateGuard: CanDeactivateGuard;
+  let mockComponent: MockComponent;
+
+  it('should work correctly with canDeactivate', () => {
+    mockComponent = new MockComponent();
+    canDeactivateGuard = new CanDeactivateGuard();
+    mockComponent.returnValue = true;
+    expect(canDeactivateGuard.canDeactivate(mockComponent)).toEqual(true);
+
+    mockComponent.returnValue = false;
+    expect(canDeactivateGuard.canDeactivate(mockComponent)).toEqual(false);
   });
-
-  it('should ...', inject([CanDeactivateGuard], (guard: CanDeactivateGuard) => {
-    expect(guard).toBeTruthy();
-  }));
 });

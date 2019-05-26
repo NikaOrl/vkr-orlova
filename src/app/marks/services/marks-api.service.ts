@@ -76,13 +76,6 @@ export class MarksApiService {
       .toPromise();
   }
 
-  addMarks(marks: Marks[]): Promise<any> {
-    return this.http
-      .post<any[]>(`${apiUrl}/add`, marks, httpOptions)
-      .pipe(catchError(this.handleError))
-      .toPromise();
-  }
-
   addJobsAndMarks(jobs: Jobs[], marks: Marks[]): Promise<any> {
     return Promise.all([
       jobs.forEach(job => {
