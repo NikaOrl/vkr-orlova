@@ -11,6 +11,9 @@ import {
   ControlValueAccessor,
   FormsModule,
 } from '@angular/forms';
+import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
+
+import { BehaviorSubject } from 'rxjs';
 
 import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
@@ -156,6 +159,32 @@ class CdkColumnDefStubDirective {
 }
 
 @Injectable()
+export class RouterStub {
+  navigate(path) {
+    return {};
+  }
+}
+
+@Injectable()
+export class ActivatedRouteStub {
+  private subject = new BehaviorSubject(this.testParams);
+  private _testParams: {};
+  paramMap = this.subject.asObservable();
+
+  snapshot = {
+    paramMap: convertToParamMap({ id: 1 }),
+  };
+
+  get testParams() {
+    return this._testParams;
+  }
+  set testParams(paramMap: {}) {
+    this._testParams = paramMap;
+    this.subject.next(paramMap);
+  }
+}
+
+@Injectable()
 export class MarksApiServiceStub {
   getMarks(disciplineId: number): Promise<any> {
     return new Promise((resolve, reject) => {
@@ -207,7 +236,11 @@ describe('MarksTableComponent', () => {
         CdkColumnDefStubDirective,
       ],
       imports: [FormsModule],
-      providers: [{ provide: MarksApiService, useClass: MarksApiServiceStub }],
+      providers: [
+        { provide: MarksApiService, useClass: MarksApiServiceStub },
+        { provide: Router, useClass: RouterStub },
+        { provide: ActivatedRoute, useClass: ActivatedRouteStub },
+      ],
     }).compileComponents();
   }));
 

@@ -114,7 +114,7 @@ export class MarksEditComponent implements OnInit {
         this.addJobsAndMarks(addedJobs, addedMarks);
       }
       this.saved = true;
-      this.router.navigate(['/marks']);
+      this.router.navigate([`/marks/${this.selectedDisciplineId}`]);
     } else {
       alert('no changes to save!');
     }

@@ -1,11 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Directive, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  Directive,
+  Input,
+  forwardRef,
+  Injectable,
+} from '@angular/core';
 import {
   FormsModule,
   NG_VALUE_ACCESSOR,
   ControlValueAccessor,
 } from '@angular/forms';
+import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHandler } from '@angular/common/http';
+
+import { BehaviorSubject } from 'rxjs';
 
 import { GroupTableComponent } from './group-table.component';
 import { GroupsApiService } from '../../services/groups-api.service';
@@ -157,6 +166,32 @@ const GroupsApiServiceStub = {
   },
 };
 
+@Injectable()
+export class RouterStub {
+  navigate(path) {
+    return {};
+  }
+}
+
+@Injectable()
+export class ActivatedRouteStub {
+  private subject = new BehaviorSubject(this.testParams);
+  private _testParams: {};
+  paramMap = this.subject.asObservable();
+
+  snapshot = {
+    paramMap: convertToParamMap({ id: 1 }),
+  };
+
+  get testParams() {
+    return this._testParams;
+  }
+  set testParams(paramMap: {}) {
+    this._testParams = paramMap;
+    this.subject.next(paramMap);
+  }
+}
+
 describe('GroupTableComponent', () => {
   let component: GroupTableComponent;
   let fixture: ComponentFixture<GroupTableComponent>;
@@ -182,6 +217,8 @@ describe('GroupTableComponent', () => {
         HttpClient,
         HttpHandler,
         { provide: GroupsApiService, useValue: GroupsApiServiceStub },
+        { provide: Router, useClass: RouterStub },
+        { provide: ActivatedRoute, useClass: ActivatedRouteStub },
       ],
     }).compileComponents();
   }));
