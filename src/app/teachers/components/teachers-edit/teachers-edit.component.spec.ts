@@ -60,6 +60,38 @@ class MatSelectStubComponent implements ControlValueAccessor {
   }
 }
 
+@Component({
+  // tslint:disable-next-line:component-selector
+  selector: 'mat-checkbox',
+  template: '',
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => MatCheckboxStubComponent),
+      multi: true,
+    },
+  ],
+})
+class MatCheckboxStubComponent implements ControlValueAccessor {
+  value;
+  onChangeCallback;
+  onTouchedCallback;
+
+  public writeValue(value: any): void {
+    this.value = value;
+  }
+
+  // From ControlValueAccessor interface
+  public registerOnChange(fn: (val?: any) => void): void {
+    this.onChangeCallback = fn;
+  }
+
+  // From ControlValueAccessor interface
+  public registerOnTouched(fn: (val?: any) => void): void {
+    this.onTouchedCallback = fn;
+  }
+}
+
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-option', template: '' })
 class MatOptionStubComponent {
@@ -221,6 +253,7 @@ describe('TeachersEditComponent', () => {
         MatLabelStubComponent,
         MatSelectStubComponent,
         MatOptionStubComponent,
+        MatCheckboxStubComponent,
         RouterLinkStubDirective,
         PlaceholderLabelStubDirective,
         NgxMatSelectSearchStubComponent,

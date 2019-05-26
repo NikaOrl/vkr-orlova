@@ -6,6 +6,7 @@ import {
   MatInputModule,
   MatButtonModule,
   MatSortModule,
+  MatCheckboxModule,
 } from '@angular/material';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
@@ -16,7 +17,11 @@ import { TeachersEditComponent } from './components/teachers-edit/teachers-edit.
 import { TeachersTableComponent } from './components/teachers-table/teachers-table.component';
 
 @NgModule({
-  declarations: [TeachersPageComponent, TeachersEditComponent, TeachersTableComponent],
+  declarations: [
+    TeachersPageComponent,
+    TeachersEditComponent,
+    TeachersTableComponent,
+  ],
   imports: [
     CommonModule,
     MatTableModule,
@@ -25,6 +30,7 @@ import { TeachersTableComponent } from './components/teachers-table/teachers-tab
     MatButtonModule,
     MatSortModule,
     HttpClientModule,
+    MatCheckboxModule,
     FormsModule,
 
     TeachersRoutingModule,

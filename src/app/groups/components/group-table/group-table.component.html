@@ -76,6 +76,16 @@
     <td mat-cell *matCellDef="let element" class="cell">{{ element.email }}</td>
   </ng-container>
 
+  <!-- headStudent Column -->
+  <ng-container matColumnDef="headStudent">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">
+      Role
+    </th>
+    <td mat-cell *matCellDef="let element" class="cell">
+      {{ element.headStudent ? 'Starosta' : 'Student' }}
+    </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns" class="cell"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns" class="cell"></tr>
 </table>

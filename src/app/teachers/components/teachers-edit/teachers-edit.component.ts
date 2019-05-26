@@ -14,7 +14,13 @@ import { TeachersApiService } from '../../services/teachers-api.service';
   styleUrls: ['./teachers-edit.component.scss'],
 })
 export class TeachersEditComponent implements OnInit {
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'delete'];
+  displayedColumns: string[] = [
+    'firstName',
+    'lastName',
+    'email',
+    'delete',
+    'isAdmin',
+  ];
   dataSource = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
 

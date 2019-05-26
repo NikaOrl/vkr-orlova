@@ -19,6 +19,7 @@ export class GroupTableComponent implements OnInit {
     'firstName',
     'lastName',
     'email',
+    'headStudent',
   ];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
