@@ -3,6 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { PathNotFoundComponent } from './core/components/path-not-found/path-not-found.component';
 import { AuthGuard } from './core/guards/auth.guard';
+import { AdminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -17,7 +18,7 @@ const routes: Routes = [
   },
   {
     path: 'teachers',
-    canLoad: [AuthGuard],
+    canLoad: [AuthGuard, AdminGuard],
     loadChildren: './teachers/teachers.module#TeachersModule',
   },
   {

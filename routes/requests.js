@@ -373,15 +373,16 @@ router.post('/login', (req, res, next) => {
     .getUser(email)
     .then(response => {
       authHelpers.comparePass(password, response.password);
-      return response;
+      return { response, isAdmin: response.isAdmin };
     })
-    .then(response => {
-      return localAuth.encodeToken(response);
+    .then(({ response, isAdmin }) => {
+      return { token: localAuth.encodeToken(response), isAdmin };
     })
-    .then(token => {
+    .then(({ token, isAdmin }) => {
       res.status(200).json({
         status: 'success',
         token: token,
+        isAdmin: isAdmin,
       });
     })
     .catch(err => {
