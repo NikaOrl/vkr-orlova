@@ -1,0 +1,138 @@
+<div class="teachers-filter">
+  <mat-form-field>
+    <input
+      matInput
+      (keyup)="applyFilter($event.target.value)"
+      placeholder="Teachers filter"
+    />
+  </mat-form-field>
+</div>
+
+<form (ngSubmit)="save()" ngNativeValidate>
+  <div class="scroll-table">
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+      <!-- firstName Column -->
+      <ng-container matColumnDef="firstName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>First name</th>
+        <td
+          mat-cell
+          *matCellDef="let element; let i = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+        >
+          <input
+            required
+            minlength="3"
+            type="text"
+            [(ngModel)]="element.firstName"
+            name="firstName-{{ i }}"
+            (change)="unsaved()"
+          />
+        </td>
+      </ng-container>
+
+      <!-- lastName Column -->
+      <ng-container matColumnDef="lastName">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Last name</th>
+        <td
+          mat-cell
+          *matCellDef="let element; let i = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+        >
+          <input
+            required
+            minlength="3"
+            type="text"
+            [(ngModel)]="element.lastName"
+            name="lastName-{{ i }}"
+            (change)="unsaved()"
+          />
+        </td>
+      </ng-container>
+
+      <!-- email Column -->
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td
+          mat-cell
+          *matCellDef="let element; let i = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+        >
+          <input
+            required
+            minlength="3"
+            type="email"
+            [(ngModel)]="element.email"
+            name="email-{{ i }}"
+            (change)="unsaved()"
+          />
+        </td>
+      </ng-container>
+
+      <!-- delete Column -->
+      <ng-container matColumnDef="delete">
+        <th mat-header-cell *matHeaderCellDef>Delete</th>
+        <td
+          mat-cell
+          *matCellDef="let element"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+          class="delete-td"
+        >
+          <button
+            *ngIf="!isDeleted(element) && !isAdded(element)"
+            (click)="delete(element)"
+            type="button"
+            class="btn btn-danger"
+          >
+            Delete
+          </button>
+          <div class="message" *ngIf="isDeleted(element) && !isAdded(element)">
+            This teacher will be deleted after save.
+            <a (click)="cancelDelete(element)" class="cancel">Cancel</a>
+          </div>
+          <div class="message" *ngIf="isAdded(element)">
+            This teacher will be added after save.
+            <a (click)="cancelAdd(element)" class="cancel">Cancel</a>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </div>
+
+  <div class="buttons">
+    <button (click)="add()" type="button" class="add-button btn btn-success">
+      Add teacher
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      routerLink="/teachers"
+      class="router-button"
+    >
+      Back
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      class="router-button"
+    >
+      Save
+    </button>
+  </div>
+</form>

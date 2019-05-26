@@ -16,6 +16,11 @@ const routes: Routes = [
     loadChildren: './marks/marks.module#MarksModule',
   },
   {
+    path: 'teachers',
+    canLoad: [AuthGuard],
+    loadChildren: './teachers/teachers.module#TeachersModule',
+  },
+  {
     path: '',
     redirectTo: '/marks',
     pathMatch: 'full',
