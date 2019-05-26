@@ -1,5 +1,4 @@
 import { AuthGuard } from './auth.guard';
-import { AuthenticationService } from 'src/app/login/services/authentication/authentication.service';
 
 class MockRouter {
   navigate(path) {}

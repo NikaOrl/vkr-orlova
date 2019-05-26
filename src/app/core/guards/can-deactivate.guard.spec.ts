@@ -1,7 +1,9 @@
-import { CanDeactivateGuard } from './can-deactivate.guard';
 import { Component } from '@angular/core';
-import { CanComponentDeactivate } from '../interfaces/can-component-deactivate.interface';
+
 import { Observable } from 'rxjs';
+
+import { CanDeactivateGuard } from './can-deactivate.guard';
+import { CanComponentDeactivate } from '../interfaces/can-component-deactivate.interface';
 
 @Component({})
 export class MockComponent implements CanComponentDeactivate {

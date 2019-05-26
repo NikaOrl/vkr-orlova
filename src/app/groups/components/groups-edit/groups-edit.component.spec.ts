@@ -11,8 +11,8 @@ import {
   ControlValueAccessor,
   FormsModule,
 } from '@angular/forms';
-import { HttpClient, HttpHandler } from '@angular/common/http';
 import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
+
 import { BehaviorSubject } from 'rxjs';
 
 import { GroupsEditComponent } from './groups-edit.component';

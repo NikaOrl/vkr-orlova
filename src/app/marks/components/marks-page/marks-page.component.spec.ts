@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
 import { MarksPageComponent } from './marks-page.component';
-import { Component } from '@angular/core';
 
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'router-outlet', template: '' })

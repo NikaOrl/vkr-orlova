@@ -1,10 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { LoginPageComponent } from './login-page.component';
 import { Component, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { BehaviorSubject, of } from 'rxjs';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
+
+import { BehaviorSubject, of } from 'rxjs';
+
+import { LoginPageComponent } from './login-page.component';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
 
 // tslint:disable-next-line:component-selector

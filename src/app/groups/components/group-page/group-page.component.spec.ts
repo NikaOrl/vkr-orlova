@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Component } from '@angular/core';
 
 import { GroupPageComponent } from './group-page.component';
-import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
 
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'router-outlet', template: '' })
@@ -13,7 +13,7 @@ describe('GroupPageComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [GroupPageComponent, RouterOutletStubComponent]
+      declarations: [GroupPageComponent, RouterOutletStubComponent],
     }).compileComponents();
   }));
 

@@ -1,10 +1,10 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-
-import { AuthenticationService } from './authentication.service';
 import {
   HttpClientTestingModule,
   HttpTestingController,
 } from '@angular/common/http/testing';
+
+import { AuthenticationService } from './authentication.service';
 
 describe('AuthenticationService', () => {
   let injector: TestBed;

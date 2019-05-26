@@ -1,6 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MarksTableComponent } from './marks-table.component';
 import {
   Input,
   Directive,
@@ -13,6 +11,8 @@ import {
   ControlValueAccessor,
   FormsModule,
 } from '@angular/forms';
+
+import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
 
 // tslint:disable-next-line:component-selector

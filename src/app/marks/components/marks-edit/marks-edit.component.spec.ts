@@ -1,6 +1,4 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { MarksEditComponent } from './marks-edit.component';
 import {
   Input,
   Directive,
@@ -13,8 +11,11 @@ import {
   ControlValueAccessor,
   FormsModule,
 } from '@angular/forms';
-import { BehaviorSubject } from 'rxjs';
 import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
+
+import { BehaviorSubject } from 'rxjs';
+
+import { MarksEditComponent } from './marks-edit.component';
 import { Marks } from '../../models/marks.model';
 import { Jobs } from '../../models/jobs.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
@@ -224,13 +225,6 @@ export class MarksApiServiceStub {
   }
 
   updateJobs(jobs: Jobs[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 }, { id: 2 }] }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  addMarks(marks: Marks[]): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve({ result: [{ id: 1 }, { id: 2 }] }));
       setTimeout(() => reject(new Error('ignored')));
