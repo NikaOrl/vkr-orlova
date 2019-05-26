@@ -100,6 +100,25 @@
         </td>
       </ng-container>
 
+      <!-- headStudent Column -->
+      <ng-container matColumnDef="headStudent">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Starosta</th>
+        <td
+          mat-cell
+          *matCellDef="let element; let i = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+        >
+          <mat-checkbox
+            [(ngModel)]="element.headStudent"
+            name="headStudent-{{ i }}"
+            (change)="unsaved()"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
       <!-- delete Column -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>

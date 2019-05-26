@@ -20,6 +20,7 @@ export class GroupsEditComponent implements OnInit {
     'lastName',
     'email',
     'delete',
+    'headStudent',
   ];
   dataSource = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;

@@ -77,6 +77,25 @@
         </td>
       </ng-container>
 
+      <!-- isAdmin Column -->
+      <ng-container matColumnDef="isAdmin">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Admin</th>
+        <td
+          mat-cell
+          *matCellDef="let element; let i = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+        >
+          <mat-checkbox
+            [(ngModel)]="element.isAdmin"
+            name="isAdmin-{{ i }}"
+            (change)="unsaved()"
+          ></mat-checkbox>
+        </td>
+      </ng-container>
+
       <!-- delete Column -->
       <ng-container matColumnDef="delete">
         <th mat-header-cell *matHeaderCellDef>Delete</th>

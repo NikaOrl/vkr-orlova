@@ -11,7 +11,7 @@ import { TeachersApiService } from '../../services/teachers-api.service';
 })
 export class TeachersTableComponent implements OnInit {
   ELEMENT_DATA: Teacher[] = [];
-  displayedColumns: string[] = ['firstName', 'lastName', 'email'];
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'isAdmin'];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) sort: MatSort;

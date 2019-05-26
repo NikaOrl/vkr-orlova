@@ -6,6 +6,7 @@ import {
   MatInputModule,
   MatSelectModule,
   MatButtonModule,
+  MatCheckboxModule,
 } from '@angular/material';
 import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
@@ -29,8 +30,10 @@ import { GroupsEditComponent } from './components/groups-edit/groups-edit.compon
     MatInputModule,
     MatButtonModule,
     MatSortModule,
+    MatCheckboxModule,
     HttpClientModule,
     FormsModule,
+
     GroupsRoutingModule,
   ],
   exports: [GroupPageComponent],
