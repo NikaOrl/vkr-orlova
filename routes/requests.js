@@ -22,6 +22,21 @@ router.get('/students/group/:group', function(req, res, next) {
     });
 });
 
+/* GET teachers page. */
+router.get('/teachers', function(req, res, next) {
+  knex
+    .from('teachers')
+    .select(['firstName', 'lastName', 'id', 'email', 'isAdmin', 'deleted'])
+    .andWhere('deleted', false) // in case of deleted flag
+    .then(result => {
+      res.send({ result });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
 /* GET marks table. */
 router.get('/marks/discipline/:disciplineId', function(req, res, next) {
   knex
@@ -120,6 +135,32 @@ router.put('/students/update', (req, res, next) => {
         .update(student)
         .then(result => {
           console.log(`student was updated`);
+        })
+        .catch(err => {
+          console.log(err);
+          throw err;
+        });
+    }),
+  )
+    .then(() => {
+      res.status(200).json({
+        status: 'success',
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      throw err;
+    });
+});
+
+router.put('/teachers/update', (req, res, next) => {
+  Promise.all(
+    req.body.map(teacher => {
+      return knex('teachers')
+        .where('id', teacher.id)
+        .update(teacher)
+        .then(result => {
+          console.log(`teacher was updated`);
         })
         .catch(err => {
           console.log(err);
@@ -262,6 +303,27 @@ router.delete('/students/delete', (req, res, next) => {
   );
 });
 
+router.delete('/teachers/delete', (req, res, next) => {
+  let ids = req.query.id;
+  if (!Array.isArray(ids)) {
+    ids = [ids];
+  }
+  return (
+    knex('teachers')
+      .whereIn('id', ids)
+      // .del() // in case of real deleting
+      .update('deleted', true) // in case of deleted flag
+      .then(result => {
+        console.log(`teachers were deleted`);
+        res.send({ result });
+      })
+      .catch(err => {
+        console.log(err);
+        throw err;
+      })
+  );
+});
+
 router.delete('/marks/delete', (req, res, next) => {
   let jobIds = req.query.id;
   if (!Array.isArray(jobIds)) {
@@ -328,6 +390,7 @@ router.post('/login', (req, res, next) => {
 });
 
 router.post('/register', (req, res, next) => {
+  req.password = 'admin123';
   return authHelpers
     .createUser(req)
     .then(user => {

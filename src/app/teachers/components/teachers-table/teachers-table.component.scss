@@ -1,0 +1,32 @@
+$black: #000;
+
+table {
+  width: 100%;
+
+  & .cell {
+    padding: 0 8px;
+  }
+}
+
+th {
+  &.mat-sort-header-sorted {
+    color: $black;
+  }
+}
+
+.filters-container {
+  display: flex;
+
+  & .mat-form-field {
+    font-size: 14px;
+  }
+
+  & .teachers-filter {
+    margin-right: auto;
+  }
+
+  & .edit-button {
+    margin-right: 12px;
+    position: relative;
+  }
+}
