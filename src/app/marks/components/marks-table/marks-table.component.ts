@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatTableDataSource, MatSort, MatDialog } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 
 import { MarksApiService } from 'src/app/marks/services/marks-api.service';
 import { StudentMarks } from '../../models/student-marks.model';
+import { MarksDialogComponent } from '../marks-dialog/marks-dialog.component';
+import { DialogData } from '../../models/dialog-data.model';
 
 @Component({
   selector: 'app-marks-table',
@@ -18,6 +20,7 @@ export class MarksTableComponent implements OnInit {
   columns: any[];
   displayedColumns: string[];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  marksAreas: DialogData = { three: 60, four: 75, five: 90 };
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -25,6 +28,7 @@ export class MarksTableComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
+    public dialog: MatDialog,
   ) {}
 
   ngOnInit() {
@@ -100,6 +104,8 @@ export class MarksTableComponent implements OnInit {
         this.displayedColumns = [
           'studentName',
           ...this.columns.map((x, i) => x.columnDef(i)),
+          'sumPoints',
+          'mark',
         ];
         this.dataSource.sort = this.sort;
       },
@@ -107,5 +113,53 @@ export class MarksTableComponent implements OnInit {
         console.log(err);
       },
     );
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(MarksDialogComponent, {
+      width: '300px',
+      data: this.marksAreas,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.marksAreas = result;
+    });
+  }
+
+  getSumPoints(element): number {
+    let sumPoints = 0;
+    let index = 1;
+    let mark = element[1];
+    while (mark !== undefined) {
+      if (!isNaN(+mark.markValue)) {
+        sumPoints += +mark.markValue;
+      }
+      if (mark.markValue === '+') {
+        sumPoints += 10;
+      }
+      index++;
+      mark = element[index];
+    }
+    return sumPoints;
+  }
+
+  getResultMark(element): string {
+    const sumPoints = this.getSumPoints(element);
+    if (sumPoints < this.marksAreas.three) {
+      return 'неуд.';
+    } else if (
+      sumPoints > this.marksAreas.three &&
+      sumPoints < this.marksAreas.four
+    ) {
+      return 'удовл.';
+    } else if (
+      sumPoints > this.marksAreas.four &&
+      sumPoints < this.marksAreas.five
+    ) {
+      return 'хор.';
+    } else if (sumPoints > this.marksAreas.five) {
+      return 'отл.';
+    }
   }
 }

@@ -1,0 +1,25 @@
+<h1 mat-dialog-title>Выберите количество баллов для каждой оценки</h1>
+<div mat-dialog-content>
+  <span>3:</span>
+  <mat-form-field>
+    <input matInput type="number" [(ngModel)]="data.three" />
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <span>4:</span>
+  <mat-form-field>
+    <input matInput type="number" [(ngModel)]="data.four" />
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <span>5:</span>
+  <mat-form-field>
+    <input matInput type="number" [(ngModel)]="data.five" />
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Назад</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>
+    Ok
+  </button>
+</div>
