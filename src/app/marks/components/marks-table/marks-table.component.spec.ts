@@ -17,6 +17,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
+import { MatDialogModule } from '@angular/material';
 
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-form-field', template: '' })
@@ -190,10 +191,16 @@ export class MarksApiServiceStub {
     return new Promise((resolve, reject) => {
       setTimeout(() =>
         resolve({
-          marks: [{ id: 1, markValue: '1' }, { id: 2, markValue: '2' }],
-          jobs: [{ id: 1, jobValue: 1 }, { id: 2, jobValue: 2 }],
+          marks: [
+            { id: 1, markValue: '1' },
+            { id: 2, markValue: '2' },
+          ],
+          jobs: [
+            { id: 1, jobValue: 1 },
+            { id: 2, jobValue: 2 },
+          ],
           students: [{ id: 1 }, { id: 2 }],
-        }),
+        })
       );
       setTimeout(() => reject(new Error('ignored')));
     });
@@ -207,7 +214,7 @@ export class MarksApiServiceStub {
             { id: 1, disciplineValue: 'a' },
             { id: 2, disciplineValue: 'b' },
           ],
-        }),
+        })
       );
       setTimeout(() => reject(new Error('ignored')));
     });
@@ -235,7 +242,11 @@ describe('MarksTableComponent', () => {
         MatRowDefColumnsStubDirective,
         CdkColumnDefStubDirective,
       ],
-      imports: [FormsModule],
+      imports: [
+        FormsModule,
+        // TODO: fix this import
+        MatDialogModule,
+      ],
       providers: [
         { provide: MarksApiService, useClass: MarksApiServiceStub },
         { provide: Router, useClass: RouterStub },

@@ -16,6 +16,9 @@
       Edit marks
     </button>
   </div>
+  <div class="edit-button">
+    <button mat-raised-button (click)="openDialog()">Выбрать баллы</button>
+  </div>
   <mat-form-field class="disciplines-filter">
     <mat-label>Select discipline</mat-label>
     <mat-select
@@ -67,6 +70,35 @@
       </th>
       <td class="mark-cell" md-cell *cdkCellDef="let row">
         {{ column.cell(row) }}
+      </td>
+    </ng-container>
+
+    <!-- SumPoints Column -->
+    <ng-container matColumnDef="sumPoints" sticky>
+      <th
+        class="student-cell"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+      >
+        <b>Суммарный балл</b>
+      </th>
+      <td class="student-cell" mat-cell *matCellDef="let element">
+        {{ getSumPoints(element) }}
+      </td>
+    </ng-container>
+    <!-- mark Column -->
+    <ng-container matColumnDef="mark" sticky>
+      <th
+        class="student-cell"
+        mat-header-cell
+        *matHeaderCellDef
+        mat-sort-header
+      >
+        <b>Оценка</b>
+      </th>
+      <td class="student-cell" mat-cell *matCellDef="let element">
+        {{ getResultMark(element) }}
       </td>
     </ng-container>
 
