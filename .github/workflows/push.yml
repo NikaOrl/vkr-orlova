@@ -6,26 +6,23 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: npm install
+      - name: Setup node
         uses: actions/setup-node@v1
         with:
           node-version: "12"
       - run: npm install
       - run: npm test
-      # - name: npm lint
-      #   uses: actions/npm@v2
-      #   with:
-      #     args: run lint
-      # - name: docker build
-      #   uses: actions/docker/cli@v2
-      #   with:
-      #     args: build --target build -t nikaorl/vkr-orlova .
-      # - name: docker login
-      #   uses: actions/docker/login@v2
-      #   env:
-      #     DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-      #     DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      # - name: docker push
-      #   uses: actions/docker/cli@v2
-      #   with:
-      #     args: push nikaorl/vkr-orlova
+      - run: npm run lint
+      - name: Login to docker hub
+        uses: actions-hub/docker/login@master
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build :latest
+        run: docker build -t nikaorl/vkr-orlova:latest .
+
+      - name: Push to docker hub :latest
+        uses: actions-hub/docker@master
+        with:
+          args: push nikaorl/vkr-orlova:latest
