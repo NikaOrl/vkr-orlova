@@ -7,13 +7,11 @@ jobs:
     steps:
       - uses: actions/checkout@master
       - name: npm install
-        uses: actions/npm@master
+      - uses: actions/setup-node@v1
         with:
-          args: install
-      - name: npm test
-        uses: actions/npm@master
-        with:
-          args: run test
+          node-version: "12"
+      - run: npm install
+      - run: npm test
       # - name: npm lint
       #   uses: actions/npm@v2
       #   with:
