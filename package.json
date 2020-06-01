@@ -10,7 +10,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "create-tables": "cd knex-helper/tables && node create_disciplines_table.js && node create_groups_table.js && node create_jobs_table.js && node create_marks_table.js && node create_students_disciplines_table.js && node create_students_table.js && node create_teachers_table.js",
-    "insert-tables": "cd knex-helper/tables && node insert_disciplines.js && node insert_groups.js && node insert_jobs.js && node insert_marks.js && node insert_students_disciplines.js && node insert_students.js && node insert_teachers.js"
+    "insert-tables": "cd knex-helper/tables && node insert_disciplines.js && node insert_groups.js && node insert_jobs.js && node insert_marks.js && node insert_students_disciplines.js && node insert_students.js && node insert_teachers.js",
+    "build-docker": "docker build --target build -t nikaorl/vkr-orlova .",
+    "run-docker": " docker run --name nikaorl/vkr-orlova-container -d -p 3000:3000 -p 4200:4200 vkr-orlova"
   },
   "dependencies": {
     "@angular/animations": "^7.2.14",
@@ -38,7 +40,8 @@
     "rxjs": "~6.3.3",
     "serve-favicon": "^2.5.0",
     "tslib": "^1.9.0",
-    "zone.js": "~0.8.26"
+    "zone.js": "~0.8.26",
+    "node-sass": "^4.14.1"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.12.0",

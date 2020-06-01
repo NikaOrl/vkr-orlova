@@ -1,29 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { MatTableDataSource, MatSort } from "@angular/material";
+import { ActivatedRoute, Router } from "@angular/router";
 
-import { Observable } from 'rxjs';
+import { Observable } from "rxjs";
 
-import { MarksApiService } from '../../services/marks-api.service';
-import { StudentMarks } from '../../models/student-marks.model';
-import { Marks } from '../../models/marks.model';
-import { Jobs } from '../../models/jobs.model';
-import { Student } from 'src/app/groups/models/student.model';
-import { DialogService } from 'src/app/core/services/dialog.service';
+import { MarksApiService } from "../../services/marks-api.service";
+import { StudentMarks } from "../../models/student-marks.model";
+import { Marks } from "../../models/marks.model";
+import { Jobs } from "../../models/jobs.model";
+import { Student } from "src/app/groups/models/student.model";
+import { DialogService } from "src/app/core/services/dialog.service";
 
 @Component({
-  selector: 'app-marks-edit',
-  templateUrl: './marks-edit.component.html',
-  styleUrls: ['./marks-edit.component.scss'],
+  selector: "app-marks-edit",
+  templateUrl: "./marks-edit.component.html",
+  styleUrls: ["./marks-edit.component.scss"],
 })
 export class MarksEditComponent implements OnInit {
   columns: any[];
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
+  public selectedDisciplineId: number;
 
   private ELEMENT_DATA: StudentMarks[] = [];
-  private selectedDisciplineId: number;
 
   private marks: Marks[];
   private jobs: Jobs[];
@@ -40,12 +40,12 @@ export class MarksEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
-    private dialogService: DialogService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
     this.selectedDisciplineId = +this.route.snapshot.paramMap.get(
-      'disciplineId',
+      "disciplineId"
     );
     this.getMarks(this.selectedDisciplineId);
   }
@@ -116,7 +116,7 @@ export class MarksEditComponent implements OnInit {
       this.saved = true;
       this.router.navigate([`/marks/${this.selectedDisciplineId}`]);
     } else {
-      alert('no changes to save!');
+      alert("no changes to save!");
     }
   }
 
@@ -134,12 +134,12 @@ export class MarksEditComponent implements OnInit {
       jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
     });
-    this.students.forEach(student => {
+    this.students.forEach((student) => {
       this.marks.push({
         id: null,
         studentId: student.id,
         jobId: -this.addedJobsNumber,
-        markValue: '',
+        markValue: "",
         deleted: false,
       });
     });
@@ -155,7 +155,7 @@ export class MarksEditComponent implements OnInit {
   }
 
   cancelAdd(e) {
-    const index = this.jobs.findIndex(v => v.id === e);
+    const index = this.jobs.findIndex((v) => v.id === e);
     this.jobs.splice(index, 1);
     const markIndexes = [];
     this.marks.forEach((value, i) => {
@@ -193,78 +193,78 @@ export class MarksEditComponent implements OnInit {
     if (this.saved) {
       return true;
     }
-    return this.dialogService.confirm('Discard changes?');
+    return this.dialogService.confirm("Discard changes?");
   }
 
   private getMarks(disciplineId: number): void {
     this.api.getMarks(disciplineId).then(
-      res => {
+      (res) => {
         this.marks = [...res.marks];
         this.jobs = [...res.jobs];
         this.students = res.students;
 
-        this.oldJobsJSON = this.jobs.map(value => JSON.stringify(value));
-        this.oldMarksJSON = this.marks.map(value => JSON.stringify(value));
+        this.oldJobsJSON = this.jobs.map((value) => JSON.stringify(value));
+        this.oldMarksJSON = this.marks.map((value) => JSON.stringify(value));
         this.updateTableData(res);
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private updateMarks(newMarks: Marks[]) {
     this.api.updateMarks(newMarks).then(
-      res => {
-        console.log('marks were updated');
+      (res) => {
+        console.log("marks were updated");
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private updateJobs(newJobs: Jobs[]) {
     this.api.updateJobs(newJobs).then(
-      res => {
-        console.log('jobs were updated');
+      (res) => {
+        console.log("jobs were updated");
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private addJobsAndMarks(addedJobs: Jobs[], addedMarks: Marks[]) {
     this.api.addJobsAndMarks(addedJobs, addedMarks).then(
-      res => {
-        console.log('jobs and marks were added');
+      (res) => {
+        console.log("jobs and marks were added");
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private deleteJobsAndMarks() {
     this.api.deleteJobs(this.deletedJobsIds).then(
-      res => {
-        console.log('jobs and their marks were deleted');
+      (res) => {
+        console.log("jobs and their marks were deleted");
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private parseGetMarksResult(result): any[] {
-    const marksAndStudents = result.students.map(student => {
+    const marksAndStudents = result.students.map((student) => {
       const studentMarks = result.marks.filter(
-        mark => +mark.studentId === +student.id,
+        (mark) => +mark.studentId === +student.id
       );
       const markObject = {};
-      studentMarks.forEach(mark => {
-        const jobV = result.jobs.find(job => +mark.jobId === +job.id);
+      studentMarks.forEach((mark) => {
+        const jobV = result.jobs.find((job) => +mark.jobId === +job.id);
         if (jobV) {
           markObject[jobV.id] = mark;
         }
@@ -281,40 +281,40 @@ export class MarksEditComponent implements OnInit {
     this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
-    this.columns = this.jobs.map(row => {
+    this.columns = this.jobs.map((row) => {
       return {
-        columnDef: index => `${row.jobValue}-${index}`,
+        columnDef: (index) => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
         cell: (cellRow, studentIndex) => {
           const jobId = row.id;
-          const jsonMarks = this.marks.map(mark => JSON.stringify(mark));
+          const jsonMarks = this.marks.map((mark) => JSON.stringify(mark));
           const newMark = {
             id: null,
             studentId: this.students[studentIndex].id,
             jobId: jobId,
-            markValue: '',
+            markValue: "",
             deleted: false,
           };
           if (cellRow[`${row.id}`] === undefined) {
             if (jsonMarks.indexOf(JSON.stringify(newMark)) === -1) {
               this.marks.push(newMark);
-              this.oldMarksJSON.push('undefined');
+              this.oldMarksJSON.push("undefined");
               this.updateTableData({
                 students: this.students,
                 marks: this.marks,
                 jobs: this.jobs,
               });
             }
-            return '';
+            return "";
           }
           return `${cellRow[`${row.id}`].markValue}`;
         },
-        mark: cellRow => cellRow[`${row.id}`],
+        mark: (cellRow) => cellRow[`${row.id}`],
         jobId: row.id,
       };
     });
     this.displayedColumns = [
-      'studentName',
+      "studentName",
       ...this.columns.map((x, i) => x.columnDef(i)),
     ];
   }
