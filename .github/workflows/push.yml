@@ -11,7 +11,7 @@ jobs:
         with:
           node-version: "12"
       - run: npm install
-      - run: npm test
+      - run: npm run test-once
       - run: npm run lint
       - name: Login to docker hub
         uses: actions-hub/docker/login@master
