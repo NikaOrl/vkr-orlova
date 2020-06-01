@@ -1,4 +1,3 @@
-name: Publish Docker
 on: [push]
 name: npm build, lint, test and publish
 jobs:
