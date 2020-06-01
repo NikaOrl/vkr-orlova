@@ -24,18 +24,18 @@ export class GroupsEditComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource([]);
   @ViewChild(MatSort) sort: MatSort;
+  public selectedGroupId: number;
 
   private ELEMENT_DATA: Student[] = [];
   private deletedStudentsIds: Set<number> = new Set();
   private oldStudentsJSON: string[];
-  private selectedGroupId: number;
   private saved = true;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: GroupsApiService,
-    private dialogService: DialogService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -106,7 +106,7 @@ export class GroupsEditComponent implements OnInit {
 
   cancelAdd(e) {
     const index = this.ELEMENT_DATA.findIndex(
-      v => JSON.stringify(v) === JSON.stringify(e),
+      (v) => JSON.stringify(v) === JSON.stringify(e)
     );
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -142,50 +142,50 @@ export class GroupsEditComponent implements OnInit {
 
   private getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
-      res => {
+      (res) => {
         this.ELEMENT_DATA = res.result;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
-        this.oldStudentsJSON = this.ELEMENT_DATA.map(value =>
-          JSON.stringify(value),
+        this.oldStudentsJSON = this.ELEMENT_DATA.map((value) =>
+          JSON.stringify(value)
         );
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private updateStudents(newStudents: Student[]) {
     this.api.updateStudents(newStudents).then(
-      res => {
+      (res) => {
         console.log('students were updated');
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private addStudents(addedStudents) {
     this.api.addStudents(addedStudents).then(
-      res => {
+      (res) => {
         console.log('students were added');
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 
   private deleteStudents() {
     this.api.deleteStudents(this.deletedStudentsIds).then(
-      res => {
+      (res) => {
         console.log('students were deleted');
       },
-      err => {
+      (err) => {
         console.log(err);
-      },
+      }
     );
   }
 }

@@ -9,6 +9,7 @@ import {
 
 import { MarksDialogComponent } from './marks-dialog.component';
 
+// tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-form-field', template: '' })
 class MatFormFieldStubComponent {}
 

@@ -14,11 +14,12 @@ export class LoginPageComponent implements OnInit {
   email: string;
   password: string;
   returnUrl: string;
+  public showSpinner = true;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authenticationService: AuthenticationService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -33,13 +34,13 @@ export class LoginPageComponent implements OnInit {
       .login(this.email, this.password)
       .pipe(first())
       .subscribe(
-        data => {
+        (data) => {
           this.router.navigate([this.returnUrl]);
         },
-        error => {
+        (error) => {
           // should show error message
           alert(error.error);
-        },
+        }
       );
   }
 }
