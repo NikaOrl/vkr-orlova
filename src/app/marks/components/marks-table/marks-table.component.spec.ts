@@ -17,7 +17,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
-import { MatDialogModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
 
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-form-field', template: '' })
