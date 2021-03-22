@@ -22,7 +22,7 @@ export class MarksTableComponent implements OnInit {
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   marksAreas: DialogData = { three: 60, four: 75, five: 90 };
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private router: Router,

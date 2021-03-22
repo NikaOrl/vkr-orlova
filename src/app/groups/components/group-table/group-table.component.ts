@@ -24,7 +24,7 @@ export class GroupTableComponent implements OnInit {
   ];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   constructor(
     private router: Router,

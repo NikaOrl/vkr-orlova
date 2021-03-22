@@ -23,7 +23,7 @@ export class GroupsEditComponent implements OnInit {
     'headStudent',
   ];
   dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   public selectedGroupId: number;
 
   private ELEMENT_DATA: Student[] = [];

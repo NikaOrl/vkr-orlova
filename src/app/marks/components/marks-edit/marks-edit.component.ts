@@ -20,7 +20,7 @@ export class MarksEditComponent implements OnInit {
   columns: any[];
   displayedColumns: string[];
   dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
   public selectedDisciplineId: number;
 
   private ELEMENT_DATA: StudentMarks[] = [];

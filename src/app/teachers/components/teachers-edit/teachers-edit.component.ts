@@ -22,7 +22,7 @@ export class TeachersEditComponent implements OnInit {
     'isAdmin',
   ];
   dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   private ELEMENT_DATA: Teacher[] = [];
   private deletedTeachersIds: Set<number> = new Set();
