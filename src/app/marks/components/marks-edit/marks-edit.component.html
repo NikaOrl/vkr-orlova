@@ -1,10 +1,6 @@
 <div class="students-filter">
   <mat-form-field>
-    <input
-      matInput
-      (keyup)="applyFilter($event.target.value)"
-      placeholder="Students filter"
-    />
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Students filter" />
   </mat-form-field>
 </div>
 <form (ngSubmit)="save()" ngNativeValidate>
@@ -12,14 +8,7 @@
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
       <!-- studentName Column -->
       <ng-container matColumnDef="studentName" sticky>
-        <th
-          mat-header-cell
-          *matHeaderCellDef
-          class="students-cell"
-          mat-sort-header
-        >
-          Students Jobs
-        </th>
+        <th mat-header-cell *matHeaderCellDef class="students-cell" mat-sort-header>Students Jobs</th>
         <td mat-cell *matCellDef="let element" class="students-cell">
           {{ element.studentName }}
         </td>
@@ -27,10 +16,7 @@
       </ng-container>
 
       <!-- Generic column definition -->
-      <ng-container
-        *ngFor="let column of columns; let i = index"
-        [cdkColumnDef]="column.columnDef(i)"
-      >
+      <ng-container *ngFor="let column of columns; let i = index" [cdkColumnDef]="column.columnDef(i)">
         <th
           md-header-cell
           *cdkHeaderCellDef
@@ -86,17 +72,11 @@
           >
             Delete
           </button>
-          <div
-            class="message input-cell--content"
-            *ngIf="isDeleted(column.jobId) && !isAdded(column.jobId)"
-          >
+          <div class="message input-cell--content" *ngIf="isDeleted(column.jobId) && !isAdded(column.jobId)">
             This job will be deleted after save.
             <a (click)="cancelDelete(column.jobId)" class="cancel">Cancel</a>
           </div>
-          <div
-            class="message input-cell--content"
-            *ngIf="isAdded(column.jobId)"
-          >
+          <div class="message input-cell--content" *ngIf="isAdded(column.jobId)">
             This job will be added after save.
             <a (click)="cancelAdd(column.jobId)" class="cancel">Cancel</a>
           </div>
@@ -110,9 +90,7 @@
   </div>
 
   <div class="buttons">
-    <button (click)="add()" type="button" class="add-button btn btn-success">
-      Add job
-    </button>
+    <button (click)="add()" type="button" class="add-button btn btn-success">Add job</button>
     <button
       mat-raised-button
       color="primary"
@@ -122,13 +100,6 @@
     >
       Back
     </button>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      class="router-button"
-    >
-      Save
-    </button>
+    <button mat-raised-button color="primary" type="submit" class="router-button">Save</button>
   </div>
 </form>

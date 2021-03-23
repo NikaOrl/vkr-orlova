@@ -1,8 +1,5 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { TeachersApiService } from './teachers-api.service';
 import { Teacher } from '../models/teacher.model';

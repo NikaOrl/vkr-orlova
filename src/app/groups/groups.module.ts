@@ -10,19 +10,17 @@ import { MatSortModule } from '@angular/material/sort';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
-
 import { GroupPageComponent } from './components/group-page/group-page.component';
 import { GroupTableComponent } from './components/group-table/group-table.component';
 import { GroupsRoutingModule } from './groups-routing.module';
 import { GroupsEditComponent } from './components/groups-edit/groups-edit.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   declarations: [GroupPageComponent, GroupTableComponent, GroupsEditComponent],
   imports: [
     CommonModule,
     MatSelectModule,
-    NgxMatSelectSearchModule,
     MatTableModule,
     MatFormFieldModule,
     MatInputModule,
@@ -31,7 +29,7 @@ import { GroupsEditComponent } from './components/groups-edit/groups-edit.compon
     MatCheckboxModule,
     HttpClientModule,
     FormsModule,
-
+    SharedModule,
     GroupsRoutingModule,
   ],
   exports: [GroupPageComponent],

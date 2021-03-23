@@ -1,10 +1,6 @@
 <div class="students-filter">
   <mat-form-field>
-    <input
-      matInput
-      (keyup)="applyFilter($event.target.value)"
-      placeholder="Students filter"
-    />
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Students filter" />
   </mat-form-field>
 </div>
 
@@ -156,9 +152,7 @@
   </div>
 
   <div class="buttons">
-    <button (click)="add()" type="button" class="add-button btn btn-success">
-      Add student
-    </button>
+    <button (click)="add()" type="button" class="add-button btn btn-success">Add student</button>
     <button
       mat-raised-button
       color="primary"
@@ -168,13 +162,6 @@
     >
       Back
     </button>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      class="router-button"
-    >
-      Save
-    </button>
+    <button mat-raised-button color="primary" type="submit" class="router-button">Save</button>
   </div>
 </form>

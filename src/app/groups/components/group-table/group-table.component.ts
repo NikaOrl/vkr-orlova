@@ -16,38 +16,26 @@ export class GroupTableComponent implements OnInit {
   selectedGroup: any;
   groups: any[];
   filteredGroups: any[];
-  displayedColumns: string[] = [
-    'numberInList',
-    'firstName',
-    'lastName',
-    'email',
-    'headStudent',
-  ];
+  displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'headStudent'];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private api: GroupsApiService,
-  ) {}
+  constructor(private router: Router, private route: ActivatedRoute, private api: GroupsApiService) {}
 
   ngOnInit() {
     this.api.getGroups().then(
       res => {
         this.groups = res.result;
         const selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
-        this.selectedGroup = selectedGroupId
-          ? this.groups.find(group => group.id === selectedGroupId)
-          : this.groups[0];
+        this.selectedGroup = selectedGroupId ? this.groups.find(group => group.id === selectedGroupId) : this.groups[0];
         this.filteredGroups = this.groups;
 
         this.getStudents(this.selectedGroup.id);
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 
@@ -60,9 +48,7 @@ export class GroupTableComponent implements OnInit {
       return;
     }
     const search = e ? e.toLowerCase() : '';
-    this.filteredGroups = this.groups.filter(
-      group => `${group.groupNumber}`.indexOf(search) !== -1,
-    );
+    this.filteredGroups = this.groups.filter(group => `${group.groupNumber}`.indexOf(search) !== -1);
   }
 
   onSelectedGroupChange(): void {
@@ -79,7 +65,7 @@ export class GroupTableComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 }

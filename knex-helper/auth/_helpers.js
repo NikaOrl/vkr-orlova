@@ -15,9 +15,7 @@ function createUser(req) {
 }
 
 function getUser(email) {
-  return knex('teachers')
-    .where({ email })
-    .first();
+  return knex('teachers').where({ email }).first();
 }
 
 function comparePass(userPassword, databasePassword) {

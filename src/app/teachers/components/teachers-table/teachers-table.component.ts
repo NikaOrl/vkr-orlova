@@ -15,7 +15,7 @@ export class TeachersTableComponent implements OnInit {
   displayedColumns: string[] = ['firstName', 'lastName', 'email', 'isAdmin'];
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(private api: TeachersApiService) {}
 
@@ -36,7 +36,7 @@ export class TeachersTableComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 }

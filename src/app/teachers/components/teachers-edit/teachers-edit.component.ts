@@ -15,15 +15,9 @@ import { TeachersApiService } from '../../services/teachers-api.service';
   styleUrls: ['./teachers-edit.component.scss'],
 })
 export class TeachersEditComponent implements OnInit {
-  displayedColumns: string[] = [
-    'firstName',
-    'lastName',
-    'email',
-    'delete',
-    'isAdmin',
-  ];
+  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'delete', 'isAdmin'];
   dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
 
   private ELEMENT_DATA: Teacher[] = [];
   private deletedTeachersIds: Set<number> = new Set();
@@ -34,7 +28,7 @@ export class TeachersEditComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private api: TeachersApiService,
-    private dialogService: DialogService,
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -56,11 +50,7 @@ export class TeachersEditComponent implements OnInit {
         addedTeachers.push(value);
       }
     });
-    if (
-      newTeachers.length > 0 ||
-      addedTeachers.length > 0 ||
-      this.deletedTeachersIds.size > 0
-    ) {
+    if (newTeachers.length > 0 || addedTeachers.length > 0 || this.deletedTeachersIds.size > 0) {
       if (newTeachers.length > 0) {
         this.updateTeachers(newTeachers);
       }
@@ -102,9 +92,7 @@ export class TeachersEditComponent implements OnInit {
   }
 
   cancelAdd(e) {
-    const index = this.ELEMENT_DATA.findIndex(
-      v => JSON.stringify(v) === JSON.stringify(e),
-    );
+    const index = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
@@ -143,13 +131,11 @@ export class TeachersEditComponent implements OnInit {
         this.ELEMENT_DATA = res.result;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
-        this.oldTeachersJSON = this.ELEMENT_DATA.map(value =>
-          JSON.stringify(value),
-        );
+        this.oldTeachersJSON = this.ELEMENT_DATA.map(value => JSON.stringify(value));
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 
@@ -160,7 +146,7 @@ export class TeachersEditComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 
@@ -171,7 +157,7 @@ export class TeachersEditComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 
@@ -182,7 +168,7 @@ export class TeachersEditComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 }

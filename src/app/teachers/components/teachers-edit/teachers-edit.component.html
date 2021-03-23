@@ -1,10 +1,6 @@
 <div class="teachers-filter">
   <mat-form-field>
-    <input
-      matInput
-      (keyup)="applyFilter($event.target.value)"
-      placeholder="Teachers filter"
-    />
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Teachers filter" />
   </mat-form-field>
 </div>
 
@@ -88,11 +84,7 @@
             'alert-success': isAdded(element)
           }"
         >
-          <mat-checkbox
-            [(ngModel)]="element.isAdmin"
-            name="isAdmin-{{ i }}"
-            (change)="unsaved()"
-          ></mat-checkbox>
+          <mat-checkbox [(ngModel)]="element.isAdmin" name="isAdmin-{{ i }}" (change)="unsaved()"></mat-checkbox>
         </td>
       </ng-container>
 
@@ -133,25 +125,8 @@
   </div>
 
   <div class="buttons">
-    <button (click)="add()" type="button" class="add-button btn btn-success">
-      Add teacher
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      type="button"
-      routerLink="/teachers"
-      class="router-button"
-    >
-      Back
-    </button>
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      class="router-button"
-    >
-      Save
-    </button>
+    <button (click)="add()" type="button" class="add-button btn btn-success">Add teacher</button>
+    <button mat-raised-button color="primary" type="button" routerLink="/teachers" class="router-button">Back</button>
+    <button mat-raised-button color="primary" type="submit" class="router-button">Save</button>
   </div>
 </form>

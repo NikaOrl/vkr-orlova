@@ -24,21 +24,19 @@ export class MarksTableComponent implements OnInit {
   dataSource = new MatTableDataSource(this.ELEMENT_DATA);
   marksAreas: DialogData = { three: 60, four: 75, five: 90 };
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
-    public dialog: MatDialog,
+    public dialog: MatDialog
   ) {}
 
   ngOnInit() {
     this.api.getDisciplines().then(res => {
       this.disciplines = res.result;
-      const selectedDisciplineId = +this.route.snapshot.paramMap.get(
-        'disciplineId',
-      );
+      const selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
       this.selectedDiscipline = selectedDisciplineId
         ? this.disciplines.find(d => d.id === selectedDisciplineId)
         : this.disciplines[0];
@@ -56,9 +54,7 @@ export class MarksTableComponent implements OnInit {
       return;
     }
     const search = e ? e.toLowerCase() : '';
-    this.filteredDisciplines = this.disciplines.filter(
-      discipline => discipline.disciplineValue.indexOf(search) !== -1,
-    );
+    this.filteredDisciplines = this.disciplines.filter(discipline => discipline.disciplineValue.indexOf(search) !== -1);
   }
 
   onSelectedDisciplineChange(): void {
@@ -68,9 +64,7 @@ export class MarksTableComponent implements OnInit {
 
   parseGetMarksResult(result): any[] {
     const marksAndStudents = result.students.map(student => {
-      const studentMarks = result.marks.filter(
-        mark => +mark.studentId === +student.id,
-      );
+      const studentMarks = result.marks.filter(mark => +mark.studentId === +student.id);
       const markObject = {};
       studentMarks.forEach(mark => {
         const jobV = result.jobs.find(job => +mark.jobId === +job.id);
@@ -103,17 +97,12 @@ export class MarksTableComponent implements OnInit {
             },
           };
         });
-        this.displayedColumns = [
-          'studentName',
-          ...this.columns.map((x, i) => x.columnDef(i)),
-          'sumPoints',
-          'mark',
-        ];
+        this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i)), 'sumPoints', 'mark'];
         this.dataSource.sort = this.sort;
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 
@@ -150,15 +139,9 @@ export class MarksTableComponent implements OnInit {
     const sumPoints = this.getSumPoints(element);
     if (sumPoints < this.marksAreas.three) {
       return 'неуд.';
-    } else if (
-      sumPoints > this.marksAreas.three &&
-      sumPoints < this.marksAreas.four
-    ) {
+    } else if (sumPoints > this.marksAreas.three && sumPoints < this.marksAreas.four) {
       return 'удовл.';
-    } else if (
-      sumPoints > this.marksAreas.four &&
-      sumPoints < this.marksAreas.five
-    ) {
+    } else if (sumPoints > this.marksAreas.four && sumPoints < this.marksAreas.five) {
       return 'хор.';
     } else if (sumPoints > this.marksAreas.five) {
       return 'отл.';

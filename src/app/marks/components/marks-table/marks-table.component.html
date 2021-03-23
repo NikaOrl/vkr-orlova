@@ -1,10 +1,6 @@
 <div class="filters-container">
   <mat-form-field class="students-filter">
-    <input
-      matInput
-      (keyup)="applyFilter($event.target.value)"
-      placeholder="Students filter"
-    />
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Students filter" />
   </mat-form-field>
   <div class="edit-button">
     <button
@@ -21,22 +17,16 @@
   </div>
   <mat-form-field class="disciplines-filter">
     <mat-label>Select discipline</mat-label>
-    <mat-select
-      [(ngModel)]="selectedDiscipline"
-      (selectionChange)="onSelectedDisciplineChange()"
-    >
+    <mat-select [(ngModel)]="selectedDiscipline" (selectionChange)="onSelectedDisciplineChange()">
       <mat-option>
-        <ngx-mat-select-search
+        <!-- <ngx-mat-select-search
           [placeholderLabel]="'Search'"
           [noEntriesFoundLabel]="'The search has no results'"
           ngModel
           (ngModelChange)="filterDisciplines($event)"
-        ></ngx-mat-select-search>
+        ></ngx-mat-select-search> -->
       </mat-option>
-      <mat-option
-        *ngFor="let discipline of filteredDisciplines"
-        [value]="discipline"
-      >
+      <mat-option *ngFor="let discipline of filteredDisciplines" [value]="discipline">
         {{ discipline.disciplineValue }}
       </mat-option>
     </mat-select>
@@ -47,24 +37,14 @@
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <!-- studentName Column -->
     <ng-container matColumnDef="studentName" sticky>
-      <th
-        class="student-cell"
-        mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-      >
-        Students Jobs
-      </th>
+      <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Students Jobs</th>
       <td class="student-cell" mat-cell *matCellDef="let element">
         {{ element.studentName }}
       </td>
     </ng-container>
 
     <!-- Generic column definition -->
-    <ng-container
-      *ngFor="let column of columns; let i = index"
-      [cdkColumnDef]="column.columnDef(i)"
-    >
+    <ng-container *ngFor="let column of columns; let i = index" [cdkColumnDef]="column.columnDef(i)">
       <th class="mark-cell" md-header-cell *cdkHeaderCellDef>
         {{ column.header }}
       </th>
@@ -75,12 +55,7 @@
 
     <!-- SumPoints Column -->
     <ng-container matColumnDef="sumPoints" sticky>
-      <th
-        class="student-cell"
-        mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-      >
+      <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>
         <b>Суммарный балл</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">
@@ -89,12 +64,7 @@
     </ng-container>
     <!-- mark Column -->
     <ng-container matColumnDef="mark" sticky>
-      <th
-        class="student-cell"
-        mat-header-cell
-        *matHeaderCellDef
-        mat-sort-header
-      >
+      <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>
         <b>Оценка</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">

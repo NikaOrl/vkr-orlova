@@ -1,10 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Directive, Input, forwardRef } from '@angular/core';
-import {
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-} from '@angular/forms';
+import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 
 import { TeachersTableComponent } from './teachers-table.component';
@@ -172,11 +168,7 @@ describe('TeachersTableComponent', () => {
         MatRowDefColumnsStubDirective,
       ],
       imports: [FormsModule],
-      providers: [
-        HttpClient,
-        HttpHandler,
-        { provide: TeachersApiService, useValue: TeachersApiServiceStub },
-      ],
+      providers: [HttpClient, HttpHandler, { provide: TeachersApiService, useValue: TeachersApiServiceStub }],
     }).compileComponents();
   }));
 

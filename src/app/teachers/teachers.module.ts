@@ -13,13 +13,10 @@ import { TeachersRoutingModule } from './teachers-routing.module';
 import { TeachersPageComponent } from './components/teachers-page/teachers-page.component';
 import { TeachersEditComponent } from './components/teachers-edit/teachers-edit.component';
 import { TeachersTableComponent } from './components/teachers-table/teachers-table.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
-  declarations: [
-    TeachersPageComponent,
-    TeachersEditComponent,
-    TeachersTableComponent,
-  ],
+  declarations: [TeachersPageComponent, TeachersEditComponent, TeachersTableComponent],
   imports: [
     CommonModule,
     MatTableModule,
@@ -30,7 +27,7 @@ import { TeachersTableComponent } from './components/teachers-table/teachers-tab
     HttpClientModule,
     MatCheckboxModule,
     FormsModule,
-
+    SharedModule,
     TeachersRoutingModule,
   ],
 })

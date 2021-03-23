@@ -1,16 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Input,
-  Directive,
-  forwardRef,
-  Component,
-  Injectable,
-} from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-  FormsModule,
-} from '@angular/forms';
+import { Input, Directive, forwardRef, Component, Injectable } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
@@ -282,8 +272,6 @@ describe('MarksTableComponent', () => {
     component.onSelectedDisciplineChange();
 
     component.filterDisciplines('a');
-    expect(component.filteredDisciplines).toEqual([
-      { id: 1, disciplineValue: 'a' },
-    ]);
+    expect(component.filteredDisciplines).toEqual([{ id: 1, disciplineValue: 'a' }]);
   });
 });

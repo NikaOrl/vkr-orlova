@@ -34,10 +34,10 @@ export class LoginPageComponent implements OnInit {
       .login(this.email, this.password)
       .pipe(first())
       .subscribe(
-        (data) => {
+        data => {
           this.router.navigate([this.returnUrl]);
         },
-        (error) => {
+        error => {
           // should show error message
           alert(error.error);
         }

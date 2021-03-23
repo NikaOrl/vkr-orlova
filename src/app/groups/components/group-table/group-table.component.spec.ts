@@ -1,16 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Component,
-  Directive,
-  Input,
-  forwardRef,
-  Injectable,
-} from '@angular/core';
-import {
-  FormsModule,
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-} from '@angular/forms';
+import { Component, Directive, Input, forwardRef, Injectable } from '@angular/core';
+import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
 import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpHandler } from '@angular/common/http';
 

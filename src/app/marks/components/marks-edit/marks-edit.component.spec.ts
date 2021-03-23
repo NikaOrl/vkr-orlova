@@ -1,16 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  Input,
-  Directive,
-  forwardRef,
-  Component,
-  Injectable,
-} from '@angular/core';
-import {
-  NG_VALUE_ACCESSOR,
-  ControlValueAccessor,
-  FormsModule,
-} from '@angular/forms';
+import { Input, Directive, forwardRef, Component, Injectable } from '@angular/core';
+import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
 import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
 
 import { BehaviorSubject } from 'rxjs';
@@ -201,10 +191,16 @@ export class MarksApiServiceStub {
     return new Promise((resolve, reject) => {
       setTimeout(() =>
         resolve({
-          marks: [{ id: 1, markValue: '1' }, { id: 2, markValue: '2' }],
-          jobs: [{ id: 1, jobValue: 1 }, { id: 2, jobValue: 2 }],
+          marks: [
+            { id: 1, markValue: '1' },
+            { id: 2, markValue: '2' },
+          ],
+          jobs: [
+            { id: 1, jobValue: 1 },
+            { id: 2, jobValue: 2 },
+          ],
           students: [{ id: 1 }, { id: 2 }],
-        }),
+        })
       );
       setTimeout(() => reject(new Error('ignored')));
     });

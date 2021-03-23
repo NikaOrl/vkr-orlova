@@ -1,8 +1,5 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { MarksApiService } from './marks-api.service';
 import { Jobs } from '../models/jobs.model';
@@ -90,7 +87,10 @@ describe('MarksApiService', () => {
 
     service.addJobsAndMarks(
       <Jobs[]>(<unknown>[{ id: 1, first: '1' }]),
-      <Marks[]>(<unknown>[{ jobId: 1, first: '1' }, { jobId: 1, second: '2' }]),
+      <Marks[]>(<unknown>[
+        { jobId: 1, first: '1' },
+        { jobId: 1, second: '2' },
+      ])
     );
     const req2 = httpMock.expectOne(`/api/jobs/add`);
     expect(req2.request.method).toBe('POST');

@@ -8,10 +8,7 @@ import { DialogData } from '../../models/dialog-data.model';
   styleUrls: ['./marks-dialog.component.scss'],
 })
 export class MarksDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<MarksDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: DialogData,
-  ) {}
+  constructor(public dialogRef: MatDialogRef<MarksDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
   onNoClick(): void {
     this.dialogRef.close();
