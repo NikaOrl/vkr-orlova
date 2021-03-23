@@ -18,47 +18,29 @@ const apiUrl = '/api/marks';
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  private handleError(error: HttpErrorResponse) {
-    if (error.error instanceof ErrorEvent) {
-      // A client-side or network error occurred. Handle it accordingly.
-      console.error('An error occurred:', error.error.message);
-    } else {
-      // The backend returned an unsuccessful response code.
-      // The response body may contain clues as to what went wrong,
-      console.error(`Backend returned code ${error.status}, ` + `body was: ${error.error}`);
-    }
-    // return an observable with a user-facing error message
-    return throwError('Something bad happened; please try again later.');
-  }
-
-  private extractData(res: Response) {
-    const body = res;
-    return body || {};
-  }
-
-  getMarks(disciplineId: number): Promise<any> {
+  public getMarks(disciplineId: number): Promise<any> {
     return this.http
       .get(`${apiUrl}/discipline/${disciplineId}`, httpOptions)
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
 
-  getDisciplines(): Promise<any> {
+  public getDisciplines(): Promise<any> {
     return this.http
       .get(`${apiUrl}/disciplines`, httpOptions)
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
 
-  updateMarks(marks: Marks[]): Promise<any> {
+  public updateMarks(marks: Marks[]): Promise<any> {
     return this.http.put<any[]>(`${apiUrl}/update`, marks, httpOptions).pipe(catchError(this.handleError)).toPromise();
   }
 
-  updateJobs(jobs: Jobs[]): Promise<any> {
+  public updateJobs(jobs: Jobs[]): Promise<any> {
     return this.http.put<any[]>(`/api/jobs/update`, jobs, httpOptions).pipe(catchError(this.handleError)).toPromise();
   }
 
-  addJobsAndMarks(jobs: Jobs[], marks: Marks[]): Promise<any> {
+  public addJobsAndMarks(jobs: Jobs[], marks: Marks[]): Promise<any> {
     return Promise.all([
       jobs.forEach(job => {
         const jobMarks = [];
@@ -87,7 +69,7 @@ export class MarksApiService {
     ]);
   }
 
-  deleteJobs(jobsIds: Set<number>): Promise<any> {
+  public deleteJobs(jobsIds: Set<number>): Promise<any> {
     let urlParams = '';
     jobsIds.forEach(id => {
       urlParams += 'id=' + id + '&';
@@ -97,5 +79,23 @@ export class MarksApiService {
       this.http.delete(`${apiUrl}/delete?${urlParams}`, httpOptions).pipe(catchError(this.handleError)).toPromise(),
       this.http.delete(`/api/jobs/delete?${urlParams}`, httpOptions).pipe(catchError(this.handleError)).toPromise(),
     ]);
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    if (error.error instanceof ErrorEvent) {
+      // A client-side or network error occurred. Handle it accordingly.
+      console.error('An error occurred:', error.error.message);
+    } else {
+      // The backend returned an unsuccessful response code.
+      // The response body may contain clues as to what went wrong,
+      console.error(`Backend returned code ${error.status}, ` + `body was: ${error.error}`);
+    }
+    // return an observable with a user-facing error message
+    return throwError('Something bad happened; please try again later.');
+  }
+
+  private extractData(res: Response) {
+    const body = res;
+    return body || {};
   }
 }

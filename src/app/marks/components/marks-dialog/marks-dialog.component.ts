@@ -10,7 +10,7 @@ import { DialogData } from '../../models/dialog-data.model';
 export class MarksDialogComponent {
   constructor(public dialogRef: MatDialogRef<MarksDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
 
-  onNoClick(): void {
+  public onNoClick(): void {
     this.dialogRef.close();
   }
 }

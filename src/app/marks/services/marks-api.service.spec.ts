@@ -86,11 +86,11 @@ describe('MarksApiService', () => {
     const dummyUsers = [{ first: '1' }, { second: '2' }];
 
     service.addJobsAndMarks(
-      <Jobs[]>(<unknown>[{ id: 1, first: '1' }]),
-      <Marks[]>(<unknown>[
+      ([{ id: 1, first: '1' }] as unknown) as Jobs[],
+      ([
         { jobId: 1, first: '1' },
         { jobId: 1, second: '2' },
-      ])
+      ] as unknown) as Marks[]
     );
     const req2 = httpMock.expectOne(`/api/jobs/add`);
     expect(req2.request.method).toBe('POST');

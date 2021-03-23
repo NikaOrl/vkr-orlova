@@ -1,15 +1,15 @@
 import { AdminGuard } from './admin.guard';
 
 class MockRouter {
-  navigate(path) {}
+  public navigate(path: string): void {}
 }
 
 class MockAuthenticationService {
-  login(user) {
+  public login(user): void {
     localStorage.setItem('currentUser', JSON.stringify(user));
   }
 
-  logout(): void {
+  public logout(): void {
     localStorage.removeItem('currentUser');
   }
 }

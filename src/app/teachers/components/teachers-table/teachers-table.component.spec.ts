@@ -27,9 +27,9 @@ class MatLabelStubComponent {}
   ],
 })
 class MatSelectStubComponent implements ControlValueAccessor {
-  value;
-  onChangeCallback;
-  onTouchedCallback;
+  public value;
+  public onChangeCallback;
+  public onTouchedCallback;
 
   public writeValue(value: any): void {
     this.value = value;
@@ -49,7 +49,7 @@ class MatSelectStubComponent implements ControlValueAccessor {
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-option', template: '' })
 class MatOptionStubComponent {
-  @Input() value: any;
+  @Input() public value: any;
 }
 
 @Component({
@@ -65,9 +65,9 @@ class MatOptionStubComponent {
   ],
 })
 class NgxMatSelectSearchStubComponent {
-  value;
-  onChangeCallback;
-  onTouchedCallback;
+  public value;
+  public onChangeCallback;
+  public onTouchedCallback;
 
   public writeValue(value: any): void {
     this.value = value;
@@ -91,9 +91,9 @@ class NgxMatSelectSearchStubComponent {
   host: { '(click)': 'onClick()' },
 })
 class RouterLinkStubDirective {
-  @Input('routerLink') linkParams: any;
-  navigatedTo: any = null;
-  onClick() {
+  @Input('routerLink') public linkParams: any;
+  public navigatedTo: any = null;
+  public onClick() {
     this.navigatedTo = this.linkParams;
   }
 }
@@ -103,7 +103,7 @@ class RouterLinkStubDirective {
   selector: '[placeholderLabel]',
 })
 class PlaceholderLabelStubDirective {
-  @Input('placeholderLabel') linkParams: any;
+  @Input('placeholderLabel') public linkParams: any;
 }
 
 @Directive({
@@ -111,7 +111,7 @@ class PlaceholderLabelStubDirective {
   selector: '[noEntriesFoundLabel]',
 })
 class NoEntriesFoundLabelStubDirective {
-  @Input('noEntriesFoundLabel') linkParams: any;
+  @Input('noEntriesFoundLabel') public linkParams: any;
 }
 
 @Directive({
@@ -119,7 +119,7 @@ class NoEntriesFoundLabelStubDirective {
   selector: '[dataSource]',
 })
 class DataSourceStubDirective {
-  @Input('dataSource') linkParams: any;
+  @Input('dataSource') public linkParams: any;
 }
 
 @Directive({
@@ -127,7 +127,7 @@ class DataSourceStubDirective {
   selector: '[matHeaderRowDef]',
 })
 class MatHeaderRowDefStubDirective {
-  @Input('matHeaderRowDef') linkParams: any;
+  @Input('matHeaderRowDef') public linkParams: any;
 }
 
 @Directive({
@@ -135,7 +135,7 @@ class MatHeaderRowDefStubDirective {
   selector: '[matRowDefColumns]',
 })
 class MatRowDefColumnsStubDirective {
-  @Input('matRowDefColumns') linkParams: any;
+  @Input('matRowDefColumns') public linkParams: any;
 }
 
 const TeachersApiServiceStub = {

@@ -58,7 +58,7 @@ describe('TeachersApiService', () => {
   it('should addTeachers', () => {
     const dummyUsers = [{ first: '1' }];
 
-    service.addTeachers(<Teacher[]>(<unknown>[{ first: '1' }])).then(users => {
+    service.addTeachers(([{ first: '1' }] as unknown) as Teacher[]).then(users => {
       expect(users.length).toBe(1);
     });
 

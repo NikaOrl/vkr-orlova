@@ -15,15 +15,15 @@ import { DialogService } from 'src/app/core/services/dialog.service';
   styleUrls: ['./groups-edit.component.scss'],
 })
 export class GroupsEditComponent implements OnInit {
-  displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'delete', 'headStudent'];
-  dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'delete', 'headStudent'];
+  public dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) public sort: MatSort;
   public selectedGroupId: number;
 
   private ELEMENT_DATA: Student[] = [];
   private deletedStudentsIds: Set<number> = new Set();
   private oldStudentsJSON: string[];
-  private saved = true;
+  private saved: boolean = true;
 
   constructor(
     private router: Router,
@@ -32,16 +32,16 @@ export class GroupsEditComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
     this.getStudents(this.selectedGroupId);
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  save() {
+  public save(): void {
     const newStudents = [];
     const addedStudents = [];
     this.ELEMENT_DATA.forEach((value, index) => {
@@ -69,12 +69,12 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  delete(e) {
+  public delete(e): void {
     this.saved = false;
     this.deletedStudentsIds.add(e.id);
   }
 
-  add() {
+  public add(): void {
     this.saved = false;
     this.ELEMENT_DATA.push({
       id: null,
@@ -90,18 +90,18 @@ export class GroupsEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  cancelDelete(e) {
+  public cancelDelete(e): void {
     this.deletedStudentsIds.delete(e.id);
   }
 
-  cancelAdd(e) {
+  public cancelAdd(e): void {
     const index = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  isDeleted(row): boolean {
+  public isDeleted(row): boolean {
     if (this.deletedStudentsIds.has(row.id)) {
       return true;
     } else {
@@ -109,7 +109,7 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  isAdded(row): boolean {
+  public isAdded(row): boolean {
     if (row.id === null) {
       return true;
     } else {
@@ -117,11 +117,11 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  unsaved() {
+  public unsaved(): void {
     this.saved = false;
   }
 
-  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+  public canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.saved) {
       return true;
     }
@@ -142,7 +142,7 @@ export class GroupsEditComponent implements OnInit {
     );
   }
 
-  private updateStudents(newStudents: Student[]) {
+  private updateStudents(newStudents: Student[]): void {
     this.api.updateStudents(newStudents).then(
       res => {
         console.log('students were updated');
@@ -153,7 +153,7 @@ export class GroupsEditComponent implements OnInit {
     );
   }
 
-  private addStudents(addedStudents) {
+  private addStudents(addedStudents): void {
     this.api.addStudents(addedStudents).then(
       res => {
         console.log('students were added');
@@ -164,7 +164,7 @@ export class GroupsEditComponent implements OnInit {
     );
   }
 
-  private deleteStudents() {
+  private deleteStudents(): void {
     this.api.deleteStudents(this.deletedStudentsIds).then(
       res => {
         console.log('students were deleted');

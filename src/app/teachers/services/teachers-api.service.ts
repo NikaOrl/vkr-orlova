@@ -17,6 +17,40 @@ const apiUrl = '/api/teachers';
 export class TeachersApiService {
   constructor(private http: HttpClient) {}
 
+  public getTeachers(): Promise<any> {
+    return this.http
+      .get(`${apiUrl}`, httpOptions)
+      .pipe(map(this.extractData), catchError(this.handleError))
+      .toPromise();
+  }
+
+  public updateTeachers(teachers: Teacher[]): Promise<any> {
+    return this.http
+      .put<Teacher[]>(`${apiUrl}/update`, teachers, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
+
+  public addTeachers(teachers: Teacher[]): Promise<any> {
+    return Promise.all(
+      teachers.map(teacher => {
+        this.http.post<Teacher[]>(`/api/register`, teacher, httpOptions).pipe(catchError(this.handleError)).toPromise();
+      })
+    );
+  }
+
+  public deleteTeachers(teachersIds: Set<number>): Promise<any> {
+    let urlParams = '';
+    teachersIds.forEach(id => {
+      urlParams += 'id=' + id + '&';
+    });
+    urlParams = urlParams.substring(0, urlParams.length - 1);
+    return this.http
+      .delete(`${apiUrl}/delete?${urlParams}`, httpOptions)
+      .pipe(catchError(this.handleError))
+      .toPromise();
+  }
+
   private handleError(error: HttpErrorResponse) {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
@@ -33,39 +67,5 @@ export class TeachersApiService {
   private extractData(res: Response) {
     const body = res;
     return body || {};
-  }
-
-  getTeachers(): Promise<any> {
-    return this.http
-      .get(`${apiUrl}`, httpOptions)
-      .pipe(map(this.extractData), catchError(this.handleError))
-      .toPromise();
-  }
-
-  updateTeachers(teachers: Teacher[]): Promise<any> {
-    return this.http
-      .put<Teacher[]>(`${apiUrl}/update`, teachers, httpOptions)
-      .pipe(catchError(this.handleError))
-      .toPromise();
-  }
-
-  addTeachers(teachers: Teacher[]): Promise<any> {
-    return Promise.all(
-      teachers.map(teacher => {
-        this.http.post<Teacher[]>(`/api/register`, teacher, httpOptions).pipe(catchError(this.handleError)).toPromise();
-      })
-    );
-  }
-
-  deleteTeachers(teachersIds: Set<number>): Promise<any> {
-    let urlParams = '';
-    teachersIds.forEach(id => {
-      urlParams += 'id=' + id + '&';
-    });
-    urlParams = urlParams.substring(0, urlParams.length - 1);
-    return this.http
-      .delete(`${apiUrl}/delete?${urlParams}`, httpOptions)
-      .pipe(catchError(this.handleError))
-      .toPromise();
   }
 }

@@ -30,9 +30,9 @@ class MatLabelStubComponent {}
   ],
 })
 class MatSelectStubComponent implements ControlValueAccessor {
-  value;
-  onChangeCallback;
-  onTouchedCallback;
+  public value;
+  public onChangeCallback;
+  public onTouchedCallback;
 
   public writeValue(value: any): void {
     this.value = value;
@@ -52,7 +52,7 @@ class MatSelectStubComponent implements ControlValueAccessor {
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-option', template: '' })
 class MatOptionStubComponent {
-  @Input() value: any;
+  @Input() public value: any;
 }
 
 @Component({
@@ -68,9 +68,9 @@ class MatOptionStubComponent {
   ],
 })
 class NgxMatSelectSearchStubComponent {
-  value;
-  onChangeCallback;
-  onTouchedCallback;
+  public value;
+  public onChangeCallback;
+  public onTouchedCallback;
 
   public writeValue(value: any): void {
     this.value = value;
@@ -94,9 +94,9 @@ class NgxMatSelectSearchStubComponent {
   host: { '(click)': 'onClick()' },
 })
 class RouterLinkStubDirective {
-  @Input('routerLink') linkParams: any;
-  navigatedTo: any = null;
-  onClick() {
+  @Input('routerLink') public linkParams: any;
+  public navigatedTo: any = null;
+  public onClick() {
     this.navigatedTo = this.linkParams;
   }
 }
@@ -106,7 +106,7 @@ class RouterLinkStubDirective {
   selector: '[placeholderLabel]',
 })
 class PlaceholderLabelStubDirective {
-  @Input('placeholderLabel') linkParams: any;
+  @Input('placeholderLabel') public linkParams: any;
 }
 
 @Directive({
@@ -114,7 +114,7 @@ class PlaceholderLabelStubDirective {
   selector: '[noEntriesFoundLabel]',
 })
 class NoEntriesFoundLabelStubDirective {
-  @Input('noEntriesFoundLabel') linkParams: any;
+  @Input('noEntriesFoundLabel') public linkParams: any;
 }
 
 @Directive({
@@ -122,7 +122,7 @@ class NoEntriesFoundLabelStubDirective {
   selector: '[dataSource]',
 })
 class DataSourceStubDirective {
-  @Input('dataSource') linkParams: any;
+  @Input('dataSource') public linkParams: any;
 }
 
 @Directive({
@@ -130,7 +130,7 @@ class DataSourceStubDirective {
   selector: '[matHeaderRowDef]',
 })
 class MatHeaderRowDefStubDirective {
-  @Input('matHeaderRowDef') linkParams: any;
+  @Input('matHeaderRowDef') public linkParams: any;
 }
 
 @Directive({
@@ -138,7 +138,7 @@ class MatHeaderRowDefStubDirective {
   selector: '[matRowDefColumns]',
 })
 class MatRowDefColumnsStubDirective {
-  @Input('matRowDefColumns') linkParams: any;
+  @Input('matRowDefColumns') public linkParams: any;
 }
 
 @Directive({
@@ -146,26 +146,18 @@ class MatRowDefColumnsStubDirective {
   selector: '[cdkColumnDef]',
 })
 class CdkColumnDefStubDirective {
-  @Input() cdkColumnDef: any;
+  @Input() public cdkColumnDef: any;
 }
 
 @Injectable()
 export class RouterStub {
-  navigate(path) {
+  public navigate(path) {
     return {};
   }
 }
 
 @Injectable()
 export class ActivatedRouteStub {
-  private subject = new BehaviorSubject(this.testParams);
-  private _testParams: {};
-  paramMap = this.subject.asObservable();
-
-  snapshot = {
-    paramMap: convertToParamMap({ id: 1 }),
-  };
-
   get testParams() {
     return this._testParams;
   }
@@ -173,11 +165,19 @@ export class ActivatedRouteStub {
     this._testParams = paramMap;
     this.subject.next(paramMap);
   }
+  public subject = new BehaviorSubject(this.testParams);
+
+  public paramMap = this.subject.asObservable();
+
+  public snapshot = {
+    paramMap: convertToParamMap({ id: 1 }),
+  };
+  private _testParams: {};
 }
 
 @Injectable()
 export class MarksApiServiceStub {
-  getMarks(disciplineId: number): Promise<any> {
+  public getMarks(disciplineId: number): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(() =>
         resolve({
@@ -196,7 +196,7 @@ export class MarksApiServiceStub {
     });
   }
 
-  getDisciplines(): Promise<any> {
+  public getDisciplines(): Promise<any> {
     return new Promise((resolve, reject) => {
       setTimeout(() =>
         resolve({

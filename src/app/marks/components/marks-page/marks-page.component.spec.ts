@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component } from '@angular/core';
 
 import { MarksPageComponent } from './marks-page.component';
@@ -11,11 +11,11 @@ describe('MarksPageComponent', () => {
   let component: MarksPageComponent;
   let fixture: ComponentFixture<MarksPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [MarksPageComponent, RouterOutletStubComponent],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MarksPageComponent);

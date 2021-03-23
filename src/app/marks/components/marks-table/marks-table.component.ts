@@ -15,16 +15,16 @@ import { DialogData } from '../../models/dialog-data.model';
   styleUrls: ['./marks-table.component.scss'],
 })
 export class MarksTableComponent implements OnInit {
-  ELEMENT_DATA: StudentMarks[] = [];
-  selectedDiscipline: any;
-  disciplines: any[];
-  filteredDisciplines: any[];
-  columns: any[];
-  displayedColumns: string[];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-  marksAreas: DialogData = { three: 60, four: 75, five: 90 };
+  public ELEMENT_DATA: StudentMarks[] = [];
+  public selectedDiscipline: any;
+  public disciplines: any[];
+  public filteredDisciplines: any[];
+  public columns: any[];
+  public displayedColumns: string[];
+  public dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  public marksAreas: DialogData = { three: 60, four: 75, five: 90 };
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) public sort: MatSort;
 
   constructor(
     private router: Router,
@@ -33,7 +33,7 @@ export class MarksTableComponent implements OnInit {
     public dialog: MatDialog
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.api.getDisciplines().then(res => {
       this.disciplines = res.result;
       const selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
@@ -45,11 +45,11 @@ export class MarksTableComponent implements OnInit {
     });
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  filterDisciplines(e): void {
+  public filterDisciplines(e): void {
     if (!this.disciplines) {
       return;
     }
@@ -57,12 +57,12 @@ export class MarksTableComponent implements OnInit {
     this.filteredDisciplines = this.disciplines.filter(discipline => discipline.disciplineValue.indexOf(search) !== -1);
   }
 
-  onSelectedDisciplineChange(): void {
+  public onSelectedDisciplineChange(): void {
     this.router.navigate([`/marks/${this.selectedDiscipline.id}`]);
     this.getMarks(this.selectedDiscipline.id);
   }
 
-  parseGetMarksResult(result): any[] {
+  public parseGetMarksResult(result): any[] {
     const marksAndStudents = result.students.map(student => {
       const studentMarks = result.marks.filter(mark => +mark.studentId === +student.id);
       const markObject = {};
@@ -80,7 +80,7 @@ export class MarksTableComponent implements OnInit {
     return marksAndStudents;
   }
 
-  getMarks(disciplineId) {
+  public getMarks(disciplineId) {
     this.api.getMarks(disciplineId).then(
       res => {
         this.ELEMENT_DATA = this.parseGetMarksResult(res);
@@ -106,7 +106,7 @@ export class MarksTableComponent implements OnInit {
     );
   }
 
-  openDialog(): void {
+  public openDialog(): void {
     const dialogRef = this.dialog.open(MarksDialogComponent, {
       width: '300px',
       data: this.marksAreas,
@@ -118,7 +118,7 @@ export class MarksTableComponent implements OnInit {
     });
   }
 
-  getSumPoints(element): number {
+  public getSumPoints(element): number {
     let sumPoints = 0;
     let index = 1;
     let mark = element[1];
@@ -135,7 +135,7 @@ export class MarksTableComponent implements OnInit {
     return sumPoints;
   }
 
-  getResultMark(element): string {
+  public getResultMark(element): string {
     const sumPoints = this.getSumPoints(element);
     if (sumPoints < this.marksAreas.three) {
       return 'неуд.';

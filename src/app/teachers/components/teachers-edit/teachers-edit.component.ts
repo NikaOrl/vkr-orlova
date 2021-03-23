@@ -15,9 +15,9 @@ import { TeachersApiService } from '../../services/teachers-api.service';
   styleUrls: ['./teachers-edit.component.scss'],
 })
 export class TeachersEditComponent implements OnInit {
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'delete', 'isAdmin'];
-  dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'delete', 'isAdmin'];
+  public dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) public sort: MatSort;
 
   private ELEMENT_DATA: Teacher[] = [];
   private deletedTeachersIds: Set<number> = new Set();
@@ -31,15 +31,15 @@ export class TeachersEditComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.getTeachers();
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  save() {
+  public save() {
     const newTeachers = [];
     const addedTeachers = [];
     this.ELEMENT_DATA.forEach((value, index) => {
@@ -67,12 +67,12 @@ export class TeachersEditComponent implements OnInit {
     }
   }
 
-  delete(e) {
+  public delete(e) {
     this.saved = false;
     this.deletedTeachersIds.add(e.id);
   }
 
-  add() {
+  public add() {
     this.saved = false;
     this.ELEMENT_DATA.push({
       id: null,
@@ -87,18 +87,18 @@ export class TeachersEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  cancelDelete(e) {
+  public cancelDelete(e) {
     this.deletedTeachersIds.delete(e.id);
   }
 
-  cancelAdd(e) {
+  public cancelAdd(e) {
     const index = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  isDeleted(row): boolean {
+  public isDeleted(row): boolean {
     if (this.deletedTeachersIds.has(row.id)) {
       return true;
     } else {
@@ -106,7 +106,7 @@ export class TeachersEditComponent implements OnInit {
     }
   }
 
-  isAdded(row): boolean {
+  public isAdded(row): boolean {
     if (row.id === null) {
       return true;
     } else {
@@ -114,11 +114,11 @@ export class TeachersEditComponent implements OnInit {
     }
   }
 
-  unsaved() {
+  public unsaved() {
     this.saved = false;
   }
 
-  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+  public canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.saved) {
       return true;
     }

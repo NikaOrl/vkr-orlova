@@ -12,18 +12,18 @@ import { Student } from '../../models/student.model';
   styleUrls: ['./group-table.component.scss'],
 })
 export class GroupTableComponent implements OnInit {
-  ELEMENT_DATA: Student[] = [];
-  selectedGroup: any;
-  groups: any[];
-  filteredGroups: any[];
-  displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'headStudent'];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  public ELEMENT_DATA: Student[] = [];
+  public selectedGroup: any;
+  public groups: any[];
+  public filteredGroups: any[];
+  public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'headStudent'];
+  public dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) public sort: MatSort;
 
   constructor(private router: Router, private route: ActivatedRoute, private api: GroupsApiService) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.api.getGroups().then(
       res => {
         this.groups = res.result;
@@ -39,11 +39,11 @@ export class GroupTableComponent implements OnInit {
     );
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  filterGroups(e): void {
+  public filterGroups(e): void {
     if (!this.groups) {
       return;
     }
@@ -51,12 +51,12 @@ export class GroupTableComponent implements OnInit {
     this.filteredGroups = this.groups.filter(group => `${group.groupNumber}`.indexOf(search) !== -1);
   }
 
-  onSelectedGroupChange(): void {
+  public onSelectedGroupChange(): void {
     this.router.navigate([`/groups/${this.selectedGroup.id}`]);
     this.getStudents(this.selectedGroup.id);
   }
 
-  getStudents(groupId: number): void {
+  public getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
       res => {
         this.ELEMENT_DATA = res.result;

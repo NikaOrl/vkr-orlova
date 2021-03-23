@@ -7,11 +7,11 @@ import { CanActivate, CanLoad, Router } from '@angular/router';
 export class AdminGuard implements CanActivate, CanLoad {
   constructor(private router: Router) {}
 
-  canActivate(): boolean {
+  public canActivate(): boolean {
     return this.isUserAdmin();
   }
 
-  canLoad(): boolean {
+  public canLoad(): boolean {
     return this.isUserAdmin();
   }
 

@@ -18,10 +18,10 @@ import { DialogService } from 'src/app/core/services/dialog.service';
   styleUrls: ['./marks-edit.component.scss'],
 })
 export class MarksEditComponent implements OnInit {
-  columns: any[];
-  displayedColumns: string[];
-  dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  public columns: any[];
+  public displayedColumns: string[];
+  public dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) public sort: MatSort;
   public selectedDisciplineId: number;
 
   private ELEMENT_DATA: StudentMarks[] = [];
@@ -44,16 +44,16 @@ export class MarksEditComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
     this.getMarks(this.selectedDisciplineId);
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  markChange(e: string, mark: Marks) {
+  public markChange(e: string, mark: Marks) {
     this.saved = false;
     this.marks.forEach((value, index) => {
       if (JSON.stringify(value) === JSON.stringify(mark)) {
@@ -62,12 +62,12 @@ export class MarksEditComponent implements OnInit {
     });
   }
 
-  jobChange(e, jobNumber: number) {
+  public jobChange(e, jobNumber: number) {
     this.saved = false;
     this.jobs[jobNumber].jobValue = e;
   }
 
-  save() {
+  public save() {
     const newMarks = [];
     const addedMarks = [];
     this.marks.forEach((value, index) => {
@@ -108,12 +108,12 @@ export class MarksEditComponent implements OnInit {
     }
   }
 
-  delete(e) {
+  public delete(e) {
     this.saved = false;
     this.deletedJobsIds.add(e);
   }
 
-  add() {
+  public add() {
     this.saved = false;
     this.addedJobsNumber++;
     this.jobs.push({
@@ -138,11 +138,11 @@ export class MarksEditComponent implements OnInit {
     });
   }
 
-  cancelDelete(e) {
+  public cancelDelete(e) {
     this.deletedJobsIds.delete(e);
   }
 
-  cancelAdd(e) {
+  public cancelAdd(e) {
     const index = this.jobs.findIndex(v => v.id === e);
     this.jobs.splice(index, 1);
     const markIndexes = [];
@@ -161,7 +161,7 @@ export class MarksEditComponent implements OnInit {
     });
   }
 
-  isDeleted(e): boolean {
+  public isDeleted(e): boolean {
     if (this.deletedJobsIds.has(e)) {
       return true;
     } else {
@@ -169,7 +169,7 @@ export class MarksEditComponent implements OnInit {
     }
   }
 
-  isAdded(row): boolean {
+  public isAdded(row): boolean {
     if (row < 0) {
       return true;
     } else {
@@ -177,7 +177,7 @@ export class MarksEditComponent implements OnInit {
     }
   }
 
-  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+  public canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.saved) {
       return true;
     }
@@ -277,7 +277,7 @@ export class MarksEditComponent implements OnInit {
           const newMark = {
             id: null,
             studentId: this.students[studentIndex].id,
-            jobId: jobId,
+            jobId,
             markValue: '',
             deleted: false,
           };

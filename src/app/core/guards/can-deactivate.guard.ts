@@ -10,7 +10,7 @@ import { CanComponentDeactivate } from './../interfaces/can-component-deactivate
   providedIn: CoreModule,
 })
 export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
-  canDeactivate(component: CanComponentDeactivate): Observable<boolean> | Promise<boolean> | boolean {
+  public canDeactivate(component: CanComponentDeactivate): Observable<boolean> | Promise<boolean> | boolean {
     console.log('CanDeactivate Guard is called');
     return component.canDeactivate();
   }
