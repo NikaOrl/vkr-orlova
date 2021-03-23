@@ -1,11 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+
+import { MockComponents } from 'ng-mocks';
 
 import { MarksPageComponent } from './marks-page.component';
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'router-outlet', template: '' })
-class RouterOutletStubComponent {}
+import { HeaderComponent } from '../../../shared/components/header/header.component';
 
 describe('MarksPageComponent', () => {
   let component: MarksPageComponent;
@@ -13,7 +12,8 @@ describe('MarksPageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [MarksPageComponent, RouterOutletStubComponent],
+      declarations: [MarksPageComponent, MockComponents(HeaderComponent)],
+      imports: [RouterTestingModule],
     }).compileComponents();
   });
 
