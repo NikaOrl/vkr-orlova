@@ -1,8 +1,5 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { GroupsApiService } from './groups-api.service';
 
@@ -20,7 +17,7 @@ describe('GroupsApiService', () => {
     });
     injector = getTestBed();
     service = injector.get(GroupsApiService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {

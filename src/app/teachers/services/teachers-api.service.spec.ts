@@ -1,8 +1,5 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-import {
-  HttpClientTestingModule,
-  HttpTestingController,
-} from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { TeachersApiService } from './teachers-api.service';
 import { Teacher } from '../models/teacher.model';
@@ -21,7 +18,7 @@ describe('TeachersApiService', () => {
     });
     injector = getTestBed();
     service = injector.get(TeachersApiService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
@@ -61,7 +58,7 @@ describe('TeachersApiService', () => {
   it('should addTeachers', () => {
     const dummyUsers = [{ first: '1' }];
 
-    service.addTeachers(<Teacher[]>(<unknown>[{ first: '1' }])).then(users => {
+    service.addTeachers(([{ first: '1' }] as unknown) as Teacher[]).then(users => {
       expect(users.length).toBe(1);
     });
 

@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
@@ -14,22 +15,15 @@ import { DialogService } from 'src/app/core/services/dialog.service';
   styleUrls: ['./groups-edit.component.scss'],
 })
 export class GroupsEditComponent implements OnInit {
-  displayedColumns: string[] = [
-    'numberInList',
-    'firstName',
-    'lastName',
-    'email',
-    'delete',
-    'headStudent',
-  ];
-  dataSource = new MatTableDataSource([]);
-  @ViewChild(MatSort) sort: MatSort;
+  public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'delete', 'headStudent'];
+  public dataSource = new MatTableDataSource([]);
+  @ViewChild(MatSort) public sort: MatSort;
   public selectedGroupId: number;
 
   private ELEMENT_DATA: Student[] = [];
   private deletedStudentsIds: Set<number> = new Set();
   private oldStudentsJSON: string[];
-  private saved = true;
+  private saved: boolean = true;
 
   constructor(
     private router: Router,
@@ -38,16 +32,16 @@ export class GroupsEditComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit(): void {
     this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
     this.getStudents(this.selectedGroupId);
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  save() {
+  public save(): void {
     const newStudents = [];
     const addedStudents = [];
     this.ELEMENT_DATA.forEach((value, index) => {
@@ -58,11 +52,7 @@ export class GroupsEditComponent implements OnInit {
         addedStudents.push(value);
       }
     });
-    if (
-      newStudents.length > 0 ||
-      addedStudents.length > 0 ||
-      this.deletedStudentsIds.size > 0
-    ) {
+    if (newStudents.length > 0 || addedStudents.length > 0 || this.deletedStudentsIds.size > 0) {
       if (newStudents.length > 0) {
         this.updateStudents(newStudents);
       }
@@ -79,12 +69,12 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  delete(e) {
+  public delete(e): void {
     this.saved = false;
     this.deletedStudentsIds.add(e.id);
   }
 
-  add() {
+  public add(): void {
     this.saved = false;
     this.ELEMENT_DATA.push({
       id: null,
@@ -100,20 +90,18 @@ export class GroupsEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  cancelDelete(e) {
+  public cancelDelete(e): void {
     this.deletedStudentsIds.delete(e.id);
   }
 
-  cancelAdd(e) {
-    const index = this.ELEMENT_DATA.findIndex(
-      (v) => JSON.stringify(v) === JSON.stringify(e)
-    );
+  public cancelAdd(e): void {
+    const index = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  isDeleted(row): boolean {
+  public isDeleted(row): boolean {
     if (this.deletedStudentsIds.has(row.id)) {
       return true;
     } else {
@@ -121,7 +109,7 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  isAdded(row): boolean {
+  public isAdded(row): boolean {
     if (row.id === null) {
       return true;
     } else {
@@ -129,11 +117,11 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  unsaved() {
+  public unsaved(): void {
     this.saved = false;
   }
 
-  canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
+  public canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
     if (this.saved) {
       return true;
     }
@@ -142,48 +130,46 @@ export class GroupsEditComponent implements OnInit {
 
   private getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
-      (res) => {
+      res => {
         this.ELEMENT_DATA = res.result;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
-        this.oldStudentsJSON = this.ELEMENT_DATA.map((value) =>
-          JSON.stringify(value)
-        );
+        this.oldStudentsJSON = this.ELEMENT_DATA.map(value => JSON.stringify(value));
       },
-      (err) => {
+      err => {
         console.log(err);
       }
     );
   }
 
-  private updateStudents(newStudents: Student[]) {
+  private updateStudents(newStudents: Student[]): void {
     this.api.updateStudents(newStudents).then(
-      (res) => {
+      res => {
         console.log('students were updated');
       },
-      (err) => {
+      err => {
         console.log(err);
       }
     );
   }
 
-  private addStudents(addedStudents) {
+  private addStudents(addedStudents): void {
     this.api.addStudents(addedStudents).then(
-      (res) => {
+      res => {
         console.log('students were added');
       },
-      (err) => {
+      err => {
         console.log(err);
       }
     );
   }
 
-  private deleteStudents() {
+  private deleteStudents(): void {
     this.api.deleteStudents(this.deletedStudentsIds).then(
-      (res) => {
+      res => {
         console.log('students were deleted');
       },
-      (err) => {
+      err => {
         console.log(err);
       }
     );

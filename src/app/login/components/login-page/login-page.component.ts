@@ -11,9 +11,9 @@ import { AuthenticationService } from '../../services/authentication/authenticat
   styleUrls: ['./login-page.component.scss'],
 })
 export class LoginPageComponent implements OnInit {
-  email: string;
-  password: string;
-  returnUrl: string;
+  public email: string;
+  public password: string;
+  public returnUrl: string;
   public showSpinner = true;
 
   constructor(
@@ -22,22 +22,22 @@ export class LoginPageComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.authenticationService.logout();
 
     // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
-  login(): void {
+  public login(): void {
     this.authenticationService
       .login(this.email, this.password)
       .pipe(first())
       .subscribe(
-        (data) => {
+        data => {
           this.router.navigate([this.returnUrl]);
         },
-        (error) => {
+        error => {
           // should show error message
           alert(error.error);
         }

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Component, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
@@ -38,17 +38,6 @@ class MatCartActionsStubComponent {}
 
 @Injectable()
 export class ActivatedRouteStub {
-  private subject = new BehaviorSubject(this.testParams);
-  private _testParams: {};
-  paramMap = this.subject.asObservable();
-
-  snapshot = {
-    paramMap: convertToParamMap({ id: 1 }),
-    queryParams: {
-      returnUrl: '/',
-    },
-  };
-
   get testParams() {
     return this._testParams;
   }
@@ -56,23 +45,34 @@ export class ActivatedRouteStub {
     this._testParams = paramMap;
     this.subject.next(paramMap);
   }
+  public subject = new BehaviorSubject(this.testParams);
+
+  public paramMap = this.subject.asObservable();
+
+  public snapshot = {
+    paramMap: convertToParamMap({ id: 1 }),
+    queryParams: {
+      returnUrl: '/',
+    },
+  };
+  private _testParams: {};
 }
 
 @Injectable()
 export class RouterStub {
-  navigate(path) {
+  public navigate(path) {
     return {};
   }
 }
 
 @Injectable()
 export class AuthenticationServiceStub {
-  login() {
+  public login() {
     localStorage.setItem('currentUser', JSON.stringify('mocUser'));
     return of('test');
   }
 
-  logout(): void {
+  public logout(): void {
     localStorage.removeItem('currentUser');
   }
 }
@@ -81,7 +81,7 @@ describe('LoginPageComponent', () => {
   let component: LoginPageComponent;
   let fixture: ComponentFixture<LoginPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [
         LoginPageComponent,
@@ -100,7 +100,7 @@ describe('LoginPageComponent', () => {
         { provide: AuthenticationService, useClass: AuthenticationServiceStub },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(LoginPageComponent);

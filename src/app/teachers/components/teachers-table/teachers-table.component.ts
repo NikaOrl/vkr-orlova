@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource, MatSort } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 
 import { Teacher } from '../../models/teacher.model';
 import { TeachersApiService } from '../../services/teachers-api.service';
@@ -10,23 +11,23 @@ import { TeachersApiService } from '../../services/teachers-api.service';
   styleUrls: ['./teachers-table.component.scss'],
 })
 export class TeachersTableComponent implements OnInit {
-  ELEMENT_DATA: Teacher[] = [];
-  displayedColumns: string[] = ['firstName', 'lastName', 'email', 'isAdmin'];
-  dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  public ELEMENT_DATA: Teacher[] = [];
+  public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'isAdmin'];
+  public dataSource = new MatTableDataSource(this.ELEMENT_DATA);
 
-  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatSort) public sort: MatSort;
 
   constructor(private api: TeachersApiService) {}
 
-  ngOnInit() {
+  public ngOnInit() {
     this.getTeachers();
   }
 
-  applyFilter(filterValue: string): void {
+  public applyFilter(filterValue: string): void {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  getTeachers(): void {
+  public getTeachers(): void {
     this.api.getTeachers().then(
       res => {
         this.ELEMENT_DATA = res.result;
@@ -35,7 +36,7 @@ export class TeachersTableComponent implements OnInit {
       },
       err => {
         console.log(err);
-      },
+      }
     );
   }
 }

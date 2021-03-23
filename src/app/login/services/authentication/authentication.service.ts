@@ -9,11 +9,11 @@ import { map } from 'rxjs/operators';
 export class AuthenticationService {
   constructor(private http: HttpClient) {}
 
-  login(email: string, password: string) {
+  public login(email: string, password: string) {
     return this.http
       .post<any>(`/api/login`, {
-        email: email,
-        password: password,
+        email,
+        password,
       })
       .pipe(
         map(user => {
@@ -23,11 +23,11 @@ export class AuthenticationService {
             localStorage.setItem('currentUser', JSON.stringify(user));
           }
           return user;
-        }),
+        })
       );
   }
 
-  logout(): void {
+  public logout(): void {
     // remove user from local storage to log user out
     localStorage.removeItem('currentUser');
   }

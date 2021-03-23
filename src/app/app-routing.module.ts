@@ -9,17 +9,17 @@ const routes: Routes = [
   {
     path: 'groups',
     canLoad: [AuthGuard],
-    loadChildren: './groups/groups.module#GroupsModule',
+    loadChildren: () => import('./groups/groups.module').then(m => m.GroupsModule),
   },
   {
     path: 'marks',
     canLoad: [AuthGuard],
-    loadChildren: './marks/marks.module#MarksModule',
+    loadChildren: () => import('./marks/marks.module').then(m => m.MarksModule),
   },
   {
     path: 'teachers',
     canLoad: [AuthGuard, AdminGuard],
-    loadChildren: './teachers/teachers.module#TeachersModule',
+    loadChildren: () => import('./teachers/teachers.module').then(m => m.TeachersModule),
   },
   {
     path: '',

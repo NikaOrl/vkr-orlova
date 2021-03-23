@@ -1,21 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { GroupPageComponent } from './group-page.component';
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'router-outlet', template: '' })
-class RouterOutletStubComponent {}
+import { MockComponents } from 'ng-mocks';
+import { HeaderComponent } from 'src/app/shared/components/header/header.component';
 
 describe('GroupPageComponent', () => {
   let component: GroupPageComponent;
   let fixture: ComponentFixture<GroupPageComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GroupPageComponent, RouterOutletStubComponent],
+      declarations: [GroupPageComponent, MockComponents(HeaderComponent)],
+      imports: [RouterTestingModule],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupPageComponent);

@@ -1,15 +1,15 @@
 import { AuthGuard } from './auth.guard';
 
 class MockRouter {
-  navigate(path) {}
+  public navigate(path) {}
 }
 
 class MockAuthenticationService {
-  login() {
+  public login() {
     localStorage.setItem('currentUser', JSON.stringify('mocUser'));
   }
 
-  logout(): void {
+  public logout(): void {
     localStorage.removeItem('currentUser');
   }
 }
@@ -18,6 +18,10 @@ describe('AuthGuard canActivate', () => {
   let authGuard: AuthGuard;
   let router;
   let authenticationService;
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   it('should return true for a logged in user', () => {
     router = new MockRouter();
@@ -38,6 +42,10 @@ describe('AuthGuard canLoad', () => {
   let authGuard: AuthGuard;
   let router;
   let authenticationService;
+
+  beforeEach(() => {
+    localStorage.clear();
+  });
 
   it('should return true for a logged in user', () => {
     router = new MockRouter();

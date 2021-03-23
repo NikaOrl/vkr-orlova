@@ -13,13 +13,7 @@
                   <tr>
                     <td>
                       <mat-form-field class="example-full-width">
-                        <input
-                          matInput
-                          placeholder="email"
-                          [(ngModel)]="email"
-                          name="email"
-                          required
-                        />
+                        <input matInput placeholder="email" [(ngModel)]="email" name="email" required />
                       </mat-form-field>
                     </td>
                   </tr>
@@ -39,14 +33,10 @@
                   </tr>
                 </table>
               </form>
-              <mat-spinner
-                [style.display]="showSpinner ? 'block' : 'none'"
-              ></mat-spinner>
+              <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
             </mat-card-content>
             <mat-card-actions>
-              <button mat-raised-button (click)="login()" color="primary">
-                Login
-              </button>
+              <button mat-raised-button (click)="login()" color="primary">Login</button>
             </mat-card-actions>
           </div>
         </mat-card>

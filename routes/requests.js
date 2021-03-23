@@ -7,7 +7,7 @@ const localAuth = require('../knex-helper/auth/local');
 const authHelpers = require('../knex-helper/auth/_helpers');
 
 /* GET students page. */
-router.get('/students/group/:group', function(req, res, next) {
+router.get('/students/group/:group', function (req, res, next) {
   knex
     .from('students')
     .select('*')
@@ -23,7 +23,7 @@ router.get('/students/group/:group', function(req, res, next) {
 });
 
 /* GET teachers page. */
-router.get('/teachers', function(req, res, next) {
+router.get('/teachers', function (req, res, next) {
   knex
     .from('teachers')
     .select(['firstName', 'lastName', 'id', 'email', 'isAdmin', 'deleted'])
@@ -38,7 +38,7 @@ router.get('/teachers', function(req, res, next) {
 });
 
 /* GET marks table. */
-router.get('/marks/discipline/:disciplineId', function(req, res, next) {
+router.get('/marks/discipline/:disciplineId', function (req, res, next) {
   knex
     .from('students-disciplines')
     .select('studentId')
@@ -100,7 +100,7 @@ router.get('/marks/discipline/:disciplineId', function(req, res, next) {
 });
 
 /* GET all groups */
-router.get('/students/groups', function(req, res, next) {
+router.get('/students/groups', function (req, res, next) {
   knex
     .from('groups')
     .select('*')
@@ -114,7 +114,7 @@ router.get('/students/groups', function(req, res, next) {
 });
 
 /* GET disciplines */
-router.get('/marks/disciplines', function(req, res, next) {
+router.get('/marks/disciplines', function (req, res, next) {
   knex
     .from('disciplines')
     .select('*')
@@ -140,7 +140,7 @@ router.put('/students/update', (req, res, next) => {
           console.log(err);
           throw err;
         });
-    }),
+    })
   )
     .then(() => {
       res.status(200).json({
@@ -166,7 +166,7 @@ router.put('/teachers/update', (req, res, next) => {
           console.log(err);
           throw err;
         });
-    }),
+    })
   )
     .then(() => {
       res.status(200).json({
@@ -204,7 +204,7 @@ router.put('/marks/update', (req, res, next) => {
             throw err;
           });
       }
-    }),
+    })
   )
     .then(() => {
       res.status(200).json({
@@ -230,7 +230,7 @@ router.put('/jobs/update', (req, res, next) => {
           console.log(err);
           throw err;
         });
-    }),
+    })
   )
     .then(() => {
       res.status(200).json({

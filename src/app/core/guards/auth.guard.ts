@@ -9,11 +9,11 @@ import { CoreModule } from '../core.module';
 export class AuthGuard implements CanActivate, CanLoad {
   constructor(private router: Router) {}
 
-  canActivate(): boolean {
+  public canActivate(): boolean {
     return this.checkLogin();
   }
 
-  canLoad(): boolean {
+  public canLoad(): boolean {
     return this.checkLogin();
   }
 
