@@ -37,7 +37,6 @@
     "moment": "^2.15.2",
     "morgan": "^1.9.1",
     "mysql2": "^1.6.5",
-    "ngx-mat-select-search": "^3.2.0",
     "rxjs": "~6.6.6",
     "serve-favicon": "^2.5.0",
     "tslib": "^2.0.0",
