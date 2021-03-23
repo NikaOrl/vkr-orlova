@@ -20,7 +20,7 @@ describe('GroupsApiService', () => {
     });
     injector = getTestBed();
     service = injector.get(GroupsApiService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {

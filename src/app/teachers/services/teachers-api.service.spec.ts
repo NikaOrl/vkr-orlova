@@ -21,7 +21,7 @@ describe('TeachersApiService', () => {
     });
     injector = getTestBed();
     service = injector.get(TeachersApiService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {

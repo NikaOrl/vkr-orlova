@@ -22,7 +22,7 @@ describe('MarksApiService', () => {
     });
     injector = getTestBed();
     service = injector.get(MarksApiService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {

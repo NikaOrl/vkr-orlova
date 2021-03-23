@@ -41,7 +41,6 @@ import { MarksDialogComponent } from './components/marks-dialog/marks-dialog.com
     FormsModule,
     MarksRoutingModule,
   ],
-  entryComponents: [MarksDialogComponent],
   exports: [MarksPageComponent],
 })
 export class MarksModule {}

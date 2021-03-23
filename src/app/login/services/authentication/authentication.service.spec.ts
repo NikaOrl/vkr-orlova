@@ -19,7 +19,7 @@ describe('AuthenticationService', () => {
 
     injector = getTestBed();
     service = injector.get(AuthenticationService);
-    httpMock = TestBed.get(HttpTestingController);
+    httpMock = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => {
