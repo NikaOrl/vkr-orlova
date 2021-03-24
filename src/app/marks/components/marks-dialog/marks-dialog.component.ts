@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DialogData } from '../../models/dialog-data.model';
+
+import { IDialogData } from '../../models/dialog-data.model';
 
 @Component({
   selector: 'app-marks-dialog',
@@ -8,7 +9,10 @@ import { DialogData } from '../../models/dialog-data.model';
   styleUrls: ['./marks-dialog.component.scss'],
 })
 export class MarksDialogComponent {
-  constructor(public dialogRef: MatDialogRef<MarksDialogComponent>, @Inject(MAT_DIALOG_DATA) public data: DialogData) {}
+  constructor(
+    public dialogRef: MatDialogRef<MarksDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: IDialogData
+  ) {}
 
   public onNoClick(): void {
     this.dialogRef.close();

@@ -1,185 +1,32 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Directive, Input, forwardRef, Injectable } from '@angular/core';
-import { FormsModule, NG_VALUE_ACCESSOR, ControlValueAccessor } from '@angular/forms';
-import { convertToParamMap, Router, ActivatedRoute } from '@angular/router';
-import { HttpClient, HttpHandler } from '@angular/common/http';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
-import { BehaviorSubject } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatInputModule } from '@angular/material/input';
 
 import { GroupTableComponent } from './group-table.component';
 import { GroupsApiService } from '../../services/groups-api.service';
+import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-form-field', template: '' })
-class MatFormFieldStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-label', template: '' })
-class MatLabelStubComponent {}
-
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'mat-select',
-  template: '',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MatSelectStubComponent),
-      multi: true,
-    },
-  ],
-})
-class MatSelectStubComponent implements ControlValueAccessor {
-  public value;
-  public onChangeCallback;
-  public onTouchedCallback;
-
-  public writeValue(value: any): void {
-    this.value = value;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnChange(fn: (val?: any) => void): void {
-    this.onChangeCallback = fn;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnTouched(fn: (val?: any) => void): void {
-    this.onTouchedCallback = fn;
-  }
-}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-option', template: '' })
-class MatOptionStubComponent {
-  @Input() public value: any;
-}
-
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'ngx-mat-select-search',
-  template: '',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NgxMatSelectSearchStubComponent),
-      multi: true,
-    },
-  ],
-})
-class NgxMatSelectSearchStubComponent {
-  public value;
-  public onChangeCallback;
-  public onTouchedCallback;
-
-  public writeValue(value: any): void {
-    this.value = value;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnChange(fn: (val?: any) => void): void {
-    this.onChangeCallback = fn;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnTouched(fn: (val?: any) => void): void {
-    this.onTouchedCallback = fn;
-  }
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[routerLink]',
-  // tslint:disable-next-line:use-host-property-decorator
-  host: { '(click)': 'onClick()' },
-})
-class RouterLinkStubDirective {
-  @Input('routerLink') public linkParams: any;
-  public navigatedTo: any = null;
-  public onClick() {
-    this.navigatedTo = this.linkParams;
-  }
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[placeholderLabel]',
-})
-class PlaceholderLabelStubDirective {
-  @Input('placeholderLabel') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[noEntriesFoundLabel]',
-})
-class NoEntriesFoundLabelStubDirective {
-  @Input('noEntriesFoundLabel') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[dataSource]',
-})
-class DataSourceStubDirective {
-  @Input('dataSource') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[matHeaderRowDef]',
-})
-class MatHeaderRowDefStubDirective {
-  @Input('matHeaderRowDef') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[matRowDefColumns]',
-})
-class MatRowDefColumnsStubDirective {
-  @Input('matRowDefColumns') public linkParams: any;
-}
-
-const GroupsApiServiceStub = {
-  getStudents: (groupId: number): Promise<any> => {
+export class GroupsApiServiceStub {
+  public getStudents(groupId: number): Promise<unknown> {
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve({ result: 'students' }));
       setTimeout(() => reject(new Error('ignored')));
     });
-  },
-  getGroups: (): Promise<any> => {
+  }
+
+  public getGroups(): Promise<unknown> {
     return new Promise((resolve, reject) => {
       setTimeout(() => resolve({ result: 'groups' }));
       setTimeout(() => reject(new Error('ignored')));
     });
-  },
-};
-
-@Injectable()
-export class RouterStub {
-  public navigate(path) {
-    return {};
   }
-}
-
-@Injectable()
-export class ActivatedRouteStub {
-  get testParams() {
-    return this._testParams;
-  }
-  public subject = new BehaviorSubject(this.testParams);
-  public paramMap = this.subject.asObservable();
-
-  set testParams(paramMap: {}) {
-    this._testParams = paramMap;
-    this.subject.next(paramMap);
-  }
-
-  public snapshot = {
-    paramMap: convertToParamMap({ id: 1 }),
-  };
-  private _testParams: {};
 }
 
 describe('GroupTableComponent', () => {
@@ -188,25 +35,11 @@ describe('GroupTableComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [
-        GroupTableComponent,
-        MatFormFieldStubComponent,
-        MatLabelStubComponent,
-        MatSelectStubComponent,
-        MatOptionStubComponent,
-        RouterLinkStubDirective,
-        PlaceholderLabelStubDirective,
-        NgxMatSelectSearchStubComponent,
-        NoEntriesFoundLabelStubDirective,
-        DataSourceStubDirective,
-        MatHeaderRowDefStubDirective,
-        MatRowDefColumnsStubDirective,
-      ],
-      imports: [FormsModule],
+      declarations: [GroupTableComponent, RouterLinkStubDirective],
+      imports: [FormsModule, MatFormFieldModule, MatTableModule, MatSelectModule, MatInputModule, NoopAnimationsModule],
       providers: [
-        HttpClient,
-        HttpHandler,
-        { provide: GroupsApiService, useValue: GroupsApiServiceStub },
+        HttpClientTestingModule,
+        { provide: GroupsApiService, useClass: GroupsApiServiceStub },
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useClass: ActivatedRouteStub },
       ],
@@ -229,11 +62,14 @@ describe('GroupTableComponent', () => {
   });
 
   it('should filter groups', () => {
-    component.filterGroups('a');
+    component.filterGroups('1');
     expect(component.filteredGroups).toBe(undefined);
 
-    component.groups = [{ groupNumber: 'a' }, { groupNumber: 'b' }];
-    component.filterGroups('a');
-    expect(component.filteredGroups).toEqual([{ groupNumber: 'a' }]);
+    component.groups = [
+      { id: 1, groupNumber: 1 },
+      { id: 2, groupNumber: 2 },
+    ];
+    component.filterGroups('1');
+    expect(component.filteredGroups).toEqual([{ id: 1, groupNumber: 1 }]);
   });
 });

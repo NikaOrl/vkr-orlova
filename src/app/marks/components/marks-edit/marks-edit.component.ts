@@ -6,11 +6,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { MarksApiService } from '../../services/marks-api.service';
-import { StudentMarks } from '../../models/student-marks.model';
-import { Marks } from '../../models/marks.model';
-import { Jobs } from '../../models/jobs.model';
-import { Student } from 'src/app/groups/models/student.model';
+import { IStudentMark } from '../../models/student-marks.model';
+import { IMark } from '../../models/marks.model';
+import { IJob } from '../../models/jobs.model';
+import { IStudent } from 'src/app/groups/models/student.model';
 import { DialogService } from 'src/app/core/services/dialog.service';
+import { IColumn } from '../../models/column.model';
+import { ITableData } from '../../models/table-data.model';
 
 @Component({
   selector: 'app-marks-edit',
@@ -18,24 +20,24 @@ import { DialogService } from 'src/app/core/services/dialog.service';
   styleUrls: ['./marks-edit.component.scss'],
 })
 export class MarksEditComponent implements OnInit {
-  public columns: any[];
+  public columns: IColumn[];
   public displayedColumns: string[];
-  public dataSource = new MatTableDataSource([]);
+  public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
   public selectedDisciplineId: number;
 
-  private ELEMENT_DATA: StudentMarks[] = [];
+  private ELEMENT_DATA: IStudentMark[] = [];
 
-  private marks: Marks[];
-  private jobs: Jobs[];
-  private students: Student[];
+  private marks: IMark[];
+  private jobs: IJob[];
+  private students: IStudent[];
 
   private deletedJobsIds: Set<number> = new Set();
   private oldMarksJSON: string[];
   private oldJobsJSON: string[];
-  private addedJobsNumber = 0;
+  private addedJobsNumber: number = 0;
 
-  private saved = true;
+  private saved: boolean = true;
 
   constructor(
     private router: Router,
@@ -44,7 +46,7 @@ export class MarksEditComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
     this.getMarks(this.selectedDisciplineId);
   }
@@ -53,7 +55,7 @@ export class MarksEditComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public markChange(e: string, mark: Marks) {
+  public markChange(e: string, mark: IMark): void {
     this.saved = false;
     this.marks.forEach((value, index) => {
       if (JSON.stringify(value) === JSON.stringify(mark)) {
@@ -62,14 +64,14 @@ export class MarksEditComponent implements OnInit {
     });
   }
 
-  public jobChange(e, jobNumber: number) {
+  public jobChange(e: string, jobNumber: number): void {
     this.saved = false;
     this.jobs[jobNumber].jobValue = e;
   }
 
-  public save() {
-    const newMarks = [];
-    const addedMarks = [];
+  public save(): void {
+    const newMarks: IMark[] = [];
+    const addedMarks: IMark[] = [];
     this.marks.forEach((value, index) => {
       if (this.oldMarksJSON[index] && this.oldMarksJSON[index] !== JSON.stringify(value)) {
         newMarks.push(value);
@@ -78,8 +80,8 @@ export class MarksEditComponent implements OnInit {
         addedMarks.push(value);
       }
     });
-    const newJobs = [];
-    const addedJobs = [];
+    const newJobs: IJob[] = [];
+    const addedJobs: IJob[] = [];
     this.jobs.forEach((value, index) => {
       if (this.oldJobsJSON[index] && this.oldJobsJSON[index] !== JSON.stringify(value)) {
         newJobs.push(value);
@@ -108,12 +110,12 @@ export class MarksEditComponent implements OnInit {
     }
   }
 
-  public delete(e) {
+  public delete(e: number): void {
     this.saved = false;
     this.deletedJobsIds.add(e);
   }
 
-  public add() {
+  public add(): void {
     this.saved = false;
     this.addedJobsNumber++;
     this.jobs.push({
@@ -138,20 +140,20 @@ export class MarksEditComponent implements OnInit {
     });
   }
 
-  public cancelDelete(e) {
+  public cancelDelete(e: number): void {
     this.deletedJobsIds.delete(e);
   }
 
-  public cancelAdd(e) {
-    const index = this.jobs.findIndex(v => v.id === e);
+  public cancelAdd(e: number): void {
+    const index: number = this.jobs.findIndex(v => v.id === e);
     this.jobs.splice(index, 1);
-    const markIndexes = [];
+    const markIndexes: number[] = [];
     this.marks.forEach((value, i) => {
       if (value.jobId === e) {
         markIndexes.push(i);
       }
     });
-    for (let i = markIndexes.length - 1; i >= 0; i--) {
+    for (let i: number = markIndexes.length - 1; i >= 0; i--) {
       this.marks.splice(markIndexes[i], 1);
     }
     this.updateTableData({
@@ -161,20 +163,12 @@ export class MarksEditComponent implements OnInit {
     });
   }
 
-  public isDeleted(e): boolean {
-    if (this.deletedJobsIds.has(e)) {
-      return true;
-    } else {
-      return false;
-    }
+  public isDeleted(e: number): boolean {
+    return this.deletedJobsIds.has(e);
   }
 
-  public isAdded(row): boolean {
-    if (row < 0) {
-      return true;
-    } else {
-      return false;
-    }
+  public isAdded(row: number): boolean {
+    return row < 0;
   }
 
   public canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
@@ -201,7 +195,7 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  private updateMarks(newMarks: Marks[]) {
+  private updateMarks(newMarks: IMark[]): void {
     this.api.updateMarks(newMarks).then(
       res => {
         console.log('marks were updated');
@@ -212,7 +206,7 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  private updateJobs(newJobs: Jobs[]) {
+  private updateJobs(newJobs: IJob[]): void {
     this.api.updateJobs(newJobs).then(
       res => {
         console.log('jobs were updated');
@@ -223,7 +217,7 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  private addJobsAndMarks(addedJobs: Jobs[], addedMarks: Marks[]) {
+  private addJobsAndMarks(addedJobs: IJob[], addedMarks: IMark[]): void {
     this.api.addJobsAndMarks(addedJobs, addedMarks).then(
       res => {
         console.log('jobs and marks were added');
@@ -234,7 +228,7 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  private deleteJobsAndMarks() {
+  private deleteJobsAndMarks(): void {
     this.api.deleteJobs(this.deletedJobsIds).then(
       res => {
         console.log('jobs and their marks were deleted');
@@ -245,12 +239,12 @@ export class MarksEditComponent implements OnInit {
     );
   }
 
-  private parseGetMarksResult(result): any[] {
-    const marksAndStudents = result.students.map(student => {
-      const studentMarks = result.marks.filter(mark => +mark.studentId === +student.id);
-      const markObject = {};
+  private parseGetMarksResult(result: ITableData): IStudentMark[] {
+    const marksAndStudents: IStudentMark[] = result.students.map(student => {
+      const studentMarks: IMark[] = result.marks.filter(mark => +mark.studentId === +student.id);
+      const markObject: { [key: number]: IMark } = {};
       studentMarks.forEach(mark => {
-        const jobV = result.jobs.find(job => +mark.jobId === +job.id);
+        const jobV: IJob = result.jobs.find(job => +mark.jobId === +job.id);
         if (jobV) {
           markObject[jobV.id] = mark;
         }
@@ -263,7 +257,7 @@ export class MarksEditComponent implements OnInit {
     return marksAndStudents;
   }
 
-  private updateTableData(dataObj) {
+  private updateTableData(dataObj: ITableData): void {
     this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
@@ -272,9 +266,9 @@ export class MarksEditComponent implements OnInit {
         columnDef: index => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
         cell: (cellRow, studentIndex) => {
-          const jobId = row.id;
-          const jsonMarks = this.marks.map(mark => JSON.stringify(mark));
-          const newMark = {
+          const jobId: number = row.id;
+          const jsonMarks: string[] = this.marks.map(mark => JSON.stringify(mark));
+          const newMark: IMark = {
             id: null,
             studentId: this.students[studentIndex].id,
             jobId,

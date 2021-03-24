@@ -3,8 +3,9 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 
-import { GroupsApiService } from 'src/app/groups/services/groups-api.service';
-import { Student } from '../../models/student.model';
+import { GroupsApiService } from '../../services/groups-api.service';
+import { IGroup } from '../../models/group.model';
+import { IStudent } from '../../models/student.model';
 
 @Component({
   selector: 'app-group-table',
@@ -12,22 +13,22 @@ import { Student } from '../../models/student.model';
   styleUrls: ['./group-table.component.scss'],
 })
 export class GroupTableComponent implements OnInit {
-  public ELEMENT_DATA: Student[] = [];
-  public selectedGroup: any;
-  public groups: any[];
-  public filteredGroups: any[];
+  public ELEMENT_DATA: IStudent[] = [];
+  public selectedGroup: IGroup;
+  public groups: IGroup[];
+  public filteredGroups: IGroup[];
   public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'headStudent'];
-  public dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  public dataSource: MatTableDataSource<IStudent> = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) public sort: MatSort;
 
   constructor(private router: Router, private route: ActivatedRoute, private api: GroupsApiService) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.api.getGroups().then(
       res => {
         this.groups = res.result;
-        const selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
+        const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
         this.selectedGroup = selectedGroupId ? this.groups.find(group => group.id === selectedGroupId) : this.groups[0];
         this.filteredGroups = this.groups;
 
@@ -43,11 +44,11 @@ export class GroupTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public filterGroups(e): void {
+  public filterGroups(e: string): void {
     if (!this.groups) {
       return;
     }
-    const search = e ? e.toLowerCase() : '';
+    const search: string = e ? e.toLowerCase() : '';
     this.filteredGroups = this.groups.filter(group => `${group.groupNumber}`.indexOf(search) !== -1);
   }
 

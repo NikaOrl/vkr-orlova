@@ -1,62 +1,45 @@
+import { TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+
+import { MockAuthenticationService } from '../../login/services/authentication/authentication.service.spec';
+import { RouterStub } from '../../shared/utils/tests-stubs';
 import { AuthGuard } from './auth.guard';
 
-class MockRouter {
-  public navigate(path) {}
-}
-
-class MockAuthenticationService {
-  public login() {
-    localStorage.setItem('currentUser', JSON.stringify('mocUser'));
-  }
-
-  public logout(): void {
-    localStorage.removeItem('currentUser');
-  }
-}
-
-describe('AuthGuard canActivate', () => {
+describe('AuthGuard', () => {
   let authGuard: AuthGuard;
-  let router;
-  let authenticationService;
+  let authenticationService: MockAuthenticationService;
 
   beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [{ provide: Router, useClass: RouterStub }],
+    });
     localStorage.clear();
-  });
-
-  it('should return true for a logged in user', () => {
-    router = new MockRouter();
-    authGuard = new AuthGuard(router);
+    authGuard = TestBed.inject(AuthGuard);
     authenticationService = new MockAuthenticationService();
-    authenticationService.logout();
-    expect(authGuard.canActivate()).toEqual(false);
-
-    authenticationService.login();
-    expect(authGuard.canActivate()).toEqual(true);
-
-    authenticationService.logout();
-    expect(authGuard.canActivate()).toEqual(false);
-  });
-});
-
-describe('AuthGuard canLoad', () => {
-  let authGuard: AuthGuard;
-  let router;
-  let authenticationService;
-
-  beforeEach(() => {
-    localStorage.clear();
   });
 
-  it('should return true for a logged in user', () => {
-    router = new MockRouter();
-    authGuard = new AuthGuard(router);
-    authenticationService = new MockAuthenticationService();
-    expect(authGuard.canLoad()).toEqual(false);
+  describe('canActivate', () => {
+    it('should return true for a logged in user', () => {
+      authenticationService.logout();
+      expect(authGuard.canActivate()).toEqual(false);
 
-    authenticationService.login();
-    expect(authGuard.canLoad()).toEqual(true);
+      authenticationService.login({ token: 'mocUser', isAdmin: true });
+      expect(authGuard.canActivate()).toEqual(true);
 
-    authenticationService.logout();
-    expect(authGuard.canLoad()).toEqual(false);
+      authenticationService.logout();
+      expect(authGuard.canActivate()).toEqual(false);
+    });
+  });
+
+  describe('canLoad', () => {
+    it('should return true for a logged in user', () => {
+      expect(authGuard.canLoad()).toEqual(false);
+
+      authenticationService.login({ token: 'mocUser', isAdmin: true });
+      expect(authGuard.canLoad()).toEqual(true);
+
+      authenticationService.logout();
+      expect(authGuard.canLoad()).toEqual(false);
+    });
   });
 });

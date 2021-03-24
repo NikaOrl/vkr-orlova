@@ -2,6 +2,9 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+import { IUser } from '../../../core/interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,9 +12,9 @@ import { map } from 'rxjs/operators';
 export class AuthenticationService {
   constructor(private http: HttpClient) {}
 
-  public login(email: string, password: string) {
+  public login(email: string, password: string): Observable<IUser> {
     return this.http
-      .post<any>(`/api/login`, {
+      .post<IUser>(`/api/login`, {
         email,
         password,
       })

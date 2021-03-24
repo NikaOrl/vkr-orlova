@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
-import { Teacher } from '../../models/teacher.model';
+import { ITeacher } from '../../models/teacher.model';
 import { TeachersApiService } from '../../services/teachers-api.service';
 
 @Component({
@@ -11,15 +11,15 @@ import { TeachersApiService } from '../../services/teachers-api.service';
   styleUrls: ['./teachers-table.component.scss'],
 })
 export class TeachersTableComponent implements OnInit {
-  public ELEMENT_DATA: Teacher[] = [];
+  public ELEMENT_DATA: ITeacher[] = [];
   public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'isAdmin'];
-  public dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+  public dataSource: MatTableDataSource<ITeacher> = new MatTableDataSource(this.ELEMENT_DATA);
 
   @ViewChild(MatSort) public sort: MatSort;
 
   constructor(private api: TeachersApiService) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.getTeachers();
   }
 

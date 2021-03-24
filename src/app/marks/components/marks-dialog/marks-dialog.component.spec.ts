@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Component } from '@angular/core';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -13,20 +13,16 @@ describe('MarksDialogComponent', () => {
   let component: MarksDialogComponent;
   let fixture: ComponentFixture<MarksDialogComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [MarksDialogComponent, MatFormFieldStubComponent],
-      imports: [
-        FormsModule,
-        // TODO: fix this import
-        MatDialogModule,
-      ],
+      imports: [FormsModule, MatDialogModule],
       providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MarksDialogComponent);

@@ -1,273 +1,50 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, forwardRef, Input, Directive, Injectable } from '@angular/core';
-import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
-import { Router, ActivatedRoute, convertToParamMap } from '@angular/router';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { Router, ActivatedRoute } from '@angular/router';
 
-import { BehaviorSubject } from 'rxjs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { GroupsEditComponent } from './groups-edit.component';
 import { GroupsApiService } from '../../services/groups-api.service';
-import { Student } from '../../models/student.model';
-import { DialogService } from 'src/app/core/services/dialog.service';
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-form-field', template: '' })
-class MatFormFieldStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-label', template: '' })
-class MatLabelStubComponent {}
-
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'mat-select',
-  template: '',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MatSelectStubComponent),
-      multi: true,
-    },
-  ],
-})
-class MatSelectStubComponent implements ControlValueAccessor {
-  public value;
-  public onChangeCallback;
-  public onTouchedCallback;
-
-  public writeValue(value: any): void {
-    this.value = value;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnChange(fn: (val?: any) => void): void {
-    this.onChangeCallback = fn;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnTouched(fn: (val?: any) => void): void {
-    this.onTouchedCallback = fn;
-  }
-}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-option', template: '' })
-class MatOptionStubComponent {
-  @Input() public value: any;
-}
-
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'ngx-mat-select-search',
-  template: '',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NgxMatSelectSearchStubComponent),
-      multi: true,
-    },
-  ],
-})
-class NgxMatSelectSearchStubComponent {
-  public value;
-  public onChangeCallback;
-  public onTouchedCallback;
-
-  public writeValue(value: any): void {
-    this.value = value;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnChange(fn: (val?: any) => void): void {
-    this.onChangeCallback = fn;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnTouched(fn: (val?: any) => void): void {
-    this.onTouchedCallback = fn;
-  }
-}
-
-@Component({
-  // tslint:disable-next-line:component-selector
-  selector: 'mat-checkbox',
-  template: '',
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => MatCheckboxStubComponent),
-      multi: true,
-    },
-  ],
-})
-class MatCheckboxStubComponent implements ControlValueAccessor {
-  public value;
-  public onChangeCallback;
-  public onTouchedCallback;
-
-  public writeValue(value: any): void {
-    this.value = value;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnChange(fn: (val?: any) => void): void {
-    this.onChangeCallback = fn;
-  }
-
-  // From ControlValueAccessor interface
-  public registerOnTouched(fn: (val?: any) => void): void {
-    this.onTouchedCallback = fn;
-  }
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[routerLink]',
-  // tslint:disable-next-line:use-host-property-decorator
-  host: { '(click)': 'onClick()' },
-})
-class RouterLinkStubDirective {
-  @Input('routerLink') public linkParams: any;
-  public navigatedTo: any = null;
-  public onClick() {
-    this.navigatedTo = this.linkParams;
-  }
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[placeholderLabel]',
-})
-class PlaceholderLabelStubDirective {
-  @Input('placeholderLabel') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[noEntriesFoundLabel]',
-})
-class NoEntriesFoundLabelStubDirective {
-  @Input('noEntriesFoundLabel') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[dataSource]',
-})
-class DataSourceStubDirective {
-  @Input('dataSource') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[matHeaderRowDef]',
-})
-class MatHeaderRowDefStubDirective {
-  @Input('matHeaderRowDef') public linkParams: any;
-}
-
-@Directive({
-  // tslint:disable-next-line:directive-selector
-  selector: '[matRowDefColumns]',
-})
-class MatRowDefColumnsStubDirective {
-  @Input('matRowDefColumns') public linkParams: any;
-}
-
-@Injectable()
-export class GroupsApiServiceStub {
-  public getStudents(groupId: number): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 }, { id: 2 }] }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  public getGroups(): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  public updateStudents(students: Student[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  public addStudents(students: Student[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  public deleteStudents(studentsIds: Set<number>): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-}
-
-@Injectable()
-export class RouterStub {
-  public navigate(path) {
-    return {};
-  }
-}
-
-@Injectable()
-export class ActivatedRouteStub {
-  get testParams() {
-    return this._testParams;
-  }
-  set testParams(paramMap: {}) {
-    this._testParams = paramMap;
-    this.subject.next(paramMap);
-  }
-  public subject = new BehaviorSubject(this.testParams);
-
-  public paramMap = this.subject.asObservable();
-
-  public snapshot = {
-    paramMap: convertToParamMap({ id: 1 }),
-  };
-  private _testParams: {};
-}
+import { IStudent } from '../../models/student.model';
+import { DialogService } from '../../../core/services/dialog.service';
+import { ActivatedRouteStub, RouterStub } from 'src/app/shared/utils/tests-stubs';
+import { DialogServiceStub } from '../../../core/services/dialog.service.spec';
+import { GroupsApiServiceStub } from '../../services/groups-api.service.spec';
 
 describe('GroupsEditComponent', () => {
   let component: GroupsEditComponent;
   let fixture: ComponentFixture<GroupsEditComponent>;
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        GroupsEditComponent,
-        MatFormFieldStubComponent,
-        MatLabelStubComponent,
-        MatSelectStubComponent,
-        MatOptionStubComponent,
-        MatCheckboxStubComponent,
-        RouterLinkStubDirective,
-        PlaceholderLabelStubDirective,
-        NgxMatSelectSearchStubComponent,
-        NoEntriesFoundLabelStubDirective,
-        DataSourceStubDirective,
-        MatHeaderRowDefStubDirective,
-        MatRowDefColumnsStubDirective,
+      declarations: [GroupsEditComponent],
+      imports: [
+        FormsModule,
+        MatSelectModule,
+        MatTableModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatSortModule,
+        MatCheckboxModule,
+        NoopAnimationsModule,
       ],
-      imports: [FormsModule],
       providers: [
-        DialogService,
+        { provide: DialogService, DialogServiceStub },
         { provide: GroupsApiService, useClass: GroupsApiServiceStub },
         { provide: Router, useClass: RouterStub },
         { provide: ActivatedRoute, useClass: ActivatedRouteStub },
       ],
     }).compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(GroupsEditComponent);
@@ -284,7 +61,7 @@ describe('GroupsEditComponent', () => {
     expect(component.dataSource.filter).toBe('a');
   });
 
-  it('should save', async(() => {
+  it('should save', fakeAsync(() => {
     spyOn(window, 'confirm').and.returnValue(true);
     fixture.detectChanges(); // Run ngOnInit
     fixture.whenStable().then(() => {
@@ -292,20 +69,20 @@ describe('GroupsEditComponent', () => {
       component.save();
 
       component.add();
-      expect(component.isAdded({ id: null })).toBe(true);
-      expect(component.isAdded({ id: 2 })).toBe(false);
+      expect(component.isAdded({ id: null } as IStudent)).toBe(true);
+      expect(component.isAdded({ id: 2 } as IStudent)).toBe(false);
 
-      component.delete({ id: 1 });
-      expect(component.isDeleted({ id: 1 })).toBe(true);
-      expect(component.isDeleted({ id: 2 })).toBe(false);
+      component.delete({ id: 1 } as IStudent);
+      expect(component.isDeleted({ id: 1 } as IStudent)).toBe(true);
+      expect(component.isDeleted({ id: 2 } as IStudent)).toBe(false);
       component.unsaved();
       component.save();
 
       expect(component.canDeactivate()).toBe(true);
-      component.cancelAdd({ id: null });
+      component.cancelAdd({ id: null } as IStudent);
 
-      component.cancelDelete({ id: 1 });
-      expect(component.isDeleted({ id: 1 })).toBe(false);
+      component.cancelDelete({ id: 1 } as IStudent);
+      expect(component.isDeleted({ id: 1 } as IStudent)).toBe(false);
     });
   }));
 });

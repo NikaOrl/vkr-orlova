@@ -1,4 +1,4 @@
-export interface Teacher {
+export interface ITeacher {
   firstName: string;
   lastName: string;
   id: number;
