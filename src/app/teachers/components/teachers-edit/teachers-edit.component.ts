@@ -5,8 +5,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
-import { DialogService } from 'src/app/core/services/dialog.service';
-import { Teacher } from '../../models/teacher.model';
+import { DialogService } from '../../../core/services/dialog.service';
+import { ITeacher } from '../../models/teacher.model';
 import { TeachersApiService } from '../../services/teachers-api.service';
 
 @Component({
@@ -16,13 +16,13 @@ import { TeachersApiService } from '../../services/teachers-api.service';
 })
 export class TeachersEditComponent implements OnInit {
   public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'delete', 'isAdmin'];
-  public dataSource = new MatTableDataSource([]);
+  public dataSource: MatTableDataSource<ITeacher> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
 
-  private ELEMENT_DATA: Teacher[] = [];
+  private ELEMENT_DATA: ITeacher[] = [];
   private deletedTeachersIds: Set<number> = new Set();
   private oldTeachersJSON: string[];
-  private saved = true;
+  private saved: boolean = true;
 
   constructor(
     private router: Router,
@@ -31,7 +31,7 @@ export class TeachersEditComponent implements OnInit {
     private dialogService: DialogService
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.getTeachers();
   }
 
@@ -39,9 +39,9 @@ export class TeachersEditComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public save() {
-    const newTeachers = [];
-    const addedTeachers = [];
+  public save(): void {
+    const newTeachers: ITeacher[] = [];
+    const addedTeachers: ITeacher[] = [];
     this.ELEMENT_DATA.forEach((value, index) => {
       if (this.oldTeachersJSON[index] !== JSON.stringify(value)) {
         newTeachers.push(value);
@@ -67,12 +67,12 @@ export class TeachersEditComponent implements OnInit {
     }
   }
 
-  public delete(e) {
+  public delete(e: ITeacher): void {
     this.saved = false;
     this.deletedTeachersIds.add(e.id);
   }
 
-  public add() {
+  public add(): void {
     this.saved = false;
     this.ELEMENT_DATA.push({
       id: null,
@@ -87,34 +87,26 @@ export class TeachersEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  public cancelDelete(e) {
+  public cancelDelete(e: ITeacher): void {
     this.deletedTeachersIds.delete(e.id);
   }
 
-  public cancelAdd(e) {
-    const index = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
+  public cancelAdd(e: ITeacher): void {
+    const index: number = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  public isDeleted(row): boolean {
-    if (this.deletedTeachersIds.has(row.id)) {
-      return true;
-    } else {
-      return false;
-    }
+  public isDeleted(row: ITeacher): boolean {
+    return this.deletedTeachersIds.has(row.id);
   }
 
-  public isAdded(row): boolean {
-    if (row.id === null) {
-      return true;
-    } else {
-      return false;
-    }
+  public isAdded(row: ITeacher): boolean {
+    return row.id === null;
   }
 
-  public unsaved() {
+  public unsaved(): void {
     this.saved = false;
   }
 
@@ -139,7 +131,7 @@ export class TeachersEditComponent implements OnInit {
     );
   }
 
-  private updateTeachers(newTeachers: Teacher[]) {
+  private updateTeachers(newTeachers: ITeacher[]): void {
     this.api.updateTeachers(newTeachers).then(
       res => {
         console.log('Teachers were updated');
@@ -150,7 +142,7 @@ export class TeachersEditComponent implements OnInit {
     );
   }
 
-  private addTeachers(addedTeachers) {
+  private addTeachers(addedTeachers: ITeacher[]): void {
     this.api.addTeachers(addedTeachers).then(
       res => {
         console.log('Teachers were added');
@@ -161,7 +153,7 @@ export class TeachersEditComponent implements OnInit {
     );
   }
 
-  private deleteTeachers() {
+  private deleteTeachers(): void {
     this.api.deleteTeachers(this.deletedTeachersIds).then(
       res => {
         console.log('Teachers were deleted');

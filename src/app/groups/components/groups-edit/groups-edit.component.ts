@@ -6,8 +6,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
 import { GroupsApiService } from '../../services/groups-api.service';
-import { Student } from '../../models/student.model';
-import { DialogService } from 'src/app/core/services/dialog.service';
+import { IStudent } from '../../models/student.model';
+import { DialogService } from '../../../core/services/dialog.service';
 
 @Component({
   selector: 'app-groups-edit',
@@ -16,11 +16,11 @@ import { DialogService } from 'src/app/core/services/dialog.service';
 })
 export class GroupsEditComponent implements OnInit {
   public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'delete', 'headStudent'];
-  public dataSource = new MatTableDataSource([]);
+  public dataSource: MatTableDataSource<IStudent> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
   public selectedGroupId: number;
 
-  private ELEMENT_DATA: Student[] = [];
+  private ELEMENT_DATA: IStudent[] = [];
   private deletedStudentsIds: Set<number> = new Set();
   private oldStudentsJSON: string[];
   private saved: boolean = true;
@@ -42,8 +42,8 @@ export class GroupsEditComponent implements OnInit {
   }
 
   public save(): void {
-    const newStudents = [];
-    const addedStudents = [];
+    const newStudents: IStudent[] = [];
+    const addedStudents: IStudent[] = [];
     this.ELEMENT_DATA.forEach((value, index) => {
       if (this.oldStudentsJSON[index] !== JSON.stringify(value)) {
         newStudents.push(value);
@@ -69,7 +69,7 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  public delete(e): void {
+  public delete(e: IStudent): void {
     this.saved = false;
     this.deletedStudentsIds.add(e.id);
   }
@@ -90,18 +90,18 @@ export class GroupsEditComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  public cancelDelete(e): void {
+  public cancelDelete(e: IStudent): void {
     this.deletedStudentsIds.delete(e.id);
   }
 
-  public cancelAdd(e): void {
-    const index = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
+  public cancelAdd(e: IStudent): void {
+    const index: number = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  public isDeleted(row): boolean {
+  public isDeleted(row: IStudent): boolean {
     if (this.deletedStudentsIds.has(row.id)) {
       return true;
     } else {
@@ -109,7 +109,7 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  public isAdded(row): boolean {
+  public isAdded(row: IStudent): boolean {
     if (row.id === null) {
       return true;
     } else {
@@ -142,7 +142,7 @@ export class GroupsEditComponent implements OnInit {
     );
   }
 
-  private updateStudents(newStudents: Student[]): void {
+  private updateStudents(newStudents: IStudent[]): void {
     this.api.updateStudents(newStudents).then(
       res => {
         console.log('students were updated');
@@ -153,7 +153,7 @@ export class GroupsEditComponent implements OnInit {
     );
   }
 
-  private addStudents(addedStudents): void {
+  private addStudents(addedStudents: IStudent[]): void {
     this.api.addStudents(addedStudents).then(
       res => {
         console.log('students were added');

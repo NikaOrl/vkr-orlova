@@ -1,57 +1,56 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { Teacher } from '../models/teacher.model';
-
-const httpOptions = {
-  headers: new HttpHeaders({ 'Content-Type': 'application/json' }),
-};
-const apiUrl = '/api/teachers';
-
+import { ITeacher } from '../models/teacher.model';
+import { HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
 @Injectable({
   providedIn: 'root',
 })
 export class TeachersApiService {
   constructor(private http: HttpClient) {}
 
-  public getTeachers(): Promise<any> {
+  public getTeachers(): Promise<{ result: ITeacher[] }> {
     return this.http
-      .get(`${apiUrl}`, httpOptions)
+      .get<{ result: ITeacher[] }>(`${TEACHERS}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
 
-  public updateTeachers(teachers: Teacher[]): Promise<any> {
+  public updateTeachers(teachers: ITeacher[]): Promise<{ status: string }> {
     return this.http
-      .put<Teacher[]>(`${apiUrl}/update`, teachers, httpOptions)
+      .put<{ status: string }>(`${TEACHERS}/update`, teachers, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
 
-  public addTeachers(teachers: Teacher[]): Promise<any> {
+  // tslint:disable-next-line: no-any
+  public addTeachers(teachers: ITeacher[]): any {
     return Promise.all(
       teachers.map(teacher => {
-        this.http.post<Teacher[]>(`/api/register`, teacher, httpOptions).pipe(catchError(this.handleError)).toPromise();
+        this.http
+          .post<ITeacher[]>(`/api/register`, teacher, HTTP_OPTIONS)
+          .pipe(catchError(this.handleError))
+          .toPromise();
       })
     );
   }
 
-  public deleteTeachers(teachersIds: Set<number>): Promise<any> {
-    let urlParams = '';
+  public deleteTeachers(teachersIds: Set<number>): Promise<{ result: number }> {
+    let urlParams: string = '';
     teachersIds.forEach(id => {
-      urlParams += 'id=' + id + '&';
+      urlParams += `id=${id}&`;
     });
     urlParams = urlParams.substring(0, urlParams.length - 1);
     return this.http
-      .delete(`${apiUrl}/delete?${urlParams}`, httpOptions)
+      .delete<{ result: number }>(`${TEACHERS}/delete?${urlParams}`, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
 
-  private handleError(error: HttpErrorResponse) {
+  private handleError(error: HttpErrorResponse): Observable<never> {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.
       console.error('An error occurred:', error.error.message);
@@ -64,8 +63,7 @@ export class TeachersApiService {
     return throwError('Something bad happened; please try again later.');
   }
 
-  private extractData(res: Response) {
-    const body = res;
-    return body || {};
+  private extractData(res: { result: ITeacher[] }): { result: ITeacher[] } {
+    return res || { result: [] };
   }
 }

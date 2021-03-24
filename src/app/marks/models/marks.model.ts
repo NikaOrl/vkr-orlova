@@ -1,4 +1,4 @@
-export interface Marks {
+export interface IMark {
   id: number;
   studentId: number;
   jobId: number;

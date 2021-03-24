@@ -1,73 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Injectable } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { convertToParamMap, ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
-import { BehaviorSubject, of } from 'rxjs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+
+import { Observable, of } from 'rxjs';
 
 import { LoginPageComponent } from './login-page.component';
 import { AuthenticationService } from '../../services/authentication/authentication.service';
+import { ActivatedRouteStub, RouterStub } from '../../../shared/utils/tests-stubs';
 
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-card', template: '' })
-class MatCartStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-card-header', template: '' })
-class MatCartHeaderStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-card-title', template: '' })
-class MatCartTitleStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-card-content', template: '' })
-class MatCartContentStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-form-field', template: '' })
-class MatCartFormFieldStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-spinner', template: '' })
-class MatSpinnerStubComponent {}
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-card-actions', template: '' })
-class MatCartActionsStubComponent {}
-
-@Injectable()
-export class ActivatedRouteStub {
-  get testParams() {
-    return this._testParams;
-  }
-  set testParams(paramMap: {}) {
-    this._testParams = paramMap;
-    this.subject.next(paramMap);
-  }
-  public subject = new BehaviorSubject(this.testParams);
-
-  public paramMap = this.subject.asObservable();
-
-  public snapshot = {
-    paramMap: convertToParamMap({ id: 1 }),
-    queryParams: {
-      returnUrl: '/',
-    },
-  };
-  private _testParams: {};
-}
-
-@Injectable()
-export class RouterStub {
-  public navigate(path) {
-    return {};
-  }
-}
-
-@Injectable()
 export class AuthenticationServiceStub {
-  public login() {
+  public login(): Observable<string> {
     localStorage.setItem('currentUser', JSON.stringify('mocUser'));
     return of('test');
   }
@@ -83,17 +31,15 @@ describe('LoginPageComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [
-        LoginPageComponent,
-        MatCartStubComponent,
-        MatCartHeaderStubComponent,
-        MatCartTitleStubComponent,
-        MatCartContentStubComponent,
-        MatCartFormFieldStubComponent,
-        MatSpinnerStubComponent,
-        MatCartActionsStubComponent,
+      declarations: [LoginPageComponent],
+      imports: [
+        FormsModule,
+        MatButtonModule,
+        MatCardModule,
+        MatInputModule,
+        MatProgressSpinnerModule,
+        NoopAnimationsModule,
       ],
-      imports: [FormsModule],
       providers: [
         { provide: ActivatedRoute, useClass: ActivatedRouteStub },
         { provide: Router, useClass: RouterStub },

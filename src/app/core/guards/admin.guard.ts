@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, CanLoad, Router } from '@angular/router';
+import { CanActivate, CanLoad } from '@angular/router';
+
+import { IUser } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AdminGuard implements CanActivate, CanLoad {
-  constructor(private router: Router) {}
+  constructor() {}
 
   public canActivate(): boolean {
     return this.isUserAdmin();
@@ -16,7 +18,7 @@ export class AdminGuard implements CanActivate, CanLoad {
   }
 
   private isUserAdmin(): boolean {
-    const user = JSON.parse(localStorage.getItem('currentUser'));
+    const user: IUser = JSON.parse(localStorage.getItem('currentUser'));
     if (user && user.isAdmin) {
       return true;
     }

@@ -1,7 +1,18 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
 
 import { AuthenticationService } from './authentication.service';
+import { IUser } from '../../../core/interfaces/user.interface';
+
+export class MockAuthenticationService {
+  public login(user: IUser): void {
+    localStorage.setItem('currentUser', JSON.stringify(user));
+  }
+
+  public logout(): void {
+    localStorage.removeItem('currentUser');
+  }
+}
 
 describe('AuthenticationService', () => {
   let injector: TestBed;
@@ -15,7 +26,7 @@ describe('AuthenticationService', () => {
     });
 
     injector = getTestBed();
-    service = injector.get(AuthenticationService);
+    service = TestBed.inject(AuthenticationService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -28,13 +39,14 @@ describe('AuthenticationService', () => {
   });
 
   it('should login', () => {
-    const dummyUser = { login: 'John' };
+    const dummyUser: IUser = { token: 'John' } as IUser;
 
+    // tslint:disable-next-line: deprecation
     service.login('user', 'password').subscribe(user => {
       expect(user).toEqual(dummyUser);
     });
 
-    const req = httpMock.expectOne(`/api/login`);
+    const req: TestRequest = httpMock.expectOne(`/api/login`);
     expect(req.request.method).toBe('POST');
     req.flush(dummyUser);
     service.logout();

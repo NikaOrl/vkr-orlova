@@ -14,7 +14,7 @@ export class LoginPageComponent implements OnInit {
   public email: string;
   public password: string;
   public returnUrl: string;
-  public showSpinner = true;
+  public showSpinner: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -22,7 +22,7 @@ export class LoginPageComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {}
 
-  public ngOnInit() {
+  public ngOnInit(): void {
     this.authenticationService.logout();
 
     // get return url from route parameters or default to '/'
@@ -33,6 +33,7 @@ export class LoginPageComponent implements OnInit {
     this.authenticationService
       .login(this.email, this.password)
       .pipe(first())
+      // tslint:disable-next-line: deprecation
       .subscribe(
         data => {
           this.router.navigate([this.returnUrl]);

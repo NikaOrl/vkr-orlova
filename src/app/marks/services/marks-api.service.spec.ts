@@ -1,11 +1,64 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
 
 import { MarksApiService } from './marks-api.service';
-import { Jobs } from '../models/jobs.model';
-import { Marks } from '../models/marks.model';
+import { IJob } from '../models/jobs.model';
+import { IMark } from '../models/marks.model';
+import { ITableData } from '../models/table-data.model';
+import { IStudent } from '../../groups/models/student.model';
+import { IDiscipline } from '../models/discipline.model';
 
-const apiUrl = '/api/marks';
+export class MarksApiServiceStub {
+  public getMarks(disciplineId: number): Promise<ITableData> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() =>
+        resolve({
+          marks: [{ id: 1, markValue: '1' } as IMark, { id: 2, markValue: '2' } as IMark],
+          jobs: [{ id: 1, jobValue: '1' } as IJob, { id: 2, jobValue: '2' } as IJob],
+          students: [{ id: 1 } as IStudent, { id: 2 } as IStudent],
+        })
+      );
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  }
+
+  public getDisciplines(): Promise<{ result: IDiscipline[] }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  }
+
+  public updateMarks(marks: IMark[]): Promise<{ result: IMark[] }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: [{ id: 1 } as IMark, { id: 2 } as IMark] }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  }
+
+  public updateJobs(jobs: IJob[]): Promise<{ result: IJob[] }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: [{ id: 1 } as IJob, { id: 2 } as IJob] }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  }
+
+  public addJobsAndMarks(jobs: IJob[], marks: IMark[]): Promise<{ result: IMark[] }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: [{ id: 1 } as IMark, { id: 2 } as IMark] }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  }
+
+  public deleteJobs(jobsIds: Set<number>): Promise<{ result: number }> {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => resolve({ result: 2 }));
+      setTimeout(() => reject(new Error('ignored')));
+    });
+  }
+}
+
+const apiUrl: string = '/api/marks';
 
 describe('MarksApiService', () => {
   let injector: TestBed;
@@ -18,7 +71,7 @@ describe('MarksApiService', () => {
       providers: [MarksApiService],
     });
     injector = getTestBed();
-    service = injector.get(MarksApiService);
+    service = TestBed.inject(MarksApiService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
@@ -30,83 +83,80 @@ describe('MarksApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should getStudents', () => {
-    const dummyUsers = [{ login: 'John' }, { login: 'Doe' }];
+  it('should getMarks', () => {
+    const dummyUsers: ITableData = { marks: [{ id: 1 } as IMark, { id: 1 } as IMark] } as ITableData;
 
     service.getMarks(1).then(users => {
-      expect(users.length).toBe(2);
+      expect(users.marks.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/discipline/1`);
+    const req: TestRequest = httpMock.expectOne(`${apiUrl}/discipline/1`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });
 
-  it('should getGroups', () => {
-    const dummyUsers = [{ first: '1' }, { second: '2' }];
+  it('should getDisciplines', () => {
+    const dummyUsers: { result: IDiscipline[] } = { result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] };
 
     service.getDisciplines().then(users => {
-      expect(users.length).toBe(2);
+      expect(users.result.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/disciplines`);
+    const req: TestRequest = httpMock.expectOne(`${apiUrl}/disciplines`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });
 
   it('should updateMarks', () => {
-    const dummyUsers = [{ first: '1' }, { second: '2' }];
+    const dummyUsers: { status: string } = { status: 'success' };
 
     service.updateMarks([]).then(users => {
-      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req = httpMock.expectOne(`${apiUrl}/update`);
+    const req: TestRequest = httpMock.expectOne(`${apiUrl}/update`);
     expect(req.request.method).toBe('PUT');
     req.flush(dummyUsers);
   });
 
   it('should updateJobs', () => {
-    const dummyUsers = [{ first: '1' }, { second: '2' }];
+    const dummyUsers: { status: string } = { status: 'success' };
 
     service.updateJobs([]).then(users => {
-      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req = httpMock.expectOne(`/api/jobs/update`);
+    const req: TestRequest = httpMock.expectOne(`/api/jobs/update`);
     expect(req.request.method).toBe('PUT');
     req.flush(dummyUsers);
   });
 
   it('should addJobsAndMarks', () => {
-    const dummyUsers = [{ first: '1' }, { second: '2' }];
+    const dummyUsers: IJob[] = [{ id: 1 } as IJob, { id: 2 } as IJob];
 
     service.addJobsAndMarks(
-      ([{ id: 1, first: '1' }] as unknown) as Jobs[],
+      ([{ id: 1, first: '1' }] as unknown) as IJob[],
       ([
         { jobId: 1, first: '1' },
         { jobId: 1, second: '2' },
-      ] as unknown) as Marks[]
+      ] as unknown) as IMark[]
     );
-    const req2 = httpMock.expectOne(`/api/jobs/add`);
+    const req2: TestRequest = httpMock.expectOne(`/api/jobs/add`);
     expect(req2.request.method).toBe('POST');
     req2.flush(dummyUsers);
   });
 
   it('should deleteStudents', () => {
-    const dummyUsers = [{ first: '1' }, { second: '2' }];
+    const dummyUsers: number = 2;
 
     service.deleteJobs(new Set([1, 2])).then(users => {
-      expect(users.length).toBe(2);
-      expect(users).toEqual(dummyUsers);
+      expect(users).toBe(2);
     });
 
-    const req = httpMock.expectOne(`/api/jobs/delete?id=1&id=2`);
-    const req2 = httpMock.expectOne(`/api/marks/delete?id=1&id=2`);
+    const req: TestRequest = httpMock.expectOne(`/api/jobs/delete?id=1&id=2`);
+    const req2: TestRequest = httpMock.expectOne(`/api/marks/delete?id=1&id=2`);
     expect(req.request.method).toBe('DELETE');
     expect(req2.request.method).toBe('DELETE');
     req.flush(dummyUsers);

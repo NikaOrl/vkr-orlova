@@ -7,9 +7,9 @@ import { CanComponentDeactivate } from '../interfaces/can-component-deactivate.i
 
 @Component({})
 export class MockComponent implements CanComponentDeactivate {
-  returnValue: boolean | Observable<boolean>;
+  public returnValue: boolean | Observable<boolean>;
 
-  canDeactivate(): boolean | Observable<boolean> {
+  public canDeactivate(): boolean | Observable<boolean> {
     return this.returnValue;
   }
 }
