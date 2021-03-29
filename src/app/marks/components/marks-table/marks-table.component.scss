@@ -1,9 +1,9 @@
 $black: #000;
 
 .scroll-table {
+  padding: 15px 15px 15px 0;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 15px 15px 15px 0;
 }
 
 table {
@@ -37,8 +37,8 @@ th {
   }
 
   & .edit-button {
-    margin-right: 12px;
     position: relative;
+    margin-right: 12px;
   }
 
   & .disciplines-filter {
