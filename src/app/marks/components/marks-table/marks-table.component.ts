@@ -29,6 +29,7 @@ export class MarksTableComponent implements OnInit {
   public displayedColumns: string[];
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
+  public selectValue: string | IDiscipline;
 
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -40,13 +41,16 @@ export class MarksTableComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.api.getDisciplines().then(res => {
+    this.api.getDisciplines().subscribe(res => {
       this.disciplines = res.result;
       const selectedDisciplineId: number = +this.route.snapshot.paramMap.get('disciplineId');
       this.selectedDiscipline = selectedDisciplineId
         ? this.disciplines.find(d => d.id === selectedDisciplineId)
         : this.disciplines[0];
       this.filteredDisciplines = this.disciplines;
+      this.selectValue = this.selectedDiscipline?.disciplineValue
+        ? this.selectedDiscipline.disciplineValue.toString()
+        : '';
       this.getMarks(this.selectedDiscipline.id);
     });
   }
@@ -55,12 +59,18 @@ export class MarksTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public filterDisciplines(e: string): void {
-    if (!this.disciplines) {
-      return;
+  public selectDiscipline(discipline: IDiscipline): void {
+    this.selectedDiscipline = discipline;
+    this.onSelectedDisciplineChange();
+  }
+
+  public displayFn(discipline: IDiscipline | string): string {
+    if (discipline) {
+      return (discipline as IDiscipline).disciplineValue
+        ? (discipline as IDiscipline).disciplineValue.toString()
+        : (discipline as string);
     }
-    const search: string = e ? e.toLowerCase() : '';
-    this.filteredDisciplines = this.disciplines.filter(discipline => discipline.disciplineValue.indexOf(search) !== -1);
+    return '';
   }
 
   public onSelectedDisciplineChange(): void {
@@ -154,5 +164,13 @@ export class MarksTableComponent implements OnInit {
     } else if (sumPoints > this.marksAreas.five) {
       return 'отл.';
     }
+  }
+
+  public filter(): void {
+    const filterValue: string = this.displayFn(this.selectValue);
+    this.filteredDisciplines = this.disciplines.filter(
+      option => `${option.disciplineValue}`.toLowerCase().indexOf(filterValue) === 0
+    );
+    this.selectValue = filterValue;
   }
 }

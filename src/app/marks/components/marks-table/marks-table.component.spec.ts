@@ -8,6 +8,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 import { MarksTableComponent } from './marks-table.component';
@@ -28,6 +29,7 @@ describe('MarksTableComponent', () => {
         MatTableModule,
         MatSelectModule,
         MatInputModule,
+        MatAutocompleteModule,
         NoopAnimationsModule,
         MatDialogModule,
       ],
@@ -54,18 +56,20 @@ describe('MarksTableComponent', () => {
     expect(component.dataSource.filter).toBe('a');
   });
 
-  it('should filter groups', () => {
+  it('should filter disciplines', () => {
     component.disciplines = [
       { id: 1, disciplineValue: 'a' } as IDiscipline,
       { id: 2, disciplineValue: 'b' } as IDiscipline,
     ];
 
-    component.filterDisciplines('c');
+    component.selectValue = 'c';
+    component.filter();
     expect(component.filteredDisciplines).toEqual([]);
     component.selectedDiscipline = { id: 1, disciplineValue: 'a' } as IDiscipline;
     component.onSelectedDisciplineChange();
 
-    component.filterDisciplines('a');
+    component.selectValue = 'a';
+    component.filter();
     expect(component.filteredDisciplines).toEqual([{ id: 1, disciplineValue: 'a' } as IDiscipline]);
   });
 });

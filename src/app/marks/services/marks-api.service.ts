@@ -23,11 +23,10 @@ export class MarksApiService {
       .toPromise();
   }
 
-  public getDisciplines(): Promise<{ result: IDiscipline[] }> {
+  public getDisciplines(): Observable<{ result: IDiscipline[] }> {
     return this.http
       .get<{ result: IDiscipline[] }>(`${MARKS}/disciplines`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError))
-      .toPromise();
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateMarks(marks: IMark[]): Promise<{ status: string }> {

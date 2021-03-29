@@ -19,17 +19,19 @@ export class GroupTableComponent implements OnInit {
   public filteredGroups: IGroup[];
   public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'headStudent'];
   public dataSource: MatTableDataSource<IStudent> = new MatTableDataSource(this.ELEMENT_DATA);
+  public selectValue: string | IGroup;
 
   @ViewChild(MatSort) public sort: MatSort;
 
   constructor(private router: Router, private route: ActivatedRoute, private api: GroupsApiService) {}
 
   public ngOnInit(): void {
-    this.api.getGroups().then(
+    this.api.getGroups().subscribe(
       res => {
         this.groups = res.result;
         const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
         this.selectedGroup = selectedGroupId ? this.groups.find(group => group.id === selectedGroupId) : this.groups[0];
+        this.selectValue = this.selectedGroup?.groupNumber ? this.selectedGroup.groupNumber.toString() : '';
         this.filteredGroups = this.groups;
 
         this.getStudents(this.selectedGroup.id);
@@ -44,12 +46,16 @@ export class GroupTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public filterGroups(e: string): void {
-    if (!this.groups) {
-      return;
+  public selectGroup(group: IGroup): void {
+    this.selectedGroup = group;
+    this.onSelectedGroupChange();
+  }
+
+  public displayFn(group: IGroup | string): string {
+    if (group) {
+      return (group as IGroup).groupNumber ? (group as IGroup).groupNumber.toString() : (group as string);
     }
-    const search: string = e ? e.toLowerCase() : '';
-    this.filteredGroups = this.groups.filter(group => `${group.groupNumber}`.indexOf(search) !== -1);
+    return '';
   }
 
   public onSelectedGroupChange(): void {
@@ -68,5 +74,13 @@ export class GroupTableComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  public filter(): void {
+    const filterValue: string = this.displayFn(this.selectValue);
+    this.filteredGroups = this.groups.filter(
+      option => `${option.groupNumber}`.toLowerCase().indexOf(filterValue) === 0
+    );
+    this.selectValue = filterValue;
   }
 }
