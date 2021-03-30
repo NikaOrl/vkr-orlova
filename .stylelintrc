@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-idiomatic-order",
+    "stylelint-prettier/recommended"
+  ],
+  "plugins": [
+    "stylelint-selector-no-empty"
+  ],
+  "rules": {
+    "plugin/stylelint-selector-no-empty": true,
+    "selector-type-no-unknown": [
+      true,
+      {
+        "ignoreTypes": ["rdci-root", "pdf-viewer"]
+      }
+    ],
+    "selector-pseudo-element-no-unknown": [
+      true,
+      {
+        "ignorePseudoElements": ["ng-deep"]
+      }
+    ]
+  }
+}

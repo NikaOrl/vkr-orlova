@@ -21,11 +21,10 @@ export class GroupsApiService {
       .toPromise();
   }
 
-  public getGroups(): Promise<{ result: IGroup[] }> {
+  public getGroups(): Observable<{ result: IGroup[] }> {
     return this.http
       .get<{ result: IGroup[] }>(`${STUDENTS}/groups`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError))
-      .toPromise();
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateStudents(students: IStudent[]): Promise<{ status: string }> {

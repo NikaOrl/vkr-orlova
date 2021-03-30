@@ -1,9 +1,9 @@
 $red: #f00;
 
 .scroll-table {
+  padding: 10px 15px 15px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding: 10px 15px 15px;
 }
 
 table {
@@ -24,8 +24,8 @@ input {
 }
 
 .delete-td {
-  padding-right: 5px;
   width: 100px;
+  padding-right: 5px;
 
   & .message {
     font-size: 10px;
@@ -49,13 +49,13 @@ input {
   }
 
   & .router-button {
-    margin: 20px;
     position: relative;
     width: 100px;
+    margin: 20px;
   }
 }
 
 .teachers-filter {
-  font-size: 14px;
   margin: 0 20px;
+  font-size: 14px;
 }

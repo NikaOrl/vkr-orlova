@@ -5,6 +5,7 @@ import { GroupsApiService } from './groups-api.service';
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
 import { STUDENTS } from '../../core/http-constants';
+import { Observable, of } from 'rxjs';
 
 export class GroupsApiServiceStub {
   public getStudents(groupId: number): Promise<unknown> {
@@ -14,10 +15,12 @@ export class GroupsApiServiceStub {
     });
   }
 
-  public getGroups(): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
-      setTimeout(() => reject(new Error('ignored')));
+  public getGroups(): Observable<unknown> {
+    return of({
+      result: [
+        { id: 1, groupNumber: 1 },
+        { id: 2, groupNumber: 2 },
+      ],
     });
   }
 
@@ -84,7 +87,7 @@ describe('GroupsApiService', () => {
   it('should getGroups', () => {
     const dummyUsers: { result: IGroup[] } = { result: [{ id: 1 } as IGroup, { id: 2 } as IGroup] };
 
-    service.getGroups().then(users => {
+    service.getGroups().subscribe(users => {
       expect(users.result.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });

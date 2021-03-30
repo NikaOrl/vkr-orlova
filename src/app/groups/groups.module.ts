@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule } from '@angular/forms';
+
 import { MatTableModule } from '@angular/material/table';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,8 +10,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
-import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 import { GroupPageComponent } from './components/group-page/group-page.component';
 import { GroupTableComponent } from './components/group-table/group-table.component';
@@ -27,6 +29,7 @@ import { SharedModule } from '../shared/shared.module';
     MatButtonModule,
     MatSortModule,
     MatCheckboxModule,
+    MatAutocompleteModule,
     HttpClientModule,
     FormsModule,
     SharedModule,

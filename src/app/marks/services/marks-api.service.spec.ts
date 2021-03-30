@@ -7,6 +7,7 @@ import { IMark } from '../models/marks.model';
 import { ITableData } from '../models/table-data.model';
 import { IStudent } from '../../groups/models/student.model';
 import { IDiscipline } from '../models/discipline.model';
+import { Observable, of } from 'rxjs';
 
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number): Promise<ITableData> {
@@ -22,11 +23,8 @@ export class MarksApiServiceStub {
     });
   }
 
-  public getDisciplines(): Promise<{ result: IDiscipline[] }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public getDisciplines(): Observable<{ result: IDiscipline[] }> {
+    return of({ result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] });
   }
 
   public updateMarks(marks: IMark[]): Promise<{ result: IMark[] }> {
@@ -99,7 +97,7 @@ describe('MarksApiService', () => {
   it('should getDisciplines', () => {
     const dummyUsers: { result: IDiscipline[] } = { result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] };
 
-    service.getDisciplines().then(users => {
+    service.getDisciplines().subscribe(users => {
       expect(users.result.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });

@@ -9,20 +9,17 @@
   </div>
   <mat-form-field class="groups-filter">
     <mat-label>Select group</mat-label>
-    <mat-select [(ngModel)]="selectedGroup" (selectionChange)="onSelectedGroupChange()" name="select">
-      <mat-option>
-        <!-- <ngx-mat-select-search
-          [placeholderLabel]="'Search'"
-          [noEntriesFoundLabel]="'The search has no results'"
-          ngModel
-          name="option"
-          (ngModelChange)="filterGroups($event)"
-        ></ngx-mat-select-search> -->
-      </mat-option>
+    <input type="text" matInput [(ngModel)]="selectValue" (ngModelChange)="filter()" [matAutocomplete]="auto" />
+    <mat-autocomplete
+      autoActiveFirstOption
+      #auto="matAutocomplete"
+      [displayWith]="displayFn"
+      (optionSelected)="selectGroup($event.option.value)"
+    >
       <mat-option *ngFor="let group of filteredGroups" [value]="group">
         {{ group.groupNumber }}
       </mat-option>
-    </mat-select>
+    </mat-autocomplete>
   </mat-form-field>
 </div>
 
