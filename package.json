@@ -11,6 +11,7 @@
     "lint:ts": "ng lint --format=stylish --fix",
     "lint:style": "stylelint \"src/app/**/*.{css,scss}\" --fix",
     "lint:prettier": "prettier --config .prettierrc --write src/**/*.{ts,scss,html}",
+    "lint:commit": "node ./githooks/commit-msg.js",
     "lint": "npm run lint:ts && npm run lint:style && npm run lint:prettier",
     "create-tables": "cd knex-helper/tables && node create_disciplines_table.js && node create_groups_table.js && node create_jobs_table.js && node create_marks_table.js && node create_students_disciplines_table.js && node create_students_table.js && node create_teachers_table.js",
     "insert-tables": "cd knex-helper/tables && node insert_disciplines.js && node insert_groups.js && node insert_jobs.js && node insert_marks.js && node insert_students_disciplines.js && node insert_students.js && node insert_teachers.js",
@@ -50,6 +51,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/node": "^14.14.35",
     "codelyzer": "^6.0.0",
+    "husky": "^6.0.0",
     "jasmine-core": "^3.6.0",
     "jasmine-spec-reporter": "~6.0.0",
     "karma": "~6.2.0",
@@ -78,5 +80,11 @@
   },
   "author": "",
   "license": "ISC",
-  "homepage": "https://github.com/NikaOrl/vkr-orlova#readme"
+  "homepage": "https://github.com/NikaOrl/vkr-orlova#readme",
+  "husky": {
+    "hooks": {
+      "commit-msg": "npm run lint:commit",
+      "pre-commit": "npm run lint"
+    }
+  }
 }
