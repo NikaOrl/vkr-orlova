@@ -6,9 +6,10 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IJob } from '../models/jobs.model';
 import { IMark } from '../models/marks.model';
-import { HTTP_OPTIONS, MARKS } from '../../core/http-constants';
+import { HTTP_OPTIONS, MARKS, STUDENTS } from '../../core/http-constants';
 import { IDiscipline } from '../models/discipline.model';
 import { ITableData } from '../models/table-data.model';
+import { IGroup } from 'src/app/groups/models/group.model';
 
 @Injectable({
   providedIn: 'root',
@@ -16,9 +17,9 @@ import { ITableData } from '../models/table-data.model';
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  public getMarks(disciplineId: number): Promise<ITableData> {
+  public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
     return this.http
-      .get<ITableData>(`${MARKS}/discipline/${disciplineId}`, HTTP_OPTIONS)
+      .get<ITableData>(`${MARKS}/${groupId}/${disciplineId}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
@@ -26,6 +27,12 @@ export class MarksApiService {
   public getDisciplines(): Observable<{ result: IDiscipline[] }> {
     return this.http
       .get<{ result: IDiscipline[] }>(`${MARKS}/disciplines`, HTTP_OPTIONS)
+      .pipe(map(this.extractData), catchError(this.handleError));
+  }
+
+  public getGroups(): Observable<{ result: IGroup[] }> {
+    return this.http
+      .get<{ result: IGroup[] }>(`${STUDENTS}/groups`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
@@ -100,7 +107,7 @@ export class MarksApiService {
   }
 
   // tslint:disable-next-line: no-any
-  private extractData(res: ITableData | { result: IDiscipline[] }): any {
+  private extractData(res: ITableData | { result: IDiscipline[] } | { result: IGroup[] }): any {
     return res || { result: [] };
   }
 }

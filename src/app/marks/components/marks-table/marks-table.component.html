@@ -3,26 +3,46 @@
     <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Students filter" />
   </mat-form-field>
   <div class="edit-button">
-    <button
-      *ngIf="selectedDiscipline"
-      mat-raised-button
-      color="primary"
-      routerLink="/marks/edit/{{ selectedDiscipline.id }}"
-    >
-      Edit marks
-    </button>
+    <button *ngIf="selectedDiscipline" mat-raised-button color="primary" [routerLink]="editLink">Edit marks</button>
   </div>
   <div class="edit-button">
     <button mat-raised-button (click)="openDialog()">Выбрать баллы</button>
   </div>
-  <mat-form-field class="disciplines-filter">
-    <mat-label>Select discipline</mat-label>
-    <input type="text" matInput [(ngModel)]="selectValue" (ngModelChange)="filter()" [matAutocomplete]="auto" />
+  <mat-form-field class="groups-filter">
+    <mat-label>Select group</mat-label>
+    <input
+      type="text"
+      matInput
+      [(ngModel)]="groupSelectValue"
+      (ngModelChange)="filterGroups()"
+      [matAutocomplete]="autoGroup"
+    />
     <mat-autocomplete
       autoActiveFirstOption
-      #auto="matAutocomplete"
-      [displayWith]="displayFn"
-      (optionSelected)="selectDiscipline($event.option.value)"
+      #autoGroup="matAutocomplete"
+      [displayWith]="displayGroupFn"
+      (optionSelected)="selectGroup($event.option.value)"
+    >
+      <mat-option *ngFor="let group of filteredGroups" [value]="group">
+        {{ group.groupNumber }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <mat-form-field class="disciplines-filter">
+    <mat-label>Select discipline</mat-label>
+    <input
+      type="text"
+      matInput
+      [(ngModel)]="disciplineSelectValue"
+      (ngModelChange)="filterDisciplines()"
+      [matAutocomplete]="autoDiscipline"
+    />
+    <mat-autocomplete
+      autoActiveFirstOption
+      #autoDiscipline="matAutocomplete"
+      [displayWith]="displayDisciplineFn"
+      (optionSelected)="selectDiscipline($event)"
     >
       <mat-option *ngFor="let discipline of filteredDisciplines" [value]="discipline">
         {{ discipline.disciplineValue }}
