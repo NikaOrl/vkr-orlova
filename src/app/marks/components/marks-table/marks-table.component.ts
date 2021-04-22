@@ -14,6 +14,7 @@ import { IDiscipline } from '../../models/discipline.model';
 import { ITableData } from '../../models/table-data.model';
 import { IMark } from '../../models/marks.model';
 import { IJob } from '../../models/jobs.model';
+import { IGroup } from 'src/app/groups/models/group.model';
 
 @Component({
   selector: 'app-marks-table',
@@ -22,14 +23,23 @@ import { IJob } from '../../models/jobs.model';
 })
 export class MarksTableComponent implements OnInit {
   public ELEMENT_DATA: IStudentMark[] = [];
+
   public selectedDiscipline: IDiscipline;
   public disciplines: IDiscipline[];
   public filteredDisciplines: IDiscipline[];
+  public disciplineSelectValue: string | IDiscipline;
+
+  public selectedGroup: IGroup;
+  public groups: IGroup[];
+  public filteredGroups: IGroup[];
+  public groupSelectValue: string | IGroup;
+
   public columns: IColumn[];
   public displayedColumns: string[];
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
-  public selectValue: string | IDiscipline;
+
+  public editLink: string = '';
 
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -48,10 +58,20 @@ export class MarksTableComponent implements OnInit {
         ? this.disciplines.find(d => d.id === selectedDisciplineId)
         : this.disciplines[0];
       this.filteredDisciplines = this.disciplines;
-      this.selectValue = this.selectedDiscipline?.disciplineValue
+      this.disciplineSelectValue = this.selectedDiscipline?.disciplineValue
         ? this.selectedDiscipline.disciplineValue.toString()
         : '';
-      this.getMarks(this.selectedDiscipline.id);
+
+      this.getMarks();
+    });
+
+    this.api.getGroups().subscribe(res => {
+      this.groups = res.result;
+      const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
+      this.selectedGroup = selectedGroupId ? this.groups.find(d => d.id === selectedGroupId) : this.groups[0];
+      this.filteredGroups = this.groups;
+      this.groupSelectValue = this.selectedGroup?.groupNumber ? this.selectedGroup.groupNumber.toString() : '';
+      this.getMarks();
     });
   }
 
@@ -61,10 +81,15 @@ export class MarksTableComponent implements OnInit {
 
   public selectDiscipline(discipline: IDiscipline): void {
     this.selectedDiscipline = discipline;
-    this.onSelectedDisciplineChange();
+    this.onSelectChange();
   }
 
-  public displayFn(discipline: IDiscipline | string): string {
+  public selectGroup(group: IGroup): void {
+    this.selectedGroup = group;
+    this.onSelectChange();
+  }
+
+  public displayDisciplineFn(discipline: IDiscipline | string): string {
     if (discipline) {
       return (discipline as IDiscipline).disciplineValue
         ? (discipline as IDiscipline).disciplineValue.toString()
@@ -73,9 +98,16 @@ export class MarksTableComponent implements OnInit {
     return '';
   }
 
-  public onSelectedDisciplineChange(): void {
-    this.router.navigate([`/marks/${this.selectedDiscipline.id}`]);
-    this.getMarks(this.selectedDiscipline.id);
+  public displayGroupFn(group: IGroup | string): string {
+    if (group) {
+      return (group as IGroup).groupNumber ? (group as IGroup).groupNumber.toString() : (group as string);
+    }
+    return '';
+  }
+
+  public onSelectChange(): void {
+    this.router.navigate([`/marks/${this.selectedGroup.id}/${this.selectedDiscipline.id}`]);
+    this.getMarks();
   }
 
   public parseGetMarksResult(result: ITableData): IStudentMark[] {
@@ -96,30 +128,34 @@ export class MarksTableComponent implements OnInit {
     return marksAndStudents;
   }
 
-  public getMarks(disciplineId: number): void {
-    this.api.getMarks(disciplineId).then(
-      res => {
-        this.ELEMENT_DATA = this.parseGetMarksResult(res);
-        this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-        this.columns = res.jobs.map(row => {
-          return {
-            columnDef: index => `${row.jobValue}-${index}`,
-            header: `${row.jobValue}`,
-            cell: cellRow => {
-              if (cellRow[`${row.id}`] === undefined) {
-                return '';
-              }
-              return `${cellRow[`${row.id}`].markValue}`;
-            },
-          };
-        });
-        this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i)), 'sumPoints', 'mark'];
-        this.dataSource.sort = this.sort;
-      },
-      err => {
-        console.log(err);
-      }
-    );
+  public getMarks(): void {
+    if (this.selectedDiscipline && this.selectedGroup) {
+      this.editLink = `/marks/edit/${this.selectedGroup.id}/${this.selectedDiscipline.id}`;
+
+      this.api.getMarks(this.selectedDiscipline.id, this.selectedGroup.id).then(
+        res => {
+          this.ELEMENT_DATA = this.parseGetMarksResult(res);
+          this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+          this.columns = res.jobs.map(row => {
+            return {
+              columnDef: index => `${row.jobValue}-${index}`,
+              header: `${row.jobValue}`,
+              cell: cellRow => {
+                if (cellRow[`${row.id}`] === undefined) {
+                  return '';
+                }
+                return `${cellRow[`${row.id}`].markValue}`;
+              },
+            };
+          });
+          this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i)), 'sumPoints', 'mark'];
+          this.dataSource.sort = this.sort;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
   }
 
   public openDialog(): void {
@@ -166,11 +202,19 @@ export class MarksTableComponent implements OnInit {
     }
   }
 
-  public filter(): void {
-    const filterValue: string = this.displayFn(this.selectValue);
+  public filterDisciplines(): void {
+    const filterValue: string = this.displayDisciplineFn(this.disciplineSelectValue);
     this.filteredDisciplines = this.disciplines.filter(
       option => `${option.disciplineValue}`.toLowerCase().indexOf(filterValue) === 0
     );
-    this.selectValue = filterValue;
+    this.disciplineSelectValue = filterValue;
+  }
+
+  public filterGroups(): void {
+    const filterValue: string = this.displayGroupFn(this.groupSelectValue);
+    this.filteredGroups = this.groups.filter(
+      option => `${option.groupNumber}`.toLowerCase().indexOf(filterValue) === 0
+    );
+    this.groupSelectValue = filterValue;
   }
 }

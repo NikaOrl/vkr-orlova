@@ -38,7 +38,8 @@ router.get('/teachers', function (req, res, next) {
 });
 
 /* GET marks table. */
-router.get('/marks/discipline/:disciplineId', function (req, res, next) {
+router.get('/marks/:groupId/:disciplineId', function (req, res, next) {
+  // TODO: add groupId logic here
   knex
     .from('students-disciplines')
     .select('studentId')

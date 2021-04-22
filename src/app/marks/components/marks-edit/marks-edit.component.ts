@@ -24,6 +24,8 @@ export class MarksEditComponent implements OnInit {
   public displayedColumns: string[];
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
+
+  public selectedGroupId: number;
   public selectedDisciplineId: number;
 
   private ELEMENT_DATA: IStudentMark[] = [];
@@ -48,7 +50,8 @@ export class MarksEditComponent implements OnInit {
 
   public ngOnInit(): void {
     this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
-    this.getMarks(this.selectedDisciplineId);
+    this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
+    this.getMarks();
   }
 
   public applyFilter(filterValue: string): void {
@@ -104,7 +107,7 @@ export class MarksEditComponent implements OnInit {
         this.addJobsAndMarks(addedJobs, addedMarks);
       }
       this.saved = true;
-      this.router.navigate([`/marks/${this.selectedDisciplineId}`]);
+      this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
     } else {
       alert('no changes to save!');
     }
@@ -178,8 +181,8 @@ export class MarksEditComponent implements OnInit {
     return this.dialogService.confirm('Discard changes?');
   }
 
-  private getMarks(disciplineId: number): void {
-    this.api.getMarks(disciplineId).then(
+  private getMarks(): void {
+    this.api.getMarks(this.selectedDisciplineId, this.selectedGroupId).then(
       res => {
         this.marks = [...res.marks];
         this.jobs = [...res.jobs];

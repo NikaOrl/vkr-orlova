@@ -10,7 +10,7 @@ import { IDiscipline } from '../models/discipline.model';
 import { Observable, of } from 'rxjs';
 
 export class MarksApiServiceStub {
-  public getMarks(disciplineId: number): Promise<ITableData> {
+  public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
     return new Promise((resolve, reject) => {
       setTimeout(() =>
         resolve({
@@ -25,6 +25,15 @@ export class MarksApiServiceStub {
 
   public getDisciplines(): Observable<{ result: IDiscipline[] }> {
     return of({ result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] });
+  }
+
+  public getGroups(): Observable<unknown> {
+    return of({
+      result: [
+        { id: 1, groupNumber: 1 },
+        { id: 2, groupNumber: 2 },
+      ],
+    });
   }
 
   public updateMarks(marks: IMark[]): Promise<{ result: IMark[] }> {
@@ -84,12 +93,12 @@ describe('MarksApiService', () => {
   it('should getMarks', () => {
     const dummyUsers: ITableData = { marks: [{ id: 1 } as IMark, { id: 1 } as IMark] } as ITableData;
 
-    service.getMarks(1).then(users => {
+    service.getMarks(1, 1).then(users => {
       expect(users.marks.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${apiUrl}/discipline/1`);
+    const req: TestRequest = httpMock.expectOne(`${apiUrl}/1/1`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });

@@ -15,6 +15,7 @@ import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
 import { IDiscipline } from '../../models/discipline.model';
+import { IGroup } from 'src/app/groups/models/group.model';
 
 describe('MarksTableComponent', () => {
   let component: MarksTableComponent;
@@ -62,14 +63,28 @@ describe('MarksTableComponent', () => {
       { id: 2, disciplineValue: 'b' } as IDiscipline,
     ];
 
-    component.selectValue = 'c';
-    component.filter();
+    component.disciplineSelectValue = 'c';
+    component.filterDisciplines();
     expect(component.filteredDisciplines).toEqual([]);
     component.selectedDiscipline = { id: 1, disciplineValue: 'a' } as IDiscipline;
-    component.onSelectedDisciplineChange();
+    component.onSelectChange();
 
-    component.selectValue = 'a';
-    component.filter();
+    component.disciplineSelectValue = 'a';
+    component.filterDisciplines();
     expect(component.filteredDisciplines).toEqual([{ id: 1, disciplineValue: 'a' } as IDiscipline]);
+  });
+
+  it('should filter groups', () => {
+    component.groups = [{ id: 1, groupNumber: 1 } as IGroup, { id: 2, groupNumber: 2 } as IGroup];
+
+    component.groupSelectValue = '0';
+    component.filterGroups();
+    expect(component.filteredGroups).toEqual([]);
+    component.selectedGroup = { id: 1, groupNumber: 1 } as IGroup;
+    component.onSelectChange();
+
+    component.groupSelectValue = '1';
+    component.filterGroups();
+    expect(component.filteredGroups).toEqual([{ id: 1, groupNumber: 1 } as IGroup]);
   });
 });

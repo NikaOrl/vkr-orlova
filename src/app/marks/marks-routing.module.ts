@@ -14,12 +14,12 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'edit/:disciplineId',
+        path: 'edit/:groupId/:disciplineId',
         component: MarksEditComponent,
         canDeactivate: [CanDeactivateGuard],
       },
       {
-        path: ':disciplineId',
+        path: ':groupId/:disciplineId',
         component: MarksTableComponent,
       },
       {
