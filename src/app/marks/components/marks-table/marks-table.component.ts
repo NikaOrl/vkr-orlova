@@ -39,7 +39,7 @@ export class MarksTableComponent implements OnInit {
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
 
-  public editLink = '';
+  public editLink: string = '';
 
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -79,8 +79,8 @@ export class MarksTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public selectDiscipline(event): void {
-    this.selectedDiscipline = event.option.value;
+  public selectDiscipline(discipline: IDiscipline): void {
+    this.selectedDiscipline = discipline;
     this.onSelectChange();
   }
 

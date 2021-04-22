@@ -42,7 +42,7 @@
       autoActiveFirstOption
       #autoDiscipline="matAutocomplete"
       [displayWith]="displayDisciplineFn"
-      (optionSelected)="selectDiscipline($event)"
+      (optionSelected)="selectDiscipline($event.option.value)"
     >
       <mat-option *ngFor="let discipline of filteredDisciplines" [value]="discipline">
         {{ discipline.disciplineValue }}
