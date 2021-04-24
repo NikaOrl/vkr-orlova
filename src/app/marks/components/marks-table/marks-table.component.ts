@@ -35,7 +35,13 @@ export class MarksTableComponent implements OnInit {
   public groupSelectValue: string | IGroup;
 
   public columns: IColumn[];
+  public maxPointFuilds: IColumn[];
+
   public displayedColumns: string[];
+  public displayedMaxPointColumns: string[];
+
+  private jobs: IJob[];
+
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
 
@@ -115,10 +121,8 @@ export class MarksTableComponent implements OnInit {
       const studentMarks: IMark[] = result.marks.filter(mark => +mark.studentId === +student.id);
       const markObject: { [key: number]: IMark } = {};
       studentMarks.forEach(mark => {
-        const jobV: IJob = result.jobs.find(job => +mark.jobId === +job.id);
-        if (jobV) {
-          markObject[jobV.id] = mark;
-        }
+        const jobIndex: number = result.jobs.findIndex(job => +mark.jobId === +job.id);
+        markObject[jobIndex] = mark;
       });
       return {
         studentName: `${student.firstName} ${student.lastName}`,
@@ -136,19 +140,35 @@ export class MarksTableComponent implements OnInit {
         res => {
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-          this.columns = res.jobs.map(row => {
+          this.jobs = res.jobs;
+          this.maxPointFuilds = this.jobs.map(row => {
+            return {
+              columnDef: index => `maxPoint-${index}`,
+              header: `${row.maxPoint}`,
+              cell: () => null,
+            };
+          });
+
+          this.columns = this.jobs.map((row, index) => {
             return {
               columnDef: index => `${row.jobValue}-${index}`,
               header: `${row.jobValue}`,
               cell: cellRow => {
-                if (cellRow[`${row.id}`] === undefined) {
+                if (!cellRow[index] || !cellRow[index].markValue) {
                   return '';
                 }
-                return `${cellRow[`${row.id}`].markValue}`;
+                return `${cellRow[index].markValue}`;
               },
             };
           });
           this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i)), 'sumPoints', 'mark'];
+          this.displayedMaxPointColumns = [
+            'maxPointFuild',
+            ...this.maxPointFuilds.map((x, i) => x.columnDef(i)),
+            'maxPointsSum',
+            'maxPointsResult',
+          ];
+
           this.dataSource.sort = this.sort;
         },
         err => {
@@ -168,20 +188,22 @@ export class MarksTableComponent implements OnInit {
     // tslint:disable-next-line: deprecation
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
-      this.marksAreas = result;
+      if (result) {
+        this.marksAreas = result;
+      }
     });
   }
 
   public getSumPoints(element: IMark[]): number {
     let sumPoints: number = 0;
-    let index: number = 1;
-    let mark: IMark = element[1];
+    let index: number = 0;
+    let mark: IMark = element[index];
     while (mark !== undefined) {
       if (!isNaN(+mark.markValue)) {
         sumPoints += +mark.markValue;
       }
       if (mark.markValue === '+') {
-        sumPoints += 10;
+        sumPoints += 1;
       }
       index++;
       mark = element[index];
@@ -189,8 +211,25 @@ export class MarksTableComponent implements OnInit {
     return sumPoints;
   }
 
-  public getResultMark(element: IMark[]): string {
+  public getSumMaxPoints(): number {
+    let sumPoints: number = 0;
+    this.jobs.forEach((job: IJob) => {
+      sumPoints += job.maxPoint;
+    });
+    return sumPoints;
+  }
+
+  public getResultCellMark(element: IMark[]): string {
     const sumPoints: number = this.getSumPoints(element);
+    return this.getResultMark(sumPoints);
+  }
+
+  public getResultMaxMark(): string {
+    const sumPoints: number = this.getSumMaxPoints();
+    return this.getResultMark(sumPoints);
+  }
+
+  public getResultMark(sumPoints: number): string {
     if (sumPoints < this.marksAreas.three) {
       return 'неуд.';
     } else if (sumPoints > this.marksAreas.three && sumPoints < this.marksAreas.four) {

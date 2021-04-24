@@ -65,7 +65,7 @@ export class MarksApiService {
           .pipe(catchError(this.handleError))
           .toPromise()
           .then(result => {
-            const jobId: number = JSON.parse(JSON.stringify(result))[0];
+            const jobId: number = JSON.parse(JSON.stringify(result.result))[0];
 
             jobMarks.forEach(mark => {
               mark.jobId = jobId;
