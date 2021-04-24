@@ -191,6 +191,10 @@ export class MarksEditComponent implements OnInit {
     return this.dialogService.confirm('Discard changes?');
   }
 
+  public getMaxPoint(jobId: number) {
+    return this.jobs.find(job => job.id === jobId).maxPoint;
+  }
+
   private getMarks(): void {
     this.api.getMarks(this.selectedDisciplineId, this.selectedGroupId).then(
       res => {
