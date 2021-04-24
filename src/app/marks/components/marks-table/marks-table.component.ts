@@ -40,14 +40,14 @@ export class MarksTableComponent implements OnInit {
   public displayedColumns: string[];
   public displayedMaxPointColumns: string[];
 
-  private jobs: IJob[];
-
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
 
   public editLink: string = '';
 
   @ViewChild(MatSort) public sort: MatSort;
+
+  private jobs: IJob[];
 
   constructor(
     private router: Router,
