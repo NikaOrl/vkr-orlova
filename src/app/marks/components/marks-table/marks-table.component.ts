@@ -151,7 +151,7 @@ export class MarksTableComponent implements OnInit {
 
           this.columns = this.jobs.map((row, index) => {
             return {
-              columnDef: index => `${row.jobValue}-${index}`,
+              columnDef: columnIndex => `${row.jobValue}-${columnIndex}`,
               header: `${row.jobValue}`,
               cell: cellRow => {
                 if (!cellRow[index] || !cellRow[index].markValue) {
