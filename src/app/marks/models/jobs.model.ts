@@ -3,4 +3,5 @@ export interface IJob {
   disciplineId: number;
   jobValue: string;
   deleted: boolean;
+  maxPoint: number;
 }

@@ -15,6 +15,29 @@
         <td mat-footer-cell *matFooterCellDef class="students-cell"></td>
       </ng-container>
 
+      <ng-container matColumnDef="maxPointHeader">
+        <th mat-header-cell *matHeaderCellDef>Max Point</th>
+      </ng-container>
+      <ng-container *ngFor="let column of maxPointFuilds; let i = index" [cdkColumnDef]="column.columnDef(i)">
+        <th
+          md-header-cell
+          *cdkHeaderCellDef
+          [ngClass]="{
+            'alert-danger': isDeleted(column.jobId),
+            'alert-success': isAdded(column.jobId)
+          }"
+          class="input-cell"
+        >
+          <input
+            type="number"
+            class="input-cell--content"
+            [ngModel]="column.header"
+            (ngModelChange)="maxPointChange($event, i)"
+            name="maxPoint-{{ i }}"
+          />
+        </th>
+      </ng-container>
+
       <!-- Generic column definition -->
       <ng-container *ngFor="let column of columns; let i = index" [cdkColumnDef]="column.columnDef(i)">
         <th
@@ -27,7 +50,7 @@
           class="input-cell"
         >
           <input
-            required
+            [required]="!isDeleted(column.jobId)"
             minlength="2"
             type="text"
             class="input-cell--content"
@@ -46,9 +69,9 @@
           class="input-cell"
         >
           <input
-            required
             minlength="1"
-            type="text"
+            type="number"
+            [max]="getMaxPoint(column.jobId)"
             class="input-cell--content"
             [ngModel]="column.cell(row, ind)"
             (ngModelChange)="markChange($event, column.mark(row))"
@@ -84,6 +107,7 @@
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-header-row *matHeaderRowDef="displayedMaxPointColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>

@@ -21,7 +21,11 @@ import { ITableData } from '../../models/table-data.model';
 })
 export class MarksEditComponent implements OnInit {
   public columns: IColumn[];
+  public maxPointFuilds: IColumn[];
+
   public displayedColumns: string[];
+  public displayedMaxPointColumns: string[];
+
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -70,6 +74,11 @@ export class MarksEditComponent implements OnInit {
   public jobChange(e: string, jobNumber: number): void {
     this.saved = false;
     this.jobs[jobNumber].jobValue = e;
+  }
+
+  public maxPointChange(e: number, jobNumber: number): void {
+    this.saved = false;
+    this.jobs[jobNumber].maxPoint = e;
   }
 
   public save(): void {
@@ -126,6 +135,7 @@ export class MarksEditComponent implements OnInit {
       disciplineId: this.selectedDisciplineId,
       jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
+      maxPoint: null,
     });
     this.students.forEach(student => {
       this.marks.push({
@@ -179,6 +189,10 @@ export class MarksEditComponent implements OnInit {
       return true;
     }
     return this.dialogService.confirm('Discard changes?');
+  }
+
+  public getMaxPoint(jobId: number): number {
+    return this.jobs.find(job => job.id === jobId).maxPoint;
   }
 
   private getMarks(): void {
@@ -264,6 +278,16 @@ export class MarksEditComponent implements OnInit {
     this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
+    this.maxPointFuilds = this.jobs.map(row => {
+      return {
+        columnDef: index => `maxPoint-${index}`,
+        header: `${row.maxPoint}`,
+        cell: () => {
+          return null;
+        },
+        jobId: row.id,
+      };
+    });
     this.columns = this.jobs.map(row => {
       return {
         columnDef: index => `${row.jobValue}-${index}`,
@@ -297,5 +321,6 @@ export class MarksEditComponent implements OnInit {
       };
     });
     this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i))];
+    this.displayedMaxPointColumns = ['maxPointHeader', ...this.maxPointFuilds.map((x, i) => x.columnDef(i))];
   }
 }

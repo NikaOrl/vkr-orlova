@@ -80,17 +80,34 @@
         {{ getSumPoints(element) }}
       </td>
     </ng-container>
-    <!-- mark Column -->
+
+    <!-- Mark Column -->
     <ng-container matColumnDef="mark" sticky>
       <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>
         <b>Оценка</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">
-        {{ getResultMark(element) }}
+        {{ getResultCellMark(element) }}
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="maxPointFuild" sticky>
+      <th mat-header-cell *matHeaderCellDef>Max Point</th>
+    </ng-container>
+    <ng-container *ngFor="let column of maxPointFuilds; let i = index" [cdkColumnDef]="column.columnDef(i)">
+      <th class="student-cell" mat-header-cell *matHeaderCellDef>
+        {{ column.header }}
+      </th>
+    </ng-container>
+    <ng-container matColumnDef="maxPointsSum">
+      <th mat-header-cell *matHeaderCellDef>{{ getSumMaxPoints() }}</th>
+    </ng-container>
+    <ng-container matColumnDef="maxPointsResult">
+      <th mat-header-cell *matHeaderCellDef>{{ getResultMaxMark() }}</th>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedMaxPointColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </div>

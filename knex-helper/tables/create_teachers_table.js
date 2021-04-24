@@ -9,6 +9,7 @@ knex.schema
     table.string('email');
     table.string('password');
     table.boolean('isAdmin');
+    table.boolean('deleted');
   })
   .then(() => console.log('table teachers created'))
   .catch(err => {

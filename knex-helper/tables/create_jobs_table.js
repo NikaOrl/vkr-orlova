@@ -7,6 +7,7 @@ knex.schema
     table.integer('disciplineId');
     table.string('jobValue');
     table.boolean('deleted');
+    table.integer('maxPoint');
   })
   .then(() => console.log('table jobs created'))
   .catch(err => {
