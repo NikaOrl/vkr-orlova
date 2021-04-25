@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { MockAuthenticationService } from '../../login/services/authentication/authentication.service.spec';
+import { AuthenticationServiceStub } from '../../login/services/authentication/authentication.service.spec';
 import { RouterStub } from '../../shared/utils/tests-stubs';
 import { AuthGuard } from './auth.guard';
 
 describe('AuthGuard', () => {
   let authGuard: AuthGuard;
-  let authenticationService: MockAuthenticationService;
+  let authenticationService: AuthenticationServiceStub;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -15,7 +15,7 @@ describe('AuthGuard', () => {
     });
     localStorage.clear();
     authGuard = TestBed.inject(AuthGuard);
-    authenticationService = new MockAuthenticationService();
+    authenticationService = new AuthenticationServiceStub();
   });
 
   describe('canActivate', () => {

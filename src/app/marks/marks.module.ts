@@ -19,6 +19,7 @@ import { MarksRoutingModule } from './marks-routing.module';
 import { MarksEditComponent } from './components/marks-edit/marks-edit.component';
 import { MarksDialogComponent } from './components/marks-dialog/marks-dialog.component';
 import { SharedModule } from '../shared/shared.module';
+import { TranslocoRootModule } from '../transloco/transloco-root.module';
 
 @NgModule({
   declarations: [MarksTableComponent, MarksPageComponent, MarksEditComponent, MarksDialogComponent],
@@ -36,6 +37,7 @@ import { SharedModule } from '../shared/shared.module';
     CdkTableModule,
     FormsModule,
     SharedModule,
+    TranslocoRootModule,
     MarksRoutingModule,
   ],
   exports: [MarksPageComponent],

@@ -30,3 +30,12 @@ export class ActivatedRouteStub {
 export class RouterLinkStubDirective {
   @Input('routerLink') public linkParams: string;
 }
+
+@Directive({
+  // tslint:disable-next-line: directive-selector
+  selector: '[routerLinkActiveOptions]',
+})
+// tslint:disable-next-line: directive-class-suffix
+export class RouterLinkActiveOptionsDirectiveStub {
+  @Input('routerLinkActiveOptions') public linkParams: string;
+}

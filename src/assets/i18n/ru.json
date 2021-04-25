@@ -1,0 +1,69 @@
+{
+  "header": {
+    "brand": "Балльно-Рейтинговая система",
+    "marks": "Оценки",
+    "groups": "Группы",
+    "teachers": "Преподаватели",
+    "logout": "Выйти"
+  },
+  "login": {
+    "login": "Вход",
+    "password": "Пароль",
+    "email": "email"
+  },
+  "marks": {
+    "choosePointsTitle": "Выберите количество баллов для каждой оценки",
+    "backButton": "Назад",
+    "okButton": "Ок",
+    "studentsFilter": "Поиск по имени",
+    "studentsTitle": "Работы студентов",
+    "maxPoint": "Максимальный балл",
+    "delete": "Удалить",
+    "deteleMessage": "Эта работа будет удалена после сохранения.",
+    "addMessage": "Эта работа будет добавлена после сохранения.",
+    "cancel": "Отменить",
+    "addButton": "Добавить работу",
+    "saveButton": "Сохранить",
+    "editMarksButton": "Редактировать оценки",
+    "choosePointsButton": "Выбрать баллы",
+    "selectGroupDropDown": "Выбрать группу",
+    "selectDisciplineDropDown": "Выбрать дисциплину",
+    "sumPoint": "Суммарный балл",
+    "result": "Оценка"
+  },
+  "groups": {
+    "editGroupButton": "Редактировать группу",
+    "selectGroupDropDown": "Выбрать группу",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "email",
+    "role": "Роль",
+    "studentsFilter": "Поиск по имени",
+    "starosta": "Староста?",
+    "delete": "Удалить",
+    "deteleMessage": "Этот студент будет удален после сохранения.",
+    "addMessage": "Этот студент будет добавлен после сохранения.",
+    "cancel": "Отменить",
+    "addButton": "Добавить студента",
+    "backButton": "Назад",
+    "saveButton": "Сохранить"
+  },
+  "teachers": {
+    "teachersFilter": "Поиск по имени",
+    "firstName": "Имя",
+    "lastName": "Фамилия",
+    "email": "email",
+    "isAdmin": "Админ?",
+    "delete": "Удалить",
+    "deteleMessage": "Этот преподаватель будет удален после сохранения.",
+    "addMessage": "Этот преподаватель будет добавлен после сохранения.",
+    "cancel": "Отменить",
+    "addButton": "Добавить преподавателя",
+    "backButton": "Назад",
+    "saveButton": "Сохранить",
+    "editButton": "Редактировать преподавателей",
+    "role": "Роль",
+    "admin": "Админ",
+    "teacher": "Преподаватель"
+  }
+}

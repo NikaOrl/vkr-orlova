@@ -1,11 +1,11 @@
-<div class="jumbotron">
+<div class="jumbotron" *transloco="let t; read: 'login'">
   <div class="container">
     <div class="row">
       <div class="col-sm-6 offset-sm-3">
         <mat-card class="example-card">
           <div>
             <mat-card-header>
-              <mat-card-title>Login</mat-card-title>
+              <mat-card-title>{{ t('login') }}</mat-card-title>
             </mat-card-header>
             <mat-card-content>
               <form class="example-form">
@@ -13,7 +13,7 @@
                   <tr>
                     <td>
                       <mat-form-field class="example-full-width">
-                        <input matInput placeholder="email" [(ngModel)]="email" name="email" required />
+                        <input matInput [placeholder]="t('email')" [(ngModel)]="email" name="email" required />
                       </mat-form-field>
                     </td>
                   </tr>
@@ -22,7 +22,7 @@
                       <mat-form-field class="example-full-width">
                         <input
                           matInput
-                          placeholder="Password"
+                          [placeholder]="t('password')"
                           [(ngModel)]="password"
                           type="password"
                           name="password"
@@ -33,10 +33,11 @@
                   </tr>
                 </table>
               </form>
-              <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner>
+              <!-- TODO: add spinner where it's needed -->
+              <!-- <mat-spinner [style.display]="showSpinner ? 'block' : 'none'"></mat-spinner> -->
             </mat-card-content>
             <mat-card-actions>
-              <button mat-raised-button (click)="login()" color="primary">Login</button>
+              <button mat-raised-button (click)="login()" color="primary">{{ t('login') }}</button>
             </mat-card-actions>
           </div>
         </mat-card>

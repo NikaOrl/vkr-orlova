@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 import { MarksDialogComponent } from './marks-dialog.component';
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
 // tslint:disable-next-line:component-selector
 @Component({ selector: 'mat-form-field', template: '' })
@@ -16,7 +17,7 @@ describe('MarksDialogComponent', () => {
   beforeEach(async () => {
     TestBed.configureTestingModule({
       declarations: [MarksDialogComponent, MatFormFieldStubComponent],
-      imports: [FormsModule, MatDialogModule],
+      imports: [FormsModule, MatDialogModule, getTranslocoModule()],
       providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },

@@ -15,8 +15,9 @@ import { MarksEditComponent } from './marks-edit.component';
 import { IMark } from '../../models/marks.model';
 import { DialogService } from '../../../core/services/dialog.service';
 import { MarksApiService } from '../../services/marks-api.service';
-import { ActivatedRouteStub, RouterStub } from '../../../shared/utils/tests-stubs';
+import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
 describe('MarksEditComponent', () => {
   let component: MarksEditComponent;
@@ -24,7 +25,7 @@ describe('MarksEditComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [MarksEditComponent],
+      declarations: [MarksEditComponent, RouterLinkStubDirective],
       imports: [
         FormsModule,
         MatTableModule,
@@ -35,6 +36,7 @@ describe('MarksEditComponent', () => {
         MatSortModule,
         CdkTableModule,
         NoopAnimationsModule,
+        getTranslocoModule(),
       ],
       providers: [
         DialogService,
@@ -60,31 +62,29 @@ describe('MarksEditComponent', () => {
     expect(component.dataSource.filter).toBe('a');
   });
 
-  it('should save', fakeAsync(() => {
+  it('should save', async () => {
     spyOn(window, 'confirm').and.returnValue(true);
     fixture.detectChanges(); // Run ngOnInit
-    fixture.whenStable().then(() => {
-      fixture.detectChanges(); // Pass data to the template
-      component.save();
+    await fixture.whenStable();
+    component.save();
 
-      component.add();
-      expect(component.isAdded(-1)).toBe(true);
-      expect(component.isAdded(1)).toBe(false);
+    component.add();
+    expect(component.isAdded(-1)).toBe(true);
+    expect(component.isAdded(1)).toBe(false);
 
-      component.delete(1);
-      expect(component.isDeleted(1)).toBe(true);
-      expect(component.isDeleted(2)).toBe(false);
+    component.delete(1);
+    expect(component.isDeleted(1)).toBe(true);
+    expect(component.isDeleted(2)).toBe(false);
 
-      component.markChange('5', { id: 1, markValue: '1' } as IMark);
-      component.jobChange('5', 1);
+    component.markChange('5', { id: 1, markValue: '1' } as IMark);
+    component.jobChange('5', 1);
 
-      component.save();
+    component.save();
 
-      expect(component.canDeactivate()).toBe(true);
-      component.cancelAdd(-1);
+    expect(component.canDeactivate()).toBe(true);
+    component.cancelAdd(-1);
 
-      component.cancelDelete(1);
-      expect(component.isDeleted(1)).toBe(false);
-    });
-  }));
+    component.cancelDelete(1);
+    expect(component.isDeleted(1)).toBe(false);
+  });
 });

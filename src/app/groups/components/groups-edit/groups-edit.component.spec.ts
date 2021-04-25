@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -15,9 +15,10 @@ import { GroupsEditComponent } from './groups-edit.component';
 import { GroupsApiService } from '../../services/groups-api.service';
 import { IStudent } from '../../models/student.model';
 import { DialogService } from '../../../core/services/dialog.service';
-import { ActivatedRouteStub, RouterStub } from 'src/app/shared/utils/tests-stubs';
+import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 import { DialogServiceStub } from '../../../core/services/dialog.service.spec';
 import { GroupsApiServiceStub } from '../../services/groups-api.service.spec';
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
 describe('GroupsEditComponent', () => {
   let component: GroupsEditComponent;
@@ -25,7 +26,7 @@ describe('GroupsEditComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [GroupsEditComponent],
+      declarations: [GroupsEditComponent, RouterLinkStubDirective],
       imports: [
         FormsModule,
         MatSelectModule,
@@ -36,6 +37,7 @@ describe('GroupsEditComponent', () => {
         MatSortModule,
         MatCheckboxModule,
         NoopAnimationsModule,
+        getTranslocoModule(),
       ],
       providers: [
         { provide: DialogService, DialogServiceStub },
@@ -61,28 +63,26 @@ describe('GroupsEditComponent', () => {
     expect(component.dataSource.filter).toBe('a');
   });
 
-  it('should save', fakeAsync(() => {
+  it('should save', async () => {
     spyOn(window, 'confirm').and.returnValue(true);
     fixture.detectChanges(); // Run ngOnInit
-    fixture.whenStable().then(() => {
-      fixture.detectChanges(); // Pass data to the template
-      component.save();
+    await fixture.whenStable();
+    component.save();
 
-      component.add();
-      expect(component.isAdded({ id: null } as IStudent)).toBe(true);
-      expect(component.isAdded({ id: 2 } as IStudent)).toBe(false);
+    component.add();
+    expect(component.isAdded({ id: null } as IStudent)).toBe(true);
+    expect(component.isAdded({ id: 2 } as IStudent)).toBe(false);
 
-      component.delete({ id: 1 } as IStudent);
-      expect(component.isDeleted({ id: 1 } as IStudent)).toBe(true);
-      expect(component.isDeleted({ id: 2 } as IStudent)).toBe(false);
-      component.unsaved();
-      component.save();
+    component.delete({ id: 1 } as IStudent);
+    expect(component.isDeleted({ id: 1 } as IStudent)).toBe(true);
+    expect(component.isDeleted({ id: 2 } as IStudent)).toBe(false);
+    component.unsaved();
+    component.save();
 
-      expect(component.canDeactivate()).toBe(true);
-      component.cancelAdd({ id: null } as IStudent);
+    expect(component.canDeactivate()).toBe(true);
+    component.cancelAdd({ id: null } as IStudent);
 
-      component.cancelDelete({ id: 1 } as IStudent);
-      expect(component.isDeleted({ id: 1 } as IStudent)).toBe(false);
-    });
-  }));
+    component.cancelDelete({ id: 1 } as IStudent);
+    expect(component.isDeleted({ id: 1 } as IStudent)).toBe(false);
+  });
 });
