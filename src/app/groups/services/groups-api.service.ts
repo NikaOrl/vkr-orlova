@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
-import { HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
+import { GROUPS, HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
 
 @Injectable({
   providedIn: 'root',
@@ -14,41 +14,39 @@ import { HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
 export class GroupsApiService {
   constructor(private http: HttpClient) {}
 
-  public getStudents(groupId: number): Promise<{ result: IStudent[] }> {
+  public getStudents(groupId: number): Promise<IStudent[]> {
     return this.http
-      .get<{ result: IStudent[] }>(`${STUDENTS}/group/${groupId}`, HTTP_OPTIONS)
+      .get<IStudent[]>(`${STUDENTS}/${groupId}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
 
-  public getGroups(): Observable<{ result: IGroup[] }> {
-    return this.http
-      .get<{ result: IGroup[] }>(`${STUDENTS}/groups`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError));
+  public getGroups(): Observable<IGroup[]> {
+    return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateStudents(students: IStudent[]): Promise<{ status: string }> {
     return this.http
-      .put<{ status: string }>(`${STUDENTS}/update`, students, HTTP_OPTIONS)
+      .put<{ status: string }>(`${STUDENTS}`, students, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
 
-  public addStudents(students: IStudent[]): Promise<{ result: number[] }> {
+  public addStudents(students: IStudent[]): Promise<number[]> {
     return this.http
-      .post<{ result: number[] }>(`${STUDENTS}/add`, students, HTTP_OPTIONS)
+      .post<number[]>(`${STUDENTS}`, students, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
 
-  public deleteStudents(studentsIds: Set<number>): Promise<{ result: number }> {
-    let urlParams: string = '';
-    studentsIds.forEach(id => {
-      urlParams += `id=${id}&`;
-    });
-    urlParams = urlParams.substring(0, urlParams.length - 1);
+  public deleteStudents(studentsIds: Set<number>): Promise<number> {
     return this.http
-      .delete<{ result: number }>(`${STUDENTS}/delete?${urlParams}`, HTTP_OPTIONS)
+      .delete<number>(`${STUDENTS}`, {
+        ...HTTP_OPTIONS,
+        params: {
+          ids: [...studentsIds].map(id => id.toString()),
+        },
+      })
       .pipe(catchError(this.handleError))
       .toPromise();
   }
@@ -67,7 +65,7 @@ export class GroupsApiService {
   }
 
   // tslint:disable-next-line: no-any
-  private extractData(res: { result: IGroup[] } | { result: IStudent[] }): any {
-    return res || { result: [] };
+  private extractData(res: IGroup[] | IStudent[]): any {
+    return res || [];
   }
 }

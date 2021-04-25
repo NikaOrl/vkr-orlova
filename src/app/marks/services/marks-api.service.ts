@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IJob } from '../models/jobs.model';
 import { IMark } from '../models/marks.model';
-import { HTTP_OPTIONS, MARKS, STUDENTS } from '../../core/http-constants';
+import { DISCIPLINES, GROUPS, HTTP_OPTIONS, JOBS, MARKS } from '../../core/http-constants';
 import { IDiscipline } from '../models/discipline.model';
 import { ITableData } from '../models/table-data.model';
 import { IGroup } from 'src/app/groups/models/group.model';
@@ -19,33 +19,37 @@ export class MarksApiService {
 
   public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
     return this.http
-      .get<ITableData>(`${MARKS}/${groupId}/${disciplineId}`, HTTP_OPTIONS)
+      .get<ITableData>(`${MARKS}`, {
+        ...HTTP_OPTIONS,
+        params: {
+          groupId: groupId.toString(),
+          disciplineId: disciplineId.toString(),
+        },
+      })
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
 
-  public getDisciplines(): Observable<{ result: IDiscipline[] }> {
+  public getDisciplines(): Observable<IDiscipline[]> {
     return this.http
-      .get<{ result: IDiscipline[] }>(`${MARKS}/disciplines`, HTTP_OPTIONS)
+      .get<IDiscipline[]>(`${DISCIPLINES}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public getGroups(): Observable<{ result: IGroup[] }> {
-    return this.http
-      .get<{ result: IGroup[] }>(`${STUDENTS}/groups`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError));
+  public getGroups(): Observable<IGroup[]> {
+    return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateMarks(marks: IMark[]): Promise<{ status: string }> {
     return this.http
-      .put<{ status: string }>(`${MARKS}/update`, marks, HTTP_OPTIONS)
+      .put<{ status: string }>(`${MARKS}`, marks, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
 
   public updateJobs(jobs: IJob[]): Promise<{ status: string }> {
     return this.http
-      .put<{ status: string }>(`/api/jobs/update`, jobs, HTTP_OPTIONS)
+      .put<{ status: string }>(`${JOBS}`, jobs, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
@@ -61,19 +65,19 @@ export class MarksApiService {
         });
         job.id = null;
         this.http
-          .post<{ result: number[] }>(`/api/jobs/add`, job, HTTP_OPTIONS)
+          .post<number[]>(`${JOBS}`, job, HTTP_OPTIONS)
           .pipe(catchError(this.handleError))
           .toPromise()
           .then(result => {
-            if (result.result) {
-              const jobId: number = +result.result[0];
+            if (result) {
+              const jobId: number = +result[0];
 
               jobMarks.forEach(mark => {
                 mark.jobId = jobId;
                 return mark;
               });
               this.http
-                .post<{ result: number[] }>(`/api/marks/add`, jobMarks, HTTP_OPTIONS)
+                .post<number[]>(`${MARKS}`, jobMarks, HTTP_OPTIONS)
                 .pipe(catchError(this.handleError))
                 .toPromise();
             }
@@ -84,14 +88,25 @@ export class MarksApiService {
 
   // tslint:disable-next-line: no-any
   public deleteJobs(jobsIds: Set<number>): Promise<any> {
-    let urlParams: string = '';
-    jobsIds.forEach(id => {
-      urlParams += `id=${id}&`;
-    });
-    urlParams = urlParams.substring(0, urlParams.length - 1);
     return Promise.all([
-      this.http.delete(`${MARKS}/delete?${urlParams}`, HTTP_OPTIONS).pipe(catchError(this.handleError)).toPromise(),
-      this.http.delete(`/api/jobs/delete?${urlParams}`, HTTP_OPTIONS).pipe(catchError(this.handleError)).toPromise(),
+      this.http
+        .delete(`${MARKS}`, {
+          ...HTTP_OPTIONS,
+          params: {
+            ids: [...jobsIds].map(id => id.toString()),
+          },
+        })
+        .pipe(catchError(this.handleError))
+        .toPromise(),
+      this.http
+        .delete(`${JOBS}`, {
+          ...HTTP_OPTIONS,
+          params: {
+            ids: [...jobsIds].map(id => id.toString()),
+          },
+        })
+        .pipe(catchError(this.handleError))
+        .toPromise(),
     ]);
   }
 
@@ -109,7 +124,7 @@ export class MarksApiService {
   }
 
   // tslint:disable-next-line: no-any
-  private extractData(res: ITableData | { result: IDiscipline[] } | { result: IGroup[] }): any {
-    return res || { result: [] };
+  private extractData(res: ITableData | IDiscipline[] | IGroup[]): any {
+    return res || [];
   }
 }

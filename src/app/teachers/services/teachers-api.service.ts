@@ -12,16 +12,16 @@ import { HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
 export class TeachersApiService {
   constructor(private http: HttpClient) {}
 
-  public getTeachers(): Promise<{ result: ITeacher[] }> {
+  public getTeachers(): Promise<ITeacher[]> {
     return this.http
-      .get<{ result: ITeacher[] }>(`${TEACHERS}`, HTTP_OPTIONS)
+      .get<ITeacher[]>(`${TEACHERS}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
   }
 
   public updateTeachers(teachers: ITeacher[]): Promise<{ status: string }> {
     return this.http
-      .put<{ status: string }>(`${TEACHERS}/update`, teachers, HTTP_OPTIONS)
+      .put<{ status: string }>(`${TEACHERS}`, teachers, HTTP_OPTIONS)
       .pipe(catchError(this.handleError))
       .toPromise();
   }
@@ -30,22 +30,19 @@ export class TeachersApiService {
   public addTeachers(teachers: ITeacher[]): any {
     return Promise.all(
       teachers.map(teacher => {
-        this.http
-          .post<ITeacher[]>(`/api/register`, teacher, HTTP_OPTIONS)
-          .pipe(catchError(this.handleError))
-          .toPromise();
+        this.http.post<ITeacher[]>(`${TEACHERS}`, teacher, HTTP_OPTIONS).pipe(catchError(this.handleError)).toPromise();
       })
     );
   }
 
-  public deleteTeachers(teachersIds: Set<number>): Promise<{ result: number }> {
-    let urlParams: string = '';
-    teachersIds.forEach(id => {
-      urlParams += `id=${id}&`;
-    });
-    urlParams = urlParams.substring(0, urlParams.length - 1);
+  public deleteTeachers(teachersIds: Set<number>): Promise<number> {
     return this.http
-      .delete<{ result: number }>(`${TEACHERS}/delete?${urlParams}`, HTTP_OPTIONS)
+      .delete<number>(`${TEACHERS}`, {
+        ...HTTP_OPTIONS,
+        params: {
+          ids: [...teachersIds].map(id => id.toString()),
+        },
+      })
       .pipe(catchError(this.handleError))
       .toPromise();
   }
@@ -63,7 +60,7 @@ export class TeachersApiService {
     return throwError('Something bad happened; please try again later.');
   }
 
-  private extractData(res: { result: ITeacher[] }): { result: ITeacher[] } {
-    return res || { result: [] };
+  private extractData(res: ITeacher[]): ITeacher[] {
+    return res || [];
   }
 }

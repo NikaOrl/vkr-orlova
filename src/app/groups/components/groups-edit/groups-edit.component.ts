@@ -131,7 +131,7 @@ export class GroupsEditComponent implements OnInit {
   private getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
       res => {
-        this.ELEMENT_DATA = res.result;
+        this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
         this.oldStudentsJSON = this.ELEMENT_DATA.map(value => JSON.stringify(value));

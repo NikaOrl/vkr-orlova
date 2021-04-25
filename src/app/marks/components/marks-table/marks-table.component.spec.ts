@@ -23,7 +23,7 @@ describe('MarksTableComponent', () => {
   let fixture: ComponentFixture<MarksTableComponent>;
 
   beforeEach(async () => {
-    TestBed.configureTestingModule({
+    await TestBed.configureTestingModule({
       declarations: [MarksTableComponent, RouterLinkStubDirective],
       imports: [
         FormsModule,
