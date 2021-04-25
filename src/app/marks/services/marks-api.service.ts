@@ -87,7 +87,7 @@ export class MarksApiService {
                 return mark;
               });
               this.http
-                .post<number[]>(`/api/marks/add`, jobMarks, HTTP_OPTIONS)
+                .post<number[]>(`${MARKS}`, jobMarks, HTTP_OPTIONS)
                 .pipe(catchError(this.handleError))
                 .toPromise();
             }
