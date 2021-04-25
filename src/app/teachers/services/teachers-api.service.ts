@@ -36,11 +36,6 @@ export class TeachersApiService {
   }
 
   public deleteTeachers(teachersIds: Set<number>): Promise<number> {
-    let urlParams: string = '';
-    teachersIds.forEach(id => {
-      urlParams += `id=${id}&`;
-    });
-    urlParams = urlParams.substring(0, urlParams.length - 1);
     return this.http
       .delete<number>(`${TEACHERS}`, {
         ...HTTP_OPTIONS,

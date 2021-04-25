@@ -77,14 +77,6 @@ export class MarksApiService {
                 return mark;
               });
               this.http
-                .post<number[]>(`${JOBS}`, jobMarks, HTTP_OPTIONS)
-                .pipe(catchError(this.handleError))
-                .toPromise();
-              jobMarks.forEach(mark => {
-                mark.jobId = jobId;
-                return mark;
-              });
-              this.http
                 .post<number[]>(`${MARKS}`, jobMarks, HTTP_OPTIONS)
                 .pipe(catchError(this.handleError))
                 .toPromise();
