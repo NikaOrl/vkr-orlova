@@ -15,6 +15,7 @@ import { TeachersTableComponent } from './teachers-table.component';
 import { TeachersApiService } from '../../services/teachers-api.service';
 import { RouterLinkStubDirective } from '../../../shared/utils/tests-stubs';
 import { TeachersApiServiceStub } from '../../services/teachers-api.service.spec';
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
 describe('TeachersTableComponent', () => {
   let component: TeachersTableComponent;
@@ -33,6 +34,7 @@ describe('TeachersTableComponent', () => {
         HttpClientModule,
         MatCheckboxModule,
         NoopAnimationsModule,
+        getTranslocoModule(),
       ],
       providers: [HttpClientTestingModule, { provide: TeachersApiService, useClass: TeachersApiServiceStub }],
     }).compileComponents();

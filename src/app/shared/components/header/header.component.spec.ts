@@ -1,16 +1,11 @@
-import { Directive, Input } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormsModule } from '@angular/forms';
+import { MatSelectModule } from '@angular/material/select';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
+import { RouterLinkActiveOptionsDirectiveStub } from '../../utils/tests-stubs';
 import { HeaderComponent } from './header.component';
-
-@Directive({
-  // tslint:disable-next-line: directive-selector
-  selector: '[routerLinkActiveOptions]',
-})
-// tslint:disable-next-line: directive-class-suffix
-class RouterLinkActiveOptionsDirectiveStub {
-  @Input('routerLinkActiveOptions') public linkParams: string;
-}
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -19,6 +14,7 @@ describe('HeaderComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [HeaderComponent, RouterLinkActiveOptionsDirectiveStub],
+      imports: [MatSelectModule, NoopAnimationsModule, FormsModule, getTranslocoModule()],
     }).compileComponents();
   });
 

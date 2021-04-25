@@ -15,17 +15,15 @@ describe('DialogService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should return false when clicked "cancel"', () => {
+  it('should return false when clicked "cancel"', async () => {
     spyOn(window, 'confirm').and.returnValue(false);
-    service.confirm('test message').then(res => {
-      expect(res).toBe(false);
-    });
+    const res: boolean = await service.confirm('test message');
+    expect(res).toBe(false);
   });
 
-  it('should return true when clicked "ok"', () => {
+  it('should return true when clicked "ok"', async () => {
     spyOn(window, 'confirm').and.returnValue(true);
-    service.confirm().then(res => {
-      expect(res).toBe(true);
-    });
+    const res: boolean = await service.confirm();
+    expect(res).toBe(true);
   });
 });

@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MockAuthenticationService } from '../../login/services/authentication/authentication.service.spec';
+import { AuthenticationServiceStub } from '../../login/services/authentication/authentication.service.spec';
 import { AdminGuard } from './admin.guard';
 
 describe('AdminGuard', () => {
   let adminGuard: AdminGuard;
-  let authenticationService: MockAuthenticationService;
+  let authenticationService: AuthenticationServiceStub;
 
   beforeEach(() => {
     adminGuard = TestBed.inject(AdminGuard);
@@ -14,7 +14,7 @@ describe('AdminGuard', () => {
 
   describe('AdminGuard canActivate', () => {
     it('should return true for a logged in user', () => {
-      authenticationService = new MockAuthenticationService();
+      authenticationService = new AuthenticationServiceStub();
       authenticationService.logout();
       expect(adminGuard.canActivate()).toEqual(false);
 
@@ -31,7 +31,7 @@ describe('AdminGuard', () => {
 
   describe('canLoad', () => {
     it('should return true for a logged in user', () => {
-      authenticationService = new MockAuthenticationService();
+      authenticationService = new AuthenticationServiceStub();
       authenticationService.logout();
 
       authenticationService.login({ token: 'mocUser', isAdmin: false });

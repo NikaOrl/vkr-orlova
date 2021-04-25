@@ -1,12 +1,14 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
+import { Observable, of } from 'rxjs';
 
 import { AuthenticationService } from './authentication.service';
 import { IUser } from '../../../core/interfaces/user.interface';
 
-export class MockAuthenticationService {
-  public login(user: IUser): void {
+export class AuthenticationServiceStub {
+  public login(user: IUser): Observable<string> {
     localStorage.setItem('currentUser', JSON.stringify(user));
+    return of('test');
   }
 
   public logout(): void {

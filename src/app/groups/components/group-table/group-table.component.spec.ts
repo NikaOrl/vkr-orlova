@@ -14,6 +14,7 @@ import { GroupTableComponent } from './group-table.component';
 import { GroupsApiService } from '../../services/groups-api.service';
 import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 import { GroupsApiServiceStub } from '../../services/groups-api.service.spec';
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
 describe('GroupTableComponent', () => {
   let component: GroupTableComponent;
@@ -30,6 +31,7 @@ describe('GroupTableComponent', () => {
         MatInputModule,
         MatAutocompleteModule,
         NoopAnimationsModule,
+        getTranslocoModule(),
       ],
       providers: [
         HttpClientTestingModule,

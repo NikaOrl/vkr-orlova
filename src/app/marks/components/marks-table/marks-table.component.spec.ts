@@ -15,7 +15,8 @@ import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
 import { IDiscipline } from '../../models/discipline.model';
-import { IGroup } from 'src/app/groups/models/group.model';
+import { IGroup } from '../../../groups/models/group.model';
+import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
 describe('MarksTableComponent', () => {
   let component: MarksTableComponent;
@@ -33,6 +34,7 @@ describe('MarksTableComponent', () => {
         MatAutocompleteModule,
         NoopAnimationsModule,
         MatDialogModule,
+        getTranslocoModule(),
       ],
       providers: [
         { provide: MarksApiService, useClass: MarksApiServiceStub },

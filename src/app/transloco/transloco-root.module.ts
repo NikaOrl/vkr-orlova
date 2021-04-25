@@ -6,15 +6,19 @@ import {
   TRANSLOCO_CONFIG,
   translocoConfig,
   TranslocoModule,
+  HashMap,
 } from '@ngneat/transloco';
 import { Injectable, NgModule } from '@angular/core';
+import { Observable } from 'rxjs';
+
 import { environment } from '../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class TranslocoHttpLoader implements TranslocoLoader {
   constructor(private http: HttpClient) {}
 
-  getTranslation(lang: string) {
+  // tslint:disable-next-line: no-any
+  public getTranslation(lang: string): Observable<HashMap<any>> {
     return this.http.get<Translation>(`/assets/i18n/${lang}.json`);
   }
 }

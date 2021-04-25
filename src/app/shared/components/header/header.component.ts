@@ -14,31 +14,31 @@ interface ILanguage {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  languageList: ILanguage[] = [
+  public languageList: ILanguage[] = [
     { code: 'en', label: 'English' },
     { code: 'ru', label: 'Russian' },
   ];
 
   public siteLanguage: ILanguage;
 
+  constructor(private translocoService: TranslocoService) {}
+
   public ngOnInit(): void {
-    const storedCode = localStorage.getItem('lang');
+    const storedCode: string = localStorage.getItem('lang');
     this.siteLanguage = storedCode
       ? this.languageList.find((lang: ILanguage) => lang.code === storedCode)
       : this.languageList[0];
-    this.service.setActiveLang(this.siteLanguage.code);
+    this.translocoService.setActiveLang(this.siteLanguage.code);
   }
 
-  constructor(private service: TranslocoService) {}
-
   public changeSiteLanguage(language: ILanguage): void {
-    this.service.setActiveLang(language.code);
+    this.translocoService.setActiveLang(language.code);
     localStorage.setItem('lang', language.code);
     this.siteLanguage = language;
   }
 
   public compareThem(o1: ILanguage, o2: ILanguage): boolean {
-    return o1.code === o2.code;
+    return o1 && o2 && o1.code === o2.code;
   }
 
   public isTeachersShouldBeShown(): boolean {

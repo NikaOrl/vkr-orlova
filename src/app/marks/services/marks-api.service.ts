@@ -65,16 +65,18 @@ export class MarksApiService {
           .pipe(catchError(this.handleError))
           .toPromise()
           .then(result => {
-            const jobId: number = JSON.parse(JSON.stringify(result.result))[0];
+            if (result.result) {
+              const jobId: number = +result.result[0];
 
-            jobMarks.forEach(mark => {
-              mark.jobId = jobId;
-              return mark;
-            });
-            this.http
-              .post<{ result: number[] }>(`/api/marks/add`, jobMarks, HTTP_OPTIONS)
-              .pipe(catchError(this.handleError))
-              .toPromise();
+              jobMarks.forEach(mark => {
+                mark.jobId = jobId;
+                return mark;
+              });
+              this.http
+                .post<{ result: number[] }>(`/api/marks/add`, jobMarks, HTTP_OPTIONS)
+                .pipe(catchError(this.handleError))
+                .toPromise();
+            }
           });
       }),
     ]);
