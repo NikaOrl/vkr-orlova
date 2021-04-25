@@ -8,6 +8,7 @@ import { ITableData } from '../models/table-data.model';
 import { IStudent } from '../../groups/models/student.model';
 import { IDiscipline } from '../models/discipline.model';
 import { Observable, of } from 'rxjs';
+import {DISCIPLINES, GROUPS, JOBS, MARKS} from '../../core/http-constants';
 
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
@@ -23,17 +24,15 @@ export class MarksApiServiceStub {
     });
   }
 
-  public getDisciplines(): Observable<{ result: IDiscipline[] }> {
-    return of({ result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] });
+  public getDisciplines(): Observable<IDiscipline[]> {
+    return of([{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline]);
   }
 
   public getGroups(): Observable<unknown> {
-    return of({
-      result: [
+    return of([
         { id: 1, groupNumber: 1 },
         { id: 2, groupNumber: 2 },
-      ],
-    });
+      ]);
   }
 
   public updateMarks(marks: IMark[]): Promise<{ result: IMark[] }> {
@@ -64,8 +63,6 @@ export class MarksApiServiceStub {
     });
   }
 }
-
-const apiUrl: string = '/api/marks';
 
 describe('MarksApiService', () => {
   let injector: TestBed;
@@ -98,20 +95,20 @@ describe('MarksApiService', () => {
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${apiUrl}/1/1`);
+    const req: TestRequest = httpMock.expectOne(`${MARKS}?groupId=1&disciplineId=1`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });
 
   it('should getDisciplines', () => {
-    const dummyUsers: { result: IDiscipline[] } = { result: [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline] };
+    const dummyUsers: IDiscipline[] = [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline];
 
     service.getDisciplines().subscribe(users => {
-      expect(users.result.length).toBe(2);
+      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${apiUrl}/disciplines`);
+    const req: TestRequest = httpMock.expectOne(`${DISCIPLINES}`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });
@@ -123,7 +120,7 @@ describe('MarksApiService', () => {
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${apiUrl}/update`);
+    const req: TestRequest = httpMock.expectOne(`${MARKS}`);
     expect(req.request.method).toBe('PUT');
     req.flush(dummyUsers);
   });
@@ -135,7 +132,7 @@ describe('MarksApiService', () => {
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`/api/jobs/update`);
+    const req: TestRequest = httpMock.expectOne(`${JOBS}`);
     expect(req.request.method).toBe('PUT');
     req.flush(dummyUsers);
   });
@@ -150,7 +147,7 @@ describe('MarksApiService', () => {
         { jobId: 1, second: '2' },
       ] as unknown) as IMark[]
     );
-    const req2: TestRequest = httpMock.expectOne(`/api/jobs/add`);
+    const req2: TestRequest = httpMock.expectOne(`${JOBS}`);
     expect(req2.request.method).toBe('POST');
     req2.flush(dummyUsers);
   });
@@ -162,8 +159,8 @@ describe('MarksApiService', () => {
       expect(users).toBe(2);
     });
 
-    const req: TestRequest = httpMock.expectOne(`/api/jobs/delete?id=1&id=2`);
-    const req2: TestRequest = httpMock.expectOne(`/api/marks/delete?id=1&id=2`);
+    const req: TestRequest = httpMock.expectOne(`${JOBS}?ids=1&ids=2`);
+    const req2: TestRequest = httpMock.expectOne(`${MARKS}?ids=1&ids=2`);
     expect(req.request.method).toBe('DELETE');
     expect(req2.request.method).toBe('DELETE');
     req.flush(dummyUsers);

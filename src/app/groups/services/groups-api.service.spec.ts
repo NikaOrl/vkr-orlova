@@ -4,43 +4,41 @@ import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@an
 import { GroupsApiService } from './groups-api.service';
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
-import { STUDENTS } from '../../core/http-constants';
+import {GROUPS, STUDENTS} from '../../core/http-constants';
 import { Observable, of } from 'rxjs';
 
 export class GroupsApiServiceStub {
   public getStudents(groupId: number): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 }, { id: 2 }] }));
+      setTimeout(() => resolve([{ id: 1 }, { id: 2 }]));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
 
   public getGroups(): Observable<unknown> {
-    return of({
-      result: [
+    return of([
         { id: 1, groupNumber: 1 },
         { id: 2, groupNumber: 2 },
-      ],
-    });
+      ]);
   }
 
   public updateStudents(students: IStudent[]): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
+      setTimeout(() => resolve('groups'));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
 
   public addStudents(students: IStudent[]): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
+      setTimeout(() => resolve('groups'));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
 
   public deleteStudents(studentsIds: Set<number>): Promise<unknown> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'groups' }));
+      setTimeout(() => resolve('groups'));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
@@ -70,29 +68,27 @@ describe('GroupsApiService', () => {
   });
 
   it('should getStudents', () => {
-    const dummyUsers: { result: IStudent[] } = {
-      result: [{ lastName: 'John' } as IStudent, { lastName: 'Doe' } as IStudent],
-    };
+    const dummyUsers: IStudent[] = [{ lastName: 'John' } as IStudent, { lastName: 'Doe' } as IStudent];
 
     service.getStudents(1).then(users => {
-      expect(users.result.length).toBe(2);
+      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/group/1`);
+    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/1`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });
 
   it('should getGroups', () => {
-    const dummyUsers: { result: IGroup[] } = { result: [{ id: 1 } as IGroup, { id: 2 } as IGroup] };
+    const dummyUsers: IGroup[] = [{ id: 1 } as IGroup, { id: 2 } as IGroup];
 
     service.getGroups().subscribe(users => {
-      expect(users.result.length).toBe(2);
+      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/groups`);
+    const req: TestRequest = httpMock.expectOne(`${GROUPS}`);
     expect(req.request.method).toBe('GET');
     req.flush(dummyUsers);
   });
@@ -104,31 +100,31 @@ describe('GroupsApiService', () => {
       expect(users).toEqual(status);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/update`);
+    const req: TestRequest = httpMock.expectOne(`${STUDENTS}`);
     expect(req.request.method).toBe('PUT');
     req.flush(status);
   });
 
   it('should addStudents', () => {
-    const dummyUsers: { result: number[] } = { result: [1, 2] };
+    const dummyUsers: number[] = [1, 2];
 
     service.addStudents([]).then(users => {
-      expect(users.result.length).toBe(2);
+      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/add`);
+    const req: TestRequest = httpMock.expectOne(`${STUDENTS}`);
     expect(req.request.method).toBe('POST');
     req.flush(dummyUsers);
   });
 
   it('should deleteStudents', () => {
     service.deleteStudents(new Set([1, 2])).then(users => {
-      expect(users).toEqual({ result: 2 });
+      expect(users).toEqual(2);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/delete?id=1&id=2`);
+    const req: TestRequest = httpMock.expectOne(`${STUDENTS}?ids=1&ids=2`);
     expect(req.request.method).toBe('DELETE');
-    req.flush({ result: 2 });
+    req.flush(2);
   });
 });

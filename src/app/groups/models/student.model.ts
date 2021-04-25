@@ -4,7 +4,6 @@ export interface IStudent {
   id: number;
   numberInList: number;
   email: string;
-  registrationDate?: Date;
   groupId: number;
   headStudent: boolean;
   deleted: boolean;

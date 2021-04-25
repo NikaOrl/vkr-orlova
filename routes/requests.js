@@ -101,7 +101,7 @@ router.get('/marks/:groupId/:disciplineId', function (req, res, next) {
 });
 
 /* GET all groups */
-router.get('/students/groups', function (req, res, next) {
+router.get('/groups', function (req, res, next) {
   knex
     .from('groups')
     .select('*')
@@ -115,7 +115,7 @@ router.get('/students/groups', function (req, res, next) {
 });
 
 /* GET disciplines */
-router.get('/marks/disciplines', function (req, res, next) {
+router.get('/disciplines', function (req, res, next) {
   knex
     .from('disciplines')
     .select('*')
