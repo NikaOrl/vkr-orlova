@@ -4,7 +4,7 @@ import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@an
 import { GroupsApiService } from './groups-api.service';
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
-import {GROUPS, STUDENTS} from '../../core/http-constants';
+import { GROUPS, STUDENTS } from '../../core/http-constants';
 import { Observable, of } from 'rxjs';
 
 export class GroupsApiServiceStub {
@@ -17,9 +17,9 @@ export class GroupsApiServiceStub {
 
   public getGroups(): Observable<unknown> {
     return of([
-        { id: 1, groupNumber: 1 },
-        { id: 2, groupNumber: 2 },
-      ]);
+      { id: 1, groupNumber: 1 },
+      { id: 2, groupNumber: 2 },
+    ]);
   }
 
   public updateStudents(students: IStudent[]): Promise<unknown> {

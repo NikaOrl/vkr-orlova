@@ -30,10 +30,7 @@ export class TeachersApiService {
   public addTeachers(teachers: ITeacher[]): any {
     return Promise.all(
       teachers.map(teacher => {
-        this.http
-          .post<ITeacher[]>(`${TEACHERS}`, teacher, HTTP_OPTIONS)
-          .pipe(catchError(this.handleError))
-          .toPromise();
+        this.http.post<ITeacher[]>(`${TEACHERS}`, teacher, HTTP_OPTIONS).pipe(catchError(this.handleError)).toPromise();
       })
     );
   }

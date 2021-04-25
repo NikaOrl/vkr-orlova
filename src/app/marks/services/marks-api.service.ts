@@ -24,7 +24,7 @@ export class MarksApiService {
         params: {
           groupId: groupId.toString(),
           disciplineId: disciplineId.toString(),
-        }
+        },
       })
       .pipe(map(this.extractData), catchError(this.handleError))
       .toPromise();
@@ -37,9 +37,7 @@ export class MarksApiService {
   }
 
   public getGroups(): Observable<IGroup[]> {
-    return this.http
-      .get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError));
+    return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateMarks(marks: IMark[]): Promise<{ status: string }> {
@@ -74,14 +72,14 @@ export class MarksApiService {
             if (result) {
               const jobId: number = +result[0];
 
-            jobMarks.forEach(mark => {
-              mark.jobId = jobId;
-              return mark;
-            });
-            this.http
-              .post<number[]>(`${JOBS}`, jobMarks, HTTP_OPTIONS)
-              .pipe(catchError(this.handleError))
-              .toPromise();
+              jobMarks.forEach(mark => {
+                mark.jobId = jobId;
+                return mark;
+              });
+              this.http
+                .post<number[]>(`${JOBS}`, jobMarks, HTTP_OPTIONS)
+                .pipe(catchError(this.handleError))
+                .toPromise();
               jobMarks.forEach(mark => {
                 mark.jobId = jobId;
                 return mark;
@@ -99,18 +97,24 @@ export class MarksApiService {
   // tslint:disable-next-line: no-any
   public deleteJobs(jobsIds: Set<number>): Promise<any> {
     return Promise.all([
-      this.http.delete(`${MARKS}`, {
-        ...HTTP_OPTIONS,
-        params: {
-          ids: [...jobsIds].map(id => id.toString()),
-        }
-      }).pipe(catchError(this.handleError)).toPromise(),
-      this.http.delete(`${JOBS}`, {
-        ...HTTP_OPTIONS,
-        params: {
-          ids: [...jobsIds].map(id => id.toString()),
-        }
-      }).pipe(catchError(this.handleError)).toPromise(),
+      this.http
+        .delete(`${MARKS}`, {
+          ...HTTP_OPTIONS,
+          params: {
+            ids: [...jobsIds].map(id => id.toString()),
+          },
+        })
+        .pipe(catchError(this.handleError))
+        .toPromise(),
+      this.http
+        .delete(`${JOBS}`, {
+          ...HTTP_OPTIONS,
+          params: {
+            ids: [...jobsIds].map(id => id.toString()),
+          },
+        })
+        .pipe(catchError(this.handleError))
+        .toPromise(),
     ]);
   }
 

@@ -8,7 +8,7 @@ import { ITableData } from '../models/table-data.model';
 import { IStudent } from '../../groups/models/student.model';
 import { IDiscipline } from '../models/discipline.model';
 import { Observable, of } from 'rxjs';
-import {DISCIPLINES, GROUPS, JOBS, MARKS} from '../../core/http-constants';
+import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
 
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
@@ -30,9 +30,9 @@ export class MarksApiServiceStub {
 
   public getGroups(): Observable<unknown> {
     return of([
-        { id: 1, groupNumber: 1 },
-        { id: 2, groupNumber: 2 },
-      ]);
+      { id: 1, groupNumber: 1 },
+      { id: 2, groupNumber: 2 },
+    ]);
   }
 
   public updateMarks(marks: IMark[]): Promise<{ result: IMark[] }> {

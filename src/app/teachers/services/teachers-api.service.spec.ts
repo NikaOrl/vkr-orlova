@@ -97,7 +97,7 @@ describe('TeachersApiService', () => {
   });
 
   it('should deleteTeachers', () => {
-    const dummyUsers: number =  2;
+    const dummyUsers: number = 2;
 
     service.deleteTeachers(new Set([1, 2])).then(users => {
       expect(users).toEqual(dummyUsers);

@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
-import {GROUPS, HTTP_OPTIONS, STUDENTS} from '../../core/http-constants';
+import { GROUPS, HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
 
 @Injectable({
   providedIn: 'root',
@@ -22,9 +22,7 @@ export class GroupsApiService {
   }
 
   public getGroups(): Observable<IGroup[]> {
-    return this.http
-      .get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError));
+    return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateStudents(students: IStudent[]): Promise<{ status: string }> {
