@@ -1,14 +1,14 @@
-<div class="filters-container">
+<div class="filters-container" *transloco="let t; read: 'groups'">
   <mat-form-field class="students-filter">
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Students filter" />
+    <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
   <div class="edit-button">
     <button *ngIf="selectedGroup" mat-raised-button color="primary" routerLink="/groups/edit/{{ selectedGroup.id }}">
-      Edit group
+      {{ t('editGroupButton') }}
     </button>
   </div>
   <mat-form-field class="groups-filter">
-    <mat-label>Select group</mat-label>
+    <mat-label>{{ t('selectGroupDropDown') }}</mat-label>
     <input type="text" matInput [(ngModel)]="selectValue" (ngModelChange)="filter()" [matAutocomplete]="auto" />
     <mat-autocomplete
       autoActiveFirstOption
@@ -23,7 +23,7 @@
   </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *transloco="let t; read: 'groups'">
   <!-- numberInList Column -->
   <ng-container matColumnDef="numberInList">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">No.</th>
@@ -34,7 +34,7 @@
 
   <!-- firstName Column -->
   <ng-container matColumnDef="firstName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">First name</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('firstName') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
       {{ element.firstName }}
     </td>
@@ -42,7 +42,7 @@
 
   <!-- lastName Column -->
   <ng-container matColumnDef="lastName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">Last name</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('lastName') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
       {{ element.lastName }}
     </td>
@@ -50,13 +50,13 @@
 
   <!-- email Column -->
   <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">Email</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('email') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">{{ element.email }}</td>
   </ng-container>
 
   <!-- headStudent Column -->
   <ng-container matColumnDef="headStudent">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">Role</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('role') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
       {{ element.headStudent ? 'Starosta' : 'Student' }}
     </td>

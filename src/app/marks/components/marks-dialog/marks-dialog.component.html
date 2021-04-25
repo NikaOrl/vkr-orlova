@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Выберите количество баллов для каждой оценки</h1>
+<h1 mat-dialog-title *transloco="let t; read: 'marks'">{{ t('choosePointsTitle') }}</h1>
 <div mat-dialog-content>
   <span>3:</span>
   <mat-form-field>
@@ -17,7 +17,7 @@
     <input matInput type="number" [(ngModel)]="data.five" />
   </mat-form-field>
 </div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Назад</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+<div mat-dialog-actions *transloco="let t; read: 'marks'">
+  <button mat-button (click)="onNoClick()">{{ t('backButton') }}</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>{{ t('okButton') }}</button>
 </div>

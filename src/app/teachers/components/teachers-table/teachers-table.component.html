@@ -1,16 +1,16 @@
-<div class="filters-container">
+<div class="filters-container" *transloco="let t; read: 'teachers'">
   <mat-form-field class="teachers-filter">
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Teachers filter" />
+    <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('teachersFilter')" />
   </mat-form-field>
   <div class="edit-button">
-    <button mat-raised-button color="primary" routerLink="/teachers/edit">Edit teachers</button>
+    <button mat-raised-button color="primary" routerLink="/teachers/edit">{{ t('editButton') }}</button>
   </div>
 </div>
 
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *transloco="let t; read: 'teachers'">
   <!-- firstName Column -->
   <ng-container matColumnDef="firstName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">First name</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('firstName') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
       {{ element.firstName }}
     </td>
@@ -18,7 +18,7 @@
 
   <!-- lastName Column -->
   <ng-container matColumnDef="lastName">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">Last name</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('lastName') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
       {{ element.lastName }}
     </td>
@@ -26,15 +26,15 @@
 
   <!-- email Column -->
   <ng-container matColumnDef="email">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">Email</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('email') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">{{ element.email }}</td>
   </ng-container>
 
   <!-- isAdmin Column -->
   <ng-container matColumnDef="isAdmin">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">Role</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('role') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
-      {{ element.isAdmin ? 'Admin' : 'Teacher' }}
+      {{ element.isAdmin ? t('admin') : t('teacher') }}
     </td>
   </ng-container>
 

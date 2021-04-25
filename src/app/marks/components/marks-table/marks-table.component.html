@@ -1,15 +1,17 @@
-<div class="filters-container">
+<div class="filters-container" *transloco="let t; read: 'marks'">
   <mat-form-field class="students-filter">
-    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Students filter" />
+    <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
   <div class="edit-button">
-    <button *ngIf="selectedDiscipline" mat-raised-button color="primary" [routerLink]="editLink">Edit marks</button>
+    <button *ngIf="selectedDiscipline" mat-raised-button color="primary" [routerLink]="editLink">
+      {{ t('editMarksButton') }}
+    </button>
   </div>
   <div class="edit-button">
-    <button mat-raised-button (click)="openDialog()">Выбрать баллы</button>
+    <button mat-raised-button (click)="openDialog()">{{ t('choosePointsButton') }}</button>
   </div>
   <mat-form-field class="groups-filter">
-    <mat-label>Select group</mat-label>
+    <mat-label>{{ t('selectGroupDropDown') }}</mat-label>
     <input
       type="text"
       matInput
@@ -30,7 +32,7 @@
   </mat-form-field>
 
   <mat-form-field class="disciplines-filter">
-    <mat-label>Select discipline</mat-label>
+    <mat-label>{{ t('selectDisciplineDropDown') }}</mat-label>
     <input
       type="text"
       matInput
@@ -51,11 +53,11 @@
   </mat-form-field>
 </div>
 
-<div class="scroll-table">
+<div class="scroll-table" *transloco="let t; read: 'marks'">
   <table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
     <!-- studentName Column -->
     <ng-container matColumnDef="studentName" sticky>
-      <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>Students Jobs</th>
+      <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>{{ t('studentsTitle') }}</th>
       <td class="student-cell" mat-cell *matCellDef="let element">
         {{ element.studentName }}
       </td>
@@ -74,7 +76,7 @@
     <!-- SumPoints Column -->
     <ng-container matColumnDef="sumPoints" sticky>
       <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>
-        <b>Суммарный балл</b>
+        <b>{{ t('sumPoint') }}</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">
         {{ getSumPoints(element) }}
@@ -84,7 +86,7 @@
     <!-- Mark Column -->
     <ng-container matColumnDef="mark" sticky>
       <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>
-        <b>Оценка</b>
+        <b>{{ t('result') }}</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">
         {{ getResultCellMark(element) }}
@@ -92,7 +94,7 @@
     </ng-container>
 
     <ng-container matColumnDef="maxPointFuild" sticky>
-      <th mat-header-cell *matHeaderCellDef>Max Point</th>
+      <th mat-header-cell *matHeaderCellDef>{{ t('maxPoint') }}</th>
     </ng-container>
     <ng-container *ngFor="let column of maxPointFuilds; let i = index" [cdkColumnDef]="column.columnDef(i)">
       <th class="student-cell" mat-header-cell *matHeaderCellDef>

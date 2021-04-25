@@ -14,6 +14,7 @@ import { TeachersPageComponent } from './components/teachers-page/teachers-page.
 import { TeachersEditComponent } from './components/teachers-edit/teachers-edit.component';
 import { TeachersTableComponent } from './components/teachers-table/teachers-table.component';
 import { SharedModule } from '../shared/shared.module';
+import { TranslocoRootModule } from '../transloco/transloco-root.module';
 
 @NgModule({
   declarations: [TeachersPageComponent, TeachersEditComponent, TeachersTableComponent],
@@ -28,6 +29,7 @@ import { SharedModule } from '../shared/shared.module';
     MatCheckboxModule,
     FormsModule,
     SharedModule,
+    TranslocoRootModule,
     TeachersRoutingModule,
   ],
 })

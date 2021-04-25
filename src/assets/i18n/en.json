@@ -1,0 +1,69 @@
+{
+  "header": {
+    "brand": "Marks Journal",
+    "marks": "Marks",
+    "groups": "Groups",
+    "teachers": "Teachers",
+    "logout": "Logout"
+  },
+  "login": {
+    "login": "Login",
+    "password": "Password",
+    "email": "Email"
+  },
+  "marks": {
+    "choosePointsTitle": "Select the number of points for each grade",
+    "backButton": "Back",
+    "okButton": "Ok",
+    "studentsFilter": "Students filter",
+    "studentsTitle": "Students Jobs",
+    "maxPoint": "Max Point",
+    "delete": "Delete",
+    "deteleMessage": "This job will be deleted after save.",
+    "addMessage": "This job will be added after save.",
+    "cancel": "Cancel",
+    "addButton": "Add job",
+    "saveButton": "Save",
+    "editMarksButton": "Edit marks",
+    "choosePointsButton": "Select points",
+    "selectGroupDropDown": "Select group",
+    "selectDisciplineDropDown": "Select discipline",
+    "sumPoint": "Total score",
+    "result": "Grade"
+  },
+  "groups": {
+    "editGroupButton": "Edit group",
+    "selectGroupDropDown": "Select group",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "role": "Role",
+    "studentsFilter": "Students filter",
+    "starosta": "Starosta?",
+    "delete": "Delete",
+    "deteleMessage": "This student will be deleted after save.",
+    "addMessage": "This student will be added after save.",
+    "cancel": "Cancel",
+    "addButton": "Add student",
+    "backButton": "Back",
+    "saveButton": "Save"
+  },
+  "teachers": {
+    "teachersFilter": "Teachers filter",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "isAdmin": "Admin?",
+    "delete": "Delete",
+    "deteleMessage": "This teacher will be deleted after save.",
+    "addMessage": "This teacher will be added after save.",
+    "cancel": "Cancel",
+    "addButton": "Add teacher",
+    "backButton": "Back",
+    "saveButton": "Save",
+    "editButton": "Edit teachers",
+    "role": "Role",
+    "admin": "Admin",
+    "teacher": "Teacher"
+  }
+}

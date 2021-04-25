@@ -17,6 +17,7 @@ import { GroupTableComponent } from './components/group-table/group-table.compon
 import { GroupsRoutingModule } from './groups-routing.module';
 import { GroupsEditComponent } from './components/groups-edit/groups-edit.component';
 import { SharedModule } from '../shared/shared.module';
+import { TranslocoRootModule } from '../transloco/transloco-root.module';
 
 @NgModule({
   declarations: [GroupPageComponent, GroupTableComponent, GroupsEditComponent],
@@ -33,6 +34,7 @@ import { SharedModule } from '../shared/shared.module';
     HttpClientModule,
     FormsModule,
     SharedModule,
+    TranslocoRootModule,
     GroupsRoutingModule,
   ],
   exports: [GroupPageComponent],

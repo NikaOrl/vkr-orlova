@@ -8,6 +8,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { LoginPageComponent } from './components/login-page/login-page.component';
 import { LoginRoutingModule } from './login-routing.module';
+import { TranslocoRootModule } from '../transloco/transloco-root.module';
 
 @NgModule({
   declarations: [LoginPageComponent],
@@ -18,6 +19,7 @@ import { LoginRoutingModule } from './login-routing.module';
     MatCardModule,
     MatInputModule,
     MatProgressSpinnerModule,
+    TranslocoRootModule,
     LoginRoutingModule,
   ],
   exports: [LoginPageComponent],
