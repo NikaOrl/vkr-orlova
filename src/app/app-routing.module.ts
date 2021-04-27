@@ -28,7 +28,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    redirectTo: '/marks',
+    redirectTo: '/disciplines',
     pathMatch: 'full',
   },
   {

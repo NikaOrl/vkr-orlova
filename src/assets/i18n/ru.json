@@ -1,7 +1,7 @@
 {
   "header": {
     "brand": "Балльно-Рейтинговая система",
-    "marks": "Оценки",
+    "disciplines": "Дисциплины",
     "groups": "Группы",
     "teachers": "Преподаватели",
     "logout": "Выйти"
@@ -65,5 +65,18 @@
     "role": "Роль",
     "admin": "Админ",
     "teacher": "Преподаватель"
+  },
+  "disciplines": {
+    "editDialogTitle": "Редактировать дисциплину",
+    "disciplineName": "Название дисциплины",
+    "requiredError": "Название должно быть заполнено",
+    "addTeacherPlaceholder": "Добавить преподавателя...",
+    "studentsDialogTitle": "Выберите группы/студентов для дисциплины",
+    "cancelButton": "Отменить",
+    "saveButton": "Сохранить",
+    "disciplines": "Дисциплины",
+    "studentsGroupsButton": "Группы/Студенты",
+    "editButton": "Редактировать",
+    "journalButton": "Журнал"
   }
 }

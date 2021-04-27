@@ -3,7 +3,7 @@
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
   <div class="edit-button">
-    <button *ngIf="selectedDiscipline" mat-raised-button color="primary" [routerLink]="editLink">
+    <button *ngIf="selectedDisciplineId" mat-raised-button color="primary" [routerLink]="editLink">
       {{ t('editMarksButton') }}
     </button>
   </div>
@@ -27,27 +27,6 @@
     >
       <mat-option *ngFor="let group of filteredGroups" [value]="group">
         {{ group.groupNumber }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-
-  <mat-form-field class="disciplines-filter">
-    <mat-label>{{ t('selectDisciplineDropDown') }}</mat-label>
-    <input
-      type="text"
-      matInput
-      [(ngModel)]="disciplineSelectValue"
-      (ngModelChange)="filterDisciplines()"
-      [matAutocomplete]="autoDiscipline"
-    />
-    <mat-autocomplete
-      autoActiveFirstOption
-      #autoDiscipline="matAutocomplete"
-      [displayWith]="displayDisciplineFn"
-      (optionSelected)="selectDiscipline($event.option.value)"
-    >
-      <mat-option *ngFor="let discipline of filteredDisciplines" [value]="discipline">
-        {{ discipline.disciplineValue }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>

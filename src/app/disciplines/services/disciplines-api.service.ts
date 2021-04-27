@@ -4,12 +4,12 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { DISCIPLINES, HTTP_OPTIONS, MARKS, TEACHERS } from '../../core/http-constants';
+import { DISCIPLINES, HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
 import { IDiscipline } from '../models/discipline.model';
 import { IDisciplineGroup } from '../models/group-students.model';
 import { ITeacher } from '../../teachers/models/teacher.model';
 
-const mockGroupStudents: IDisciplineGroup[] = [
+export const mockGroupStudents: IDisciplineGroup[] = [
   {
     id: 1,
     groupNumber: 5381,
@@ -137,19 +137,19 @@ export class DisciplinesApiService {
 
   public getDisciplines(): Observable<IDiscipline[]> {
     return this.http
-      .get<{ result: IDiscipline[] }>(`${MARKS}/disciplines`, HTTP_OPTIONS)
+      .get<IDiscipline[]>(`${DISCIPLINES}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public getTeachers(): Observable<ITeacher[]> {
     return this.http
-      .get<{ result: ITeacher[] }>(`${TEACHERS}`, HTTP_OPTIONS)
+      .get<ITeacher[]>(`${TEACHERS}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public getGroupsAndStudents(disciplineId: number): Observable<IDisciplineGroup[]> {
     // return this.http
-    //   .get<{ result: IDisciplineGroup[] }>(`${DISCIPLINES}/${disciplineId}/students`, HTTP_OPTIONS)
+    //   .get<IDisciplineGroup[]>(`${DISCIPLINES}/${disciplineId}/students`, HTTP_OPTIONS)
     //   .pipe(map(this.extractData), catchError(this.handleError));
     return of(mockGroupStudents);
   }
@@ -160,6 +160,12 @@ export class DisciplinesApiService {
   ): Observable<{ status: string }> {
     return this.http
       .put<{ status: string }>(`${DISCIPLINES}/${disciplineId}/students`, groupsAndStudentsData, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
+  }
+
+  public updateDiscipline(discipline: IDiscipline): Observable<{ status: string }> {
+    return this.http
+      .put<{ status: string }>(`${DISCIPLINES}/${discipline.id}`, discipline, HTTP_OPTIONS)
       .pipe(catchError(this.handleError));
   }
 
@@ -177,7 +183,7 @@ export class DisciplinesApiService {
   }
 
   // tslint:disable-next-line: no-any
-  private extractData<Type>(res: { result: Type[] }): Type[] {
-    return res.result || [];
+  private extractData<Type>(res: Type[]): Type[] {
+    return res || [];
   }
 }

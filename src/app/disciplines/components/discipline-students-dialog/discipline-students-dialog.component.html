@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Select Groups/Students for the discipline</h1>
+<h1 mat-dialog-title *transloco="let t; read: 'disciplines'">{{ t('studentsDialogTitle') }}</h1>
 <div mat-dialog-content>
   <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
     <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
@@ -29,7 +29,7 @@
   </mat-tree>
 </div>
 
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Save</button>
+<div mat-dialog-actions *transloco="let t; read: 'disciplines'">
+  <button mat-raised-button color="primary" (click)="onNoClick()">{{ t('cancelButton') }}</button>
+  <button mat-raised-button color="primary" (click)="onSaveClick()" cdkFocusInitial>{{ t('saveButton') }}</button>
 </div>

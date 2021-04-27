@@ -1,6 +1,7 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { Component, Inject, OnInit } from '@angular/core';
+
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 
@@ -30,11 +31,11 @@ export class DisciplineGroupFlatNode {
 }
 
 @Component({
-  selector: 'app-discipline-dialog',
-  templateUrl: './discipline-dialog.component.html',
-  styleUrls: ['./discipline-dialog.component.scss'],
+  selector: 'app-discipline-students-dialog',
+  templateUrl: './discipline-students-dialog.component.html',
+  styleUrls: ['./discipline-students-dialog.component.scss'],
 })
-export class DisciplineDialogComponent implements OnInit {
+export class DisciplineStudentsDialogComponent implements OnInit {
   public treeControl: FlatTreeControl<DisciplineGroupFlatNode>;
 
   public dataSource: MatTreeFlatDataSource<DisciplineGroupNode, DisciplineGroupFlatNode>;
@@ -54,7 +55,7 @@ export class DisciplineDialogComponent implements OnInit {
   private mainData: IDisciplineGroup[];
 
   constructor(
-    public dialogRef: MatDialogRef<DisciplineDialogComponent>,
+    public dialogRef: MatDialogRef<DisciplineStudentsDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { disciplineId: number },
     private api: DisciplinesApiService
   ) {}

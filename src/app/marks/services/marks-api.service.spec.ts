@@ -1,14 +1,14 @@
 import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
+import { Observable, of } from 'rxjs';
 
 import { MarksApiService } from './marks-api.service';
 import { IJob } from '../models/jobs.model';
 import { IMark } from '../models/marks.model';
 import { ITableData } from '../models/table-data.model';
 import { IStudent } from '../../groups/models/student.model';
-import { IDiscipline } from '../models/discipline.model';
-import { Observable, of } from 'rxjs';
 import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
+import { IDiscipline } from '../../disciplines/models/discipline.model';
 
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
