@@ -5,7 +5,7 @@
     <mat-list-item *ngFor="let discipline of disciplines | async">
       <div mat-line>{{ discipline.disciplineValue }}</div>
       <div mat-line>{{ getTeacher(discipline.teacherId) }}</div>
-      <button mat-raised-button color="primary" (click)="openDialog()">
+      <button mat-raised-button color="primary" (click)="openDialog(discipline.id)">
         <!-- {{ t('editMarksButton') }} -->
         Students/Groups
       </button>

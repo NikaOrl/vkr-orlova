@@ -4,7 +4,7 @@ export interface IDisciplineGroup {
   students: IDisciplineGroupStudent[];
 }
 
-interface IDisciplineGroupStudent {
+export interface IDisciplineGroupStudent {
   firstName: string;
   lastName: string;
   id: number;

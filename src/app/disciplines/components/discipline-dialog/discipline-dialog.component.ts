@@ -1,128 +1,79 @@
 import { SelectionModel } from '@angular/cdk/collections';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 
+import { IDisciplineGroup, IDisciplineGroupStudent } from '../../models/group-students.model';
+import { DisciplinesApiService } from '../../services/disciplines-api.service';
+
 /**
- * Node for to-do item
+ * Node for item
  */
-export class TodoItemNode {
-  public children: TodoItemNode[];
-  public item: string;
+export class DisciplineGroupNode {
+  public id: number;
+  public groupNumber: number;
+  public students: DisciplineGroupNode[];
+  public firstName: string;
+  public lastName: string;
+  public groupId: number;
+  public isInDiscipline: boolean;
 }
 
-/** Flat to-do item node with expandable and level information */
-export class TodoItemFlatNode {
+/** Flat item node with expandable and level information */
+export class DisciplineGroupFlatNode {
   public item: string;
   public level: number;
   public expandable: boolean;
+  public id: number;
+  public parentId: number;
 }
-
-const TREE_DATA = {
-  Groceries: {
-    'Almond Meal flour': null,
-    'Organic eggs': null,
-    'Protein Powder': null,
-    Fruits: {
-      Apple: null,
-      Berries: ['Blueberry', 'Raspberry'],
-      Orange: null,
-    },
-  },
-  Reminders: ['Cook dinner', 'Read the Material Design spec', 'Upgrade Application to Angular'],
-};
 
 @Component({
   selector: 'app-discipline-dialog',
   templateUrl: './discipline-dialog.component.html',
   styleUrls: ['./discipline-dialog.component.scss'],
 })
-export class DisciplineDialogComponent {
-  public flatNodeMap: Map<TodoItemFlatNode, TodoItemNode> = new Map<TodoItemFlatNode, TodoItemNode>();
+export class DisciplineDialogComponent implements OnInit {
+  public treeControl: FlatTreeControl<DisciplineGroupFlatNode>;
 
-  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
-  public nestedNodeMap: Map<TodoItemNode, TodoItemFlatNode> = new Map<TodoItemNode, TodoItemFlatNode>();
-
-  /** A selected parent node to be inserted */
-  public selectedParent: TodoItemFlatNode | null = null;
-
-  /** The new item's name */
-  public newItemName: string = '';
-
-  public treeControl: FlatTreeControl<TodoItemFlatNode>;
-
-  public treeFlattener: MatTreeFlattener<TodoItemNode, TodoItemFlatNode>;
-
-  public dataSource: MatTreeFlatDataSource<TodoItemNode, TodoItemFlatNode>;
+  public dataSource: MatTreeFlatDataSource<DisciplineGroupNode, DisciplineGroupFlatNode>;
 
   /** The selection for checklist */
-  public checklistSelection: SelectionModel<TodoItemFlatNode> = new SelectionModel<TodoItemFlatNode>(
+  public checklistSelection: SelectionModel<DisciplineGroupFlatNode> = new SelectionModel<DisciplineGroupFlatNode>(
     true /* multiple */
   );
+  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+  private nestedNodeMap: Map<DisciplineGroupNode, DisciplineGroupFlatNode> = new Map<
+    DisciplineGroupNode,
+    DisciplineGroupFlatNode
+  >();
+
+  private treeFlattener: MatTreeFlattener<DisciplineGroupNode, DisciplineGroupFlatNode>;
+
+  private mainData: IDisciplineGroup[];
 
   constructor(
     public dialogRef: MatDialogRef<DisciplineDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public disciplineId: number
-  ) {
+    @Inject(MAT_DIALOG_DATA) public data: { disciplineId: number },
+    private api: DisciplinesApiService
+  ) {}
+
+  public ngOnInit(): void {
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
-    this.treeControl = new FlatTreeControl<TodoItemFlatNode>(this.getLevel, this.isExpandable);
+    this.treeControl = new FlatTreeControl<DisciplineGroupFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-    this.dataSource.data = this.buildFileTree(TREE_DATA, 0);
+    this.api.getGroupsAndStudents(this.data.disciplineId).subscribe((data: IDisciplineGroup[]) => {
+      this.mainData = data;
+      this.dataSource.data = data as DisciplineGroupNode[];
+    });
   }
 
-  // tslint:disable-next-line: no-any
-  public buildFileTree(obj: { [key: string]: any }, level: number): TodoItemNode[] {
-    return Object.keys(obj).reduce<TodoItemNode[]>((accumulator, key) => {
-      // tslint:disable-next-line: no-any
-      const value: any = obj[key];
-      const node: TodoItemNode = new TodoItemNode();
-      node.item = key;
-
-      if (value != null) {
-        if (typeof value === 'object') {
-          node.children = this.buildFileTree(value, level + 1);
-        } else {
-          node.item = value;
-        }
-      }
-
-      return accumulator.concat(node);
-    }, []);
-  }
-
-  public onNoClick(): void {
-    this.dialogRef.close();
-  }
-
-  public getLevel = (node: TodoItemFlatNode) => node.level;
-
-  public isExpandable = (node: TodoItemFlatNode) => node.expandable;
-
-  public getChildren = (node: TodoItemNode): TodoItemNode[] => node.children;
-
-  public hasChild = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.expandable;
-
-  public hasNoContent = (_: number, _nodeData: TodoItemFlatNode) => _nodeData.item === '';
-
-  /**
-   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
-   */
-  public transformer = (node: TodoItemNode, level: number) => {
-    const existingNode: TodoItemFlatNode = this.nestedNodeMap.get(node);
-    const flatNode: TodoItemFlatNode =
-      existingNode && existingNode.item === node.item ? existingNode : new TodoItemFlatNode();
-    flatNode.item = node.item;
-    flatNode.level = level;
-    flatNode.expandable = !!node.children?.length;
-    this.flatNodeMap.set(flatNode, node);
-    this.nestedNodeMap.set(node, flatNode);
-    return flatNode;
-  };
+  public hasChild = (_: number, _nodeData: DisciplineGroupFlatNode) => _nodeData.expandable;
 
   /** Whether all the descendants of the node are selected. */
-  public descendantsAllSelected(node: TodoItemFlatNode): boolean {
-    const descendants: TodoItemFlatNode[] = this.treeControl.getDescendants(node);
+  public descendantsAllSelected(node: DisciplineGroupFlatNode): boolean {
+    const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
     const descAllSelected: boolean =
       descendants.length > 0 &&
       descendants.every(child => {
@@ -132,34 +83,89 @@ export class DisciplineDialogComponent {
   }
 
   /** Whether part of the descendants are selected */
-  public descendantsPartiallySelected(node: TodoItemFlatNode): boolean {
-    const descendants: TodoItemFlatNode[] = this.treeControl.getDescendants(node);
+  public descendantsPartiallySelected(node: DisciplineGroupFlatNode): boolean {
+    const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
     const result: boolean = descendants.some(child => this.checklistSelection.isSelected(child));
     return result && !this.descendantsAllSelected(node);
   }
 
-  /** Toggle the to-do item selection. Select/deselect all the descendants node */
-  public todoItemSelectionToggle(node: TodoItemFlatNode): void {
+  /** Toggle the item selection. Select/deselect all the descendants node */
+  public disciplineGroupSelectionToggle(node: DisciplineGroupFlatNode): void {
     this.checklistSelection.toggle(node);
-    const descendants: TodoItemFlatNode[] = this.treeControl.getDescendants(node);
-    this.checklistSelection.isSelected(node)
-      ? this.checklistSelection.select(...descendants)
-      : this.checklistSelection.deselect(...descendants);
+    const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
+
+    const isSelected: boolean = this.checklistSelection.isSelected(node);
+    isSelected ? this.checklistSelection.select(...descendants) : this.checklistSelection.deselect(...descendants);
 
     // Force update for the parent
     descendants.forEach(child => this.checklistSelection.isSelected(child));
     this.checkAllParentsSelection(node);
+
+    this.mainData.forEach((group: IDisciplineGroup) => {
+      if (group.id === node.id) {
+        group.students.forEach((student: IDisciplineGroupStudent) => {
+          student.isInDiscipline = isSelected;
+        });
+      }
+    });
   }
 
-  /** Toggle a leaf to-do item selection. Check all the parents to see if they changed */
-  public todoLeafItemSelectionToggle(node: TodoItemFlatNode): void {
+  /** Toggle a leaf item selection. Check all the parents to see if they changed */
+  public disciplineGroupLeafItemSelectionToggle(node: DisciplineGroupFlatNode): void {
     this.checklistSelection.toggle(node);
     this.checkAllParentsSelection(node);
+
+    const isSelected: boolean = this.checklistSelection.isSelected(node);
+    this.mainData.forEach((group: IDisciplineGroup) => {
+      if (group.id === node.parentId) {
+        group.students.forEach((student: IDisciplineGroupStudent) => {
+          if (student.id === node.id) {
+            student.isInDiscipline = isSelected;
+          }
+        });
+      }
+    });
   }
 
+  public onNoClick(): void {
+    this.dialogRef.close();
+  }
+
+  public onSaveClick(): void {
+    this.api.updateGroupsAndStudents(this.data.disciplineId, this.mainData).subscribe(res => {
+      this.dialogRef.close();
+    });
+  }
+
+  private getLevel = (node: DisciplineGroupFlatNode) => node.level;
+
+  private isExpandable = (node: DisciplineGroupFlatNode) => node.expandable;
+
+  private getChildren = (node: DisciplineGroupNode): DisciplineGroupNode[] => node.students;
+
+  /**
+   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
+   */
+  private transformer = (node: DisciplineGroupNode, level: number) => {
+    const existingNode: DisciplineGroupFlatNode = this.nestedNodeMap.get(node);
+    const flatNode: DisciplineGroupFlatNode =
+      existingNode && existingNode.item === `${node.groupNumber}` ? existingNode : new DisciplineGroupFlatNode();
+    flatNode.item = node.groupNumber ? `${node.groupNumber}` : `${node.firstName} ${node.lastName}`;
+    flatNode.level = level;
+    flatNode.expandable = !!node.students?.length;
+    flatNode.id = node.id;
+    flatNode.parentId = node.groupId ? node.groupId : null;
+
+    this.nestedNodeMap.set(node, flatNode);
+    if (node.isInDiscipline) {
+      this.checklistSelection.select(flatNode);
+    }
+    return flatNode;
+  };
+
   /* Checks all the parents when a leaf node is selected/unselected */
-  public checkAllParentsSelection(node: TodoItemFlatNode): void {
-    let parent: TodoItemFlatNode | null = this.getParentNode(node);
+  private checkAllParentsSelection(node: DisciplineGroupFlatNode): void {
+    let parent: DisciplineGroupFlatNode | null = this.getParentNode(node);
     while (parent) {
       this.checkRootNodeSelection(parent);
       parent = this.getParentNode(parent);
@@ -167,9 +173,9 @@ export class DisciplineDialogComponent {
   }
 
   /** Check root node checked state and change it accordingly */
-  public checkRootNodeSelection(node: TodoItemFlatNode): void {
+  private checkRootNodeSelection(node: DisciplineGroupFlatNode): void {
     const nodeSelected: boolean = this.checklistSelection.isSelected(node);
-    const descendants: TodoItemFlatNode[] = this.treeControl.getDescendants(node);
+    const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
     const descAllSelected: boolean =
       descendants.length > 0 &&
       descendants.every(child => {
@@ -183,7 +189,7 @@ export class DisciplineDialogComponent {
   }
 
   /* Get the parent node of a node */
-  public getParentNode(node: TodoItemFlatNode): TodoItemFlatNode | null {
+  private getParentNode(node: DisciplineGroupFlatNode): DisciplineGroupFlatNode | null {
     const currentLevel: number = this.getLevel(node);
 
     if (currentLevel < 1) {
@@ -193,7 +199,7 @@ export class DisciplineDialogComponent {
     const startIndex: number = this.treeControl.dataNodes.indexOf(node) - 1;
 
     for (let i: number = startIndex; i >= 0; i--) {
-      const currentNode: TodoItemFlatNode = this.treeControl.dataNodes[i];
+      const currentNode: DisciplineGroupFlatNode = this.treeControl.dataNodes[i];
 
       if (this.getLevel(currentNode) < currentLevel) {
         return currentNode;

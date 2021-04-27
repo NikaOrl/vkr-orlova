@@ -6,7 +6,7 @@
       <mat-checkbox
         class="checklist-leaf-node"
         [checked]="checklistSelection.isSelected(node)"
-        (change)="todoLeafItemSelectionToggle(node)"
+        (change)="disciplineGroupLeafItemSelectionToggle(node)"
       >
         {{ node.item }}
       </mat-checkbox>
@@ -21,7 +21,7 @@
       <mat-checkbox
         [checked]="descendantsAllSelected(node)"
         [indeterminate]="descendantsPartiallySelected(node)"
-        (change)="todoItemSelectionToggle(node)"
+        (change)="disciplineGroupSelectionToggle(node)"
       >
         {{ node.item }}
       </mat-checkbox>
@@ -31,5 +31,5 @@
 
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()">Cancel</button>
-  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Save</button>
+  <button mat-button (click)="onSaveClick()" cdkFocusInitial>Save</button>
 </div>

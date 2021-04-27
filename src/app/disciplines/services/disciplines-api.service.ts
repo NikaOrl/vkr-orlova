@@ -19,7 +19,7 @@ const mockGroupStudents: IDisciplineGroup[] = [
         firstName: 'Ivan',
         lastName: 'Ivanov',
         groupId: 1,
-        isInDiscipline: true,
+        isInDiscipline: false,
       },
       {
         id: 2,
@@ -86,6 +86,47 @@ const mockGroupStudents: IDisciplineGroup[] = [
       },
     ],
   },
+  {
+    id: 2,
+    groupNumber: 5382,
+    students: [
+      {
+        id: 2,
+        firstName: 'Ivan',
+        lastName: 'Ivanov',
+        groupId: 2,
+        isInDiscipline: false,
+      },
+      {
+        id: 2,
+        firstName: 'Petr',
+        lastName: 'Petrov',
+        groupId: 2,
+        isInDiscipline: false,
+      },
+      {
+        id: 3,
+        firstName: 'Vasia',
+        lastName: 'Vasiliev',
+        groupId: 2,
+        isInDiscipline: false,
+      },
+      {
+        id: 5,
+        firstName: 'Tolya',
+        lastName: 'Popov',
+        groupId: 2,
+        isInDiscipline: true,
+      },
+      {
+        id: 6,
+        firstName: 'Andrei',
+        lastName: 'Markoff',
+        groupId: 2,
+        isInDiscipline: true,
+      },
+    ],
+  },
 ];
 
 @Injectable({
@@ -111,6 +152,15 @@ export class DisciplinesApiService {
     //   .get<{ result: IDisciplineGroup[] }>(`${DISCIPLINE}/${disciplineId}/students`, HTTP_OPTIONS)
     //   .pipe(map(this.extractData), catchError(this.handleError));
     return of(mockGroupStudents);
+  }
+
+  public updateGroupsAndStudents(
+    disciplineId: number,
+    groupsAndStudentsData: IDisciplineGroup[]
+  ): Observable<{ status: string }> {
+    return this.http
+      .put<{ status: string }>(`${DISCIPLINE}/${disciplineId}/students`, groupsAndStudentsData, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
