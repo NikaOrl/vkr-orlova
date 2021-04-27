@@ -56,8 +56,10 @@ export class MarksTableComponent implements OnInit {
     this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
     if (!this.selectedDisciplineId) {
       this.api.getDisciplines().subscribe(disciplines => {
-        this.selectedDisciplineId = disciplines[0].id;
-        this.onSelectChange();
+        if (disciplines[0]) {
+          this.selectedDisciplineId = disciplines[0].id;
+          this.onSelectChange();
+        }
       });
     }
 
