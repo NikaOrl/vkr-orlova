@@ -58,7 +58,7 @@ export class MarksTableComponent implements OnInit {
       this.api.getDisciplines().subscribe(disciplines => {
         if (disciplines[0]) {
           this.selectedDisciplineId = disciplines[0].id;
-          this.onSelectChange();
+          this.router.navigate([`/marks/${this.selectedDisciplineId}`]);
         }
       });
     }
