@@ -16,11 +16,17 @@ import { DisciplinesPageComponent } from './components/disciplines-page/discipli
 import { DisciplinesRoutingModule } from './disciplines-routing.module';
 import { SharedModule } from '../shared/shared.module';
 import { DisciplineStudentsDialogComponent } from './components/discipline-students-dialog/discipline-students-dialog.component';
-import { DisciplineEditDialogComponent } from './components/discipline-edit-dialog/discipline-edit-dialog.component';
+import { DisciplineDialogComponent } from './components/discipline-dialog/discipline-dialog.component';
 import { TranslocoRootModule } from '../transloco/transloco-root.module';
+import { DisciplineDeleteDialogComponent } from './components/discipline-delete-dialog/discipline-delete-dialog.component';
 
 @NgModule({
-  declarations: [DisciplinesPageComponent, DisciplineStudentsDialogComponent, DisciplineEditDialogComponent],
+  declarations: [
+    DisciplinesPageComponent,
+    DisciplineStudentsDialogComponent,
+    DisciplineDialogComponent,
+    DisciplineDeleteDialogComponent,
+  ],
   imports: [
     CommonModule,
     MatListModule,

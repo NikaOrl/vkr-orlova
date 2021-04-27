@@ -4,20 +4,15 @@ import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@an
 import { TeachersApiService } from './teachers-api.service';
 import { ITeacher } from '../models/teacher.model';
 import { TEACHERS } from '../../core/http-constants';
+import { Observable, of } from 'rxjs';
 
 export class TeachersApiServiceStub {
-  public getTeachers(): Promise<ITeacher[]> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve([{ id: 1 } as ITeacher, { id: 2 } as ITeacher]));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public getTeachers(): Observable<ITeacher[]> {
+    return of([{ id: 1 } as ITeacher, { id: 2 } as ITeacher]);
   }
 
-  public updateTeachers(teachers: ITeacher[]): Promise<{ status: string }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ status: 'test' }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public updateTeachers(teachers: ITeacher[]): Observable<{ status: string }> {
+    return of({ status: 'test' });
   }
 
   // tslint:disable-next-line: no-any
@@ -28,11 +23,8 @@ export class TeachersApiServiceStub {
     });
   }
 
-  public deleteTeachers(teachersIds: Set<number>): Promise<number> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve(1));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public deleteTeachers(teachersIds: Set<number>): Observable<number> {
+    return of(1);
   }
 }
 
@@ -62,7 +54,7 @@ describe('TeachersApiService', () => {
   it('should getTeachers', () => {
     const dummyUsers: ITeacher[] = [{ lastName: 'John' } as ITeacher, { lastName: 'Doe' } as ITeacher];
 
-    service.getTeachers().then(users => {
+    service.getTeachers().subscribe(users => {
       expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
@@ -75,7 +67,7 @@ describe('TeachersApiService', () => {
   it('should updateTeachers', () => {
     const dummyUsers: { status: string } = { status: 'success' };
 
-    service.updateTeachers([]).then(users => {
+    service.updateTeachers([]).subscribe(users => {
       expect(users).toEqual(dummyUsers);
     });
 
@@ -99,7 +91,7 @@ describe('TeachersApiService', () => {
   it('should deleteTeachers', () => {
     const dummyUsers: number = 2;
 
-    service.deleteTeachers(new Set([1, 2])).then(users => {
+    service.deleteTeachers(new Set([1, 2])).subscribe(users => {
       expect(users).toEqual(dummyUsers);
     });
 

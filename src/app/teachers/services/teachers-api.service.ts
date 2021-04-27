@@ -12,18 +12,14 @@ import { HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
 export class TeachersApiService {
   constructor(private http: HttpClient) {}
 
-  public getTeachers(): Promise<ITeacher[]> {
+  public getTeachers(): Observable<ITeacher[]> {
     return this.http
       .get<ITeacher[]>(`${TEACHERS}`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError))
-      .toPromise();
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public updateTeachers(teachers: ITeacher[]): Promise<{ status: string }> {
-    return this.http
-      .put<{ status: string }>(`${TEACHERS}`, teachers, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError))
-      .toPromise();
+  public updateTeachers(teachers: ITeacher[]): Observable<{ status: string }> {
+    return this.http.put<{ status: string }>(`${TEACHERS}`, teachers, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
   // tslint:disable-next-line: no-any
@@ -35,7 +31,7 @@ export class TeachersApiService {
     );
   }
 
-  public deleteTeachers(teachersIds: Set<number>): Promise<number> {
+  public deleteTeachers(teachersIds: Set<number>): Observable<number> {
     return this.http
       .delete<number>(`${TEACHERS}`, {
         ...HTTP_OPTIONS,
@@ -43,8 +39,7 @@ export class TeachersApiService {
           ids: [...teachersIds].map(id => id.toString()),
         },
       })
-      .pipe(catchError(this.handleError))
-      .toPromise();
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

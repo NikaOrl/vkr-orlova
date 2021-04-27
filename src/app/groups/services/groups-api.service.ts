@@ -14,32 +14,25 @@ import { GROUPS, HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
 export class GroupsApiService {
   constructor(private http: HttpClient) {}
 
-  public getStudents(groupId: number): Promise<IStudent[]> {
+  public getStudents(groupId: number): Observable<IStudent[]> {
     return this.http
       .get<IStudent[]>(`${STUDENTS}/${groupId}`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError))
-      .toPromise();
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public getGroups(): Observable<IGroup[]> {
     return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public updateStudents(students: IStudent[]): Promise<{ status: string }> {
-    return this.http
-      .put<{ status: string }>(`${STUDENTS}`, students, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError))
-      .toPromise();
+  public updateStudents(students: IStudent[]): Observable<{ status: string }> {
+    return this.http.put<{ status: string }>(`${STUDENTS}`, students, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public addStudents(students: IStudent[]): Promise<number[]> {
-    return this.http
-      .post<number[]>(`${STUDENTS}`, students, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError))
-      .toPromise();
+  public addStudents(students: IStudent[]): Observable<number[]> {
+    return this.http.post<number[]>(`${STUDENTS}`, students, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public deleteStudents(studentsIds: Set<number>): Promise<number> {
+  public deleteStudents(studentsIds: Set<number>): Observable<number> {
     return this.http
       .delete<number>(`${STUDENTS}`, {
         ...HTTP_OPTIONS,
@@ -47,8 +40,7 @@ export class GroupsApiService {
           ids: [...studentsIds].map(id => id.toString()),
         },
       })
-      .pipe(catchError(this.handleError))
-      .toPromise();
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

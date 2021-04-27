@@ -1,6 +1,8 @@
-export interface IDiscipline {
+export interface IDisciplineBase {
   disciplineValue: string;
-  id: number;
   semesterId: number;
   teacherIds: number[];
+}
+export interface IDiscipline extends IDisciplineBase {
+  id: number;
 }

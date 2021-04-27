@@ -29,7 +29,7 @@
   </mat-tree>
 </div>
 
-<div mat-dialog-actions *transloco="let t; read: 'disciplines'">
+<div mat-dialog-actions *transloco="let t; read: 'disciplines'" class="buttons-container">
   <button mat-raised-button color="primary" (click)="onNoClick()">{{ t('cancelButton') }}</button>
   <button mat-raised-button color="primary" (click)="onSaveClick()" cdkFocusInitial>{{ t('saveButton') }}</button>
 </div>

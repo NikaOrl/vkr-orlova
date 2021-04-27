@@ -1,3 +1,14 @@
 button {
   margin-left: 12px;
 }
+
+.title {
+  display: inline;
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 16px;
+  margin-bottom: 8px;
+}

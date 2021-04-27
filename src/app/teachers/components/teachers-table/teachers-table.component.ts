@@ -28,7 +28,7 @@ export class TeachersTableComponent implements OnInit {
   }
 
   public getTeachers(): void {
-    this.api.getTeachers().then(
+    this.api.getTeachers().subscribe(
       res => {
         this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);

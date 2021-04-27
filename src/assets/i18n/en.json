@@ -77,6 +77,10 @@
     "disciplines": "Disciplines",
     "studentsGroupsButton": "Groups/Students",
     "editButton": "Edit",
-    "journalButton": "Journal"
+    "journalButton": "Journal",
+    "deleteDialogTitle": "Are you sure that you want to delete discipline",
+    "okButton": "Ok",
+    "deleteButton": "Delete",
+    "addButton": "Add discipline"
   }
 }

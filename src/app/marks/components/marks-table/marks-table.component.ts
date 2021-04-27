@@ -114,7 +114,7 @@ export class MarksTableComponent implements OnInit {
     if (this.selectedDisciplineId && this.selectedGroup) {
       this.editLink = `/marks/edit/${this.selectedDisciplineId}/${this.selectedGroup.id}`;
 
-      this.api.getMarks(this.selectedDisciplineId, this.selectedGroup.id).then(
+      this.api.getMarks(this.selectedDisciplineId, this.selectedGroup.id).subscribe(
         res => {
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);

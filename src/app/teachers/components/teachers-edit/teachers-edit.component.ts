@@ -118,7 +118,7 @@ export class TeachersEditComponent implements OnInit {
   }
 
   private getTeachers(): void {
-    this.api.getTeachers().then(
+    this.api.getTeachers().subscribe(
       res => {
         this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -132,7 +132,7 @@ export class TeachersEditComponent implements OnInit {
   }
 
   private updateTeachers(newTeachers: ITeacher[]): void {
-    this.api.updateTeachers(newTeachers).then(
+    this.api.updateTeachers(newTeachers).subscribe(
       res => {
         console.log('Teachers were updated');
       },
@@ -154,7 +154,7 @@ export class TeachersEditComponent implements OnInit {
   }
 
   private deleteTeachers(): void {
-    this.api.deleteTeachers(this.deletedTeachersIds).then(
+    this.api.deleteTeachers(this.deletedTeachersIds).subscribe(
       res => {
         console.log('Teachers were deleted');
       },
