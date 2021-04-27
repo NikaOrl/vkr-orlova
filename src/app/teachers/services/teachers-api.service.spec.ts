@@ -6,9 +6,9 @@ import { ITeacher } from '../models/teacher.model';
 import { TEACHERS } from '../../core/http-constants';
 
 export class TeachersApiServiceStub {
-  public getTeachers(): Promise<{ result: ITeacher[] }> {
+  public getTeachers(): Promise<ITeacher[]> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 } as ITeacher, { id: 2 } as ITeacher] }));
+      setTimeout(() => resolve([{ id: 1 } as ITeacher, { id: 2 } as ITeacher]));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
@@ -23,14 +23,14 @@ export class TeachersApiServiceStub {
   // tslint:disable-next-line: no-any
   public addTeachers(teachers: ITeacher[]): Promise<any> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 'test' }));
+      setTimeout(() => resolve('test'));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
 
-  public deleteTeachers(teachersIds: Set<number>): Promise<{ result: number }> {
+  public deleteTeachers(teachersIds: Set<number>): Promise<number> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 1 }));
+      setTimeout(() => resolve(1));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
@@ -60,12 +60,10 @@ describe('TeachersApiService', () => {
   });
 
   it('should getTeachers', () => {
-    const dummyUsers: { result: ITeacher[] } = {
-      result: [{ lastName: 'John' } as ITeacher, { lastName: 'Doe' } as ITeacher],
-    };
+    const dummyUsers: ITeacher[] = [{ lastName: 'John' } as ITeacher, { lastName: 'Doe' } as ITeacher];
 
     service.getTeachers().then(users => {
-      expect(users.result.length).toBe(2);
+      expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
 
@@ -81,7 +79,7 @@ describe('TeachersApiService', () => {
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${TEACHERS}/update`);
+    const req: TestRequest = httpMock.expectOne(`${TEACHERS}`);
     expect(req.request.method).toBe('PUT');
     req.flush(dummyUsers);
   });
@@ -93,19 +91,19 @@ describe('TeachersApiService', () => {
       expect(users.length).toBe(1);
     });
 
-    const req: TestRequest = httpMock.expectOne(`/api/register`);
+    const req: TestRequest = httpMock.expectOne(`${TEACHERS}`);
     expect(req.request.method).toBe('POST');
     req.flush(dummyUsers);
   });
 
   it('should deleteTeachers', () => {
-    const dummyUsers: { result: number } = { result: 2 };
+    const dummyUsers: number = 2;
 
     service.deleteTeachers(new Set([1, 2])).then(users => {
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${TEACHERS}/delete?id=1&id=2`);
+    const req: TestRequest = httpMock.expectOne(`${TEACHERS}?ids=1&ids=2`);
     expect(req.request.method).toBe('DELETE');
     req.flush(dummyUsers);
   });

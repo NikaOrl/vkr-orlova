@@ -4,7 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { DISCIPLINE, HTTP_OPTIONS, MARKS, TEACHERS } from '../../core/http-constants';
+import { DISCIPLINES, HTTP_OPTIONS, MARKS, TEACHERS } from '../../core/http-constants';
 import { IDiscipline } from '../models/discipline.model';
 import { IDisciplineGroup } from '../models/group-students.model';
 import { ITeacher } from '../../teachers/models/teacher.model';
@@ -149,7 +149,7 @@ export class DisciplinesApiService {
 
   public getGroupsAndStudents(disciplineId: number): Observable<IDisciplineGroup[]> {
     // return this.http
-    //   .get<{ result: IDisciplineGroup[] }>(`${DISCIPLINE}/${disciplineId}/students`, HTTP_OPTIONS)
+    //   .get<{ result: IDisciplineGroup[] }>(`${DISCIPLINES}/${disciplineId}/students`, HTTP_OPTIONS)
     //   .pipe(map(this.extractData), catchError(this.handleError));
     return of(mockGroupStudents);
   }
@@ -159,7 +159,7 @@ export class DisciplinesApiService {
     groupsAndStudentsData: IDisciplineGroup[]
   ): Observable<{ status: string }> {
     return this.http
-      .put<{ status: string }>(`${DISCIPLINE}/${disciplineId}/students`, groupsAndStudentsData, HTTP_OPTIONS)
+      .put<{ status: string }>(`${DISCIPLINES}/${disciplineId}/students`, groupsAndStudentsData, HTTP_OPTIONS)
       .pipe(catchError(this.handleError));
   }
 

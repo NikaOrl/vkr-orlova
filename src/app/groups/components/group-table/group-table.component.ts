@@ -27,8 +27,8 @@ export class GroupTableComponent implements OnInit {
 
   public ngOnInit(): void {
     this.api.getGroups().subscribe(
-      res => {
-        this.groups = res.result;
+      groups => {
+        this.groups = groups;
         const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
         this.selectedGroup = selectedGroupId ? this.groups.find(group => group.id === selectedGroupId) : this.groups[0];
         this.selectValue = this.selectedGroup?.groupNumber ? this.selectedGroup.groupNumber.toString() : '';
@@ -66,7 +66,7 @@ export class GroupTableComponent implements OnInit {
   public getStudents(groupId: number): void {
     this.api.getStudents(groupId).then(
       res => {
-        this.ELEMENT_DATA = res.result;
+        this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
       },

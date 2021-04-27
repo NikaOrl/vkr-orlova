@@ -57,8 +57,8 @@ export class MarksTableComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.api.getDisciplines().subscribe(res => {
-      this.disciplines = res.result;
+    this.api.getDisciplines().subscribe(disciplines => {
+      this.disciplines = disciplines;
       const selectedDisciplineId: number = +this.route.snapshot.paramMap.get('disciplineId');
       this.selectedDiscipline = selectedDisciplineId
         ? this.disciplines.find(d => d.id === selectedDisciplineId)
@@ -71,8 +71,8 @@ export class MarksTableComponent implements OnInit {
       this.getMarks();
     });
 
-    this.api.getGroups().subscribe(res => {
-      this.groups = res.result;
+    this.api.getGroups().subscribe(groups => {
+      this.groups = groups;
       const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
       this.selectedGroup = selectedGroupId ? this.groups.find(d => d.id === selectedGroupId) : this.groups[0];
       this.filteredGroups = this.groups;
