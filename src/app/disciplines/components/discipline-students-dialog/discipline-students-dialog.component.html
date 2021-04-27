@@ -1,0 +1,35 @@
+<h1 mat-dialog-title *transloco="let t; read: 'disciplines'">{{ t('studentsDialogTitle') }}</h1>
+<div mat-dialog-content>
+  <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+    <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
+      <button mat-icon-button disabled></button>
+      <mat-checkbox
+        class="checklist-leaf-node"
+        [checked]="checklistSelection.isSelected(node)"
+        (change)="disciplineGroupLeafItemSelectionToggle(node)"
+      >
+        {{ node.item }}
+      </mat-checkbox>
+    </mat-tree-node>
+
+    <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+      <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'Toggle ' + node.item">
+        <mat-icon class="mat-icon-rtl-mirror">
+          {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+        </mat-icon>
+      </button>
+      <mat-checkbox
+        [checked]="descendantsAllSelected(node)"
+        [indeterminate]="descendantsPartiallySelected(node)"
+        (change)="disciplineGroupSelectionToggle(node)"
+      >
+        {{ node.item }}
+      </mat-checkbox>
+    </mat-tree-node>
+  </mat-tree>
+</div>
+
+<div mat-dialog-actions *transloco="let t; read: 'disciplines'">
+  <button mat-raised-button color="primary" (click)="onNoClick()">{{ t('cancelButton') }}</button>
+  <button mat-raised-button color="primary" (click)="onSaveClick()" cdkFocusInitial>{{ t('saveButton') }}</button>
+</div>

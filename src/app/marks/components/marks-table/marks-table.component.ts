@@ -10,11 +10,11 @@ import { IStudentMark } from '../../models/student-marks.model';
 import { MarksDialogComponent } from '../marks-dialog/marks-dialog.component';
 import { IDialogData } from '../../models/dialog-data.model';
 import { IColumn } from '../../models/column.model';
-import { IDiscipline } from '../../models/discipline.model';
 import { ITableData } from '../../models/table-data.model';
 import { IMark } from '../../models/marks.model';
 import { IJob } from '../../models/jobs.model';
-import { IGroup } from 'src/app/groups/models/group.model';
+import { IGroup } from '../../../groups/models/group.model';
+import { IDiscipline } from '../../../disciplines/models/discipline.model';
 
 @Component({
   selector: 'app-marks-table',
@@ -23,11 +23,6 @@ import { IGroup } from 'src/app/groups/models/group.model';
 })
 export class MarksTableComponent implements OnInit {
   public ELEMENT_DATA: IStudentMark[] = [];
-
-  public selectedDiscipline: IDiscipline;
-  public disciplines: IDiscipline[];
-  public filteredDisciplines: IDiscipline[];
-  public disciplineSelectValue: string | IDiscipline;
 
   public selectedGroup: IGroup;
   public groups: IGroup[];
@@ -44,6 +39,7 @@ export class MarksTableComponent implements OnInit {
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
 
   public editLink: string = '';
+  public selectedDisciplineId: number;
 
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -57,19 +53,15 @@ export class MarksTableComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.api.getDisciplines().subscribe(disciplines => {
-      this.disciplines = disciplines;
-      const selectedDisciplineId: number = +this.route.snapshot.paramMap.get('disciplineId');
-      this.selectedDiscipline = selectedDisciplineId
-        ? this.disciplines.find(d => d.id === selectedDisciplineId)
-        : this.disciplines[0];
-      this.filteredDisciplines = this.disciplines;
-      this.disciplineSelectValue = this.selectedDiscipline?.disciplineValue
-        ? this.selectedDiscipline.disciplineValue.toString()
-        : '';
-
-      this.getMarks();
-    });
+    this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
+    if (!this.selectedDisciplineId) {
+      this.api.getDisciplines().subscribe(disciplines => {
+        if (disciplines[0]) {
+          this.selectedDisciplineId = disciplines[0].id;
+          this.router.navigate([`/marks/${this.selectedDisciplineId}`]);
+        }
+      });
+    }
 
     this.api.getGroups().subscribe(groups => {
       this.groups = groups;
@@ -85,23 +77,9 @@ export class MarksTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public selectDiscipline(discipline: IDiscipline): void {
-    this.selectedDiscipline = discipline;
-    this.onSelectChange();
-  }
-
   public selectGroup(group: IGroup): void {
     this.selectedGroup = group;
     this.onSelectChange();
-  }
-
-  public displayDisciplineFn(discipline: IDiscipline | string): string {
-    if (discipline) {
-      return (discipline as IDiscipline).disciplineValue
-        ? (discipline as IDiscipline).disciplineValue.toString()
-        : (discipline as string);
-    }
-    return '';
   }
 
   public displayGroupFn(group: IGroup | string): string {
@@ -112,7 +90,7 @@ export class MarksTableComponent implements OnInit {
   }
 
   public onSelectChange(): void {
-    this.router.navigate([`/marks/${this.selectedGroup.id}/${this.selectedDiscipline.id}`]);
+    this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroup.id}`]);
     this.getMarks();
   }
 
@@ -133,10 +111,10 @@ export class MarksTableComponent implements OnInit {
   }
 
   public getMarks(): void {
-    if (this.selectedDiscipline && this.selectedGroup) {
-      this.editLink = `/marks/edit/${this.selectedGroup.id}/${this.selectedDiscipline.id}`;
+    if (this.selectedDisciplineId && this.selectedGroup) {
+      this.editLink = `/marks/edit/${this.selectedDisciplineId}/${this.selectedGroup.id}`;
 
-      this.api.getMarks(this.selectedDiscipline.id, this.selectedGroup.id).then(
+      this.api.getMarks(this.selectedDisciplineId, this.selectedGroup.id).then(
         res => {
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -239,14 +217,6 @@ export class MarksTableComponent implements OnInit {
     } else if (sumPoints > this.marksAreas.five) {
       return 'отл.';
     }
-  }
-
-  public filterDisciplines(): void {
-    const filterValue: string = this.displayDisciplineFn(this.disciplineSelectValue);
-    this.filteredDisciplines = this.disciplines.filter(
-      option => `${option.disciplineValue}`.toLowerCase().indexOf(filterValue) === 0
-    );
-    this.disciplineSelectValue = filterValue;
   }
 
   public filterGroups(): void {

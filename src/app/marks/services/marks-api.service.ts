@@ -6,10 +6,10 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IJob } from '../models/jobs.model';
 import { IMark } from '../models/marks.model';
-import { DISCIPLINES, GROUPS, HTTP_OPTIONS, JOBS, MARKS } from '../../core/http-constants';
-import { IDiscipline } from '../models/discipline.model';
+import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS } from '../../core/http-constants';
 import { ITableData } from '../models/table-data.model';
-import { IGroup } from 'src/app/groups/models/group.model';
+import { IGroup } from '../../groups/models/group.model';
+import { IDiscipline } from '../../disciplines/models/discipline.model';
 
 @Injectable({
   providedIn: 'root',

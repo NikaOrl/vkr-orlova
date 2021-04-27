@@ -1,7 +1,7 @@
 {
   "header": {
     "brand": "Marks Journal",
-    "marks": "Marks",
+    "disciplines": "Disciplines",
     "groups": "Groups",
     "teachers": "Teachers",
     "logout": "Logout"
@@ -65,5 +65,18 @@
     "role": "Role",
     "admin": "Admin",
     "teacher": "Teacher"
+  },
+  "disciplines": {
+    "editDialogTitle": "Edit the discipline",
+    "disciplineName": "Discipline name",
+    "requiredError": "Discipline name is required",
+    "addTeacherPlaceholder": "Add teacher...",
+    "studentsDialogTitle": "Select Groups/Students for the discipline",
+    "cancelButton": "Cancel",
+    "saveButton": "Save",
+    "disciplines": "Disciplines",
+    "studentsGroupsButton": "Groups/Students",
+    "editButton": "Edit",
+    "journalButton": "Journal"
   }
 }

@@ -1,14 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
-import { Component } from '@angular/core';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { MarksDialogComponent } from './marks-dialog.component';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
-
-// tslint:disable-next-line:component-selector
-@Component({ selector: 'mat-form-field', template: '' })
-class MatFormFieldStubComponent {}
 
 describe('MarksDialogComponent', () => {
   let component: MarksDialogComponent;
@@ -16,8 +15,15 @@ describe('MarksDialogComponent', () => {
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [MarksDialogComponent, MatFormFieldStubComponent],
-      imports: [FormsModule, MatDialogModule, getTranslocoModule()],
+      declarations: [MarksDialogComponent],
+      imports: [
+        FormsModule,
+        MatDialogModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        MatFormFieldModule,
+        getTranslocoModule(),
+      ],
       providers: [
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: {} },

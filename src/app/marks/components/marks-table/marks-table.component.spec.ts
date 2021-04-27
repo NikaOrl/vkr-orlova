@@ -14,7 +14,6 @@ import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../.
 import { MarksTableComponent } from './marks-table.component';
 import { MarksApiService } from '../../services/marks-api.service';
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
-import { IDiscipline } from '../../models/discipline.model';
 import { IGroup } from '../../../groups/models/group.model';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
@@ -57,23 +56,6 @@ describe('MarksTableComponent', () => {
   it('should change dataSource.filter', () => {
     component.applyFilter('a');
     expect(component.dataSource.filter).toBe('a');
-  });
-
-  it('should filter disciplines', () => {
-    component.disciplines = [
-      { id: 1, disciplineValue: 'a' } as IDiscipline,
-      { id: 2, disciplineValue: 'b' } as IDiscipline,
-    ];
-
-    component.disciplineSelectValue = 'c';
-    component.filterDisciplines();
-    expect(component.filteredDisciplines).toEqual([]);
-    component.selectedDiscipline = { id: 1, disciplineValue: 'a' } as IDiscipline;
-    component.onSelectChange();
-
-    component.disciplineSelectValue = 'a';
-    component.filterDisciplines();
-    expect(component.filteredDisciplines).toEqual([{ id: 1, disciplineValue: 'a' } as IDiscipline]);
   });
 
   it('should filter groups', () => {

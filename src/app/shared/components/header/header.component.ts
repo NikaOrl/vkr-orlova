@@ -43,6 +43,6 @@ export class HeaderComponent implements OnInit {
 
   public isTeachersShouldBeShown(): boolean {
     const user: string = localStorage.getItem('currentUser');
-    return user && JSON.parse(user).isAdmin;
+    return user ? JSON.parse(user).isAdmin : false;
   }
 }
