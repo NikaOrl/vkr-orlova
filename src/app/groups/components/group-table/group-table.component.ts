@@ -64,7 +64,7 @@ export class GroupTableComponent implements OnInit {
   }
 
   public getStudents(groupId: number): void {
-    this.api.getStudents(groupId).then(
+    this.api.getStudents(groupId).subscribe(
       res => {
         this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);

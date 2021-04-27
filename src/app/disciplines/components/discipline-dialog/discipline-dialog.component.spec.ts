@@ -8,18 +8,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
 
-import { DisciplineEditDialogComponent } from './discipline-edit-dialog.component';
+import { DisciplineDialogComponent } from './discipline-dialog.component';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 import { DisciplinesApiService } from '../../services/disciplines-api.service';
 import { DisciplinesApiServiceStub } from '../../services/disciplines-api.service.spec';
 
-describe('DisciplineEditDialogComponent', () => {
-  let component: DisciplineEditDialogComponent;
-  let fixture: ComponentFixture<DisciplineEditDialogComponent>;
+describe('DisciplineDialogComponent', () => {
+  let component: DisciplineDialogComponent;
+  let fixture: ComponentFixture<DisciplineDialogComponent>;
 
   beforeEach(async () => {
     TestBed.configureTestingModule({
-      declarations: [DisciplineEditDialogComponent],
+      declarations: [DisciplineDialogComponent],
       imports: [
         ReactiveFormsModule,
         MatDialogModule,
@@ -39,7 +39,7 @@ describe('DisciplineEditDialogComponent', () => {
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DisciplineEditDialogComponent);
+    fixture = TestBed.createComponent(DisciplineDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -17,7 +17,7 @@ import { IDiscipline } from '../../disciplines/models/discipline.model';
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
+  public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
     return this.http
       .get<ITableData>(`${MARKS}`, {
         ...HTTP_OPTIONS,
@@ -26,8 +26,7 @@ export class MarksApiService {
           disciplineId: disciplineId.toString(),
         },
       })
-      .pipe(map(this.extractData), catchError(this.handleError))
-      .toPromise();
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public getDisciplines(): Observable<IDiscipline[]> {
@@ -40,18 +39,12 @@ export class MarksApiService {
     return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public updateMarks(marks: IMark[]): Promise<{ status: string }> {
-    return this.http
-      .put<{ status: string }>(`${MARKS}`, marks, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError))
-      .toPromise();
+  public updateMarks(marks: IMark[]): Observable<{ status: string }> {
+    return this.http.put<{ status: string }>(`${MARKS}`, marks, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public updateJobs(jobs: IJob[]): Promise<{ status: string }> {
-    return this.http
-      .put<{ status: string }>(`${JOBS}`, jobs, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError))
-      .toPromise();
+  public updateJobs(jobs: IJob[]): Observable<{ status: string }> {
+    return this.http.put<{ status: string }>(`${JOBS}`, jobs, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
   public addJobsAndMarks(jobs: IJob[], marks: IMark[]): Promise<void[]> {

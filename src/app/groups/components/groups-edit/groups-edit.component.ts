@@ -129,7 +129,7 @@ export class GroupsEditComponent implements OnInit {
   }
 
   private getStudents(groupId: number): void {
-    this.api.getStudents(groupId).then(
+    this.api.getStudents(groupId).subscribe(
       res => {
         this.ELEMENT_DATA = res;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
@@ -143,7 +143,7 @@ export class GroupsEditComponent implements OnInit {
   }
 
   private updateStudents(newStudents: IStudent[]): void {
-    this.api.updateStudents(newStudents).then(
+    this.api.updateStudents(newStudents).subscribe(
       res => {
         console.log('students were updated');
       },
@@ -154,7 +154,7 @@ export class GroupsEditComponent implements OnInit {
   }
 
   private addStudents(addedStudents: IStudent[]): void {
-    this.api.addStudents(addedStudents).then(
+    this.api.addStudents(addedStudents).subscribe(
       res => {
         console.log('students were added');
       },
@@ -165,7 +165,7 @@ export class GroupsEditComponent implements OnInit {
   }
 
   private deleteStudents(): void {
-    this.api.deleteStudents(this.deletedStudentsIds).then(
+    this.api.deleteStudents(this.deletedStudentsIds).subscribe(
       res => {
         console.log('students were deleted');
       },

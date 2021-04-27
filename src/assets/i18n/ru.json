@@ -77,6 +77,10 @@
     "disciplines": "Дисциплины",
     "studentsGroupsButton": "Группы/Студенты",
     "editButton": "Редактировать",
-    "journalButton": "Журнал"
+    "journalButton": "Журнал",
+    "deleteDialogTitle": "Вы уверены, что хотите удалить дисциплину",
+    "okButton": "Ок",
+    "deleteButton": "Удалить",
+    "addButton": "Добавить дисциплину"
   }
 }

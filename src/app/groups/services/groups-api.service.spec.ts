@@ -8,11 +8,8 @@ import { GROUPS, STUDENTS } from '../../core/http-constants';
 import { Observable, of } from 'rxjs';
 
 export class GroupsApiServiceStub {
-  public getStudents(groupId: number): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve([{ id: 1 }, { id: 2 }]));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public getStudents(groupId: number): Observable<unknown> {
+    return of([{ id: 1 }, { id: 2 }]);
   }
 
   public getGroups(): Observable<unknown> {
@@ -22,25 +19,16 @@ export class GroupsApiServiceStub {
     ]);
   }
 
-  public updateStudents(students: IStudent[]): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve('groups'));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public updateStudents(students: IStudent[]): Observable<unknown> {
+    return of('groups');
   }
 
-  public addStudents(students: IStudent[]): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve('groups'));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public addStudents(students: IStudent[]): Observable<unknown> {
+    return of('groups');
   }
 
-  public deleteStudents(studentsIds: Set<number>): Promise<unknown> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve('groups'));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public deleteStudents(studentsIds: Set<number>): Observable<unknown> {
+    return of('groups');
   }
 }
 
@@ -70,7 +58,7 @@ describe('GroupsApiService', () => {
   it('should getStudents', () => {
     const dummyUsers: IStudent[] = [{ lastName: 'John' } as IStudent, { lastName: 'Doe' } as IStudent];
 
-    service.getStudents(1).then(users => {
+    service.getStudents(1).subscribe(users => {
       expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
@@ -96,7 +84,7 @@ describe('GroupsApiService', () => {
   it('should updateStudents', () => {
     const status: { status: string } = { status: 'success' };
 
-    service.updateStudents([]).then(users => {
+    service.updateStudents([]).subscribe(users => {
       expect(users).toEqual(status);
     });
 
@@ -108,7 +96,7 @@ describe('GroupsApiService', () => {
   it('should addStudents', () => {
     const dummyUsers: number[] = [1, 2];
 
-    service.addStudents([]).then(users => {
+    service.addStudents([]).subscribe(users => {
       expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
@@ -119,7 +107,7 @@ describe('GroupsApiService', () => {
   });
 
   it('should deleteStudents', () => {
-    service.deleteStudents(new Set([1, 2])).then(users => {
+    service.deleteStudents(new Set([1, 2])).subscribe(users => {
       expect(users).toEqual(2);
     });
 

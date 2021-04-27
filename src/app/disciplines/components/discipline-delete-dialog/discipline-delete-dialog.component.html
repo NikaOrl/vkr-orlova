@@ -1,0 +1,6 @@
+<h1 mat-dialog-title *transloco="let t; read: 'disciplines'">{{ t('deleteDialogTitle') }} {{ disciplineName }}?</h1>
+
+<div mat-dialog-actions class="buttons-container" *transloco="let t; read: 'disciplines'">
+  <button mat-raised-button color="primary" (click)="onNoClick()">{{ t('cancelButton') }}</button>
+  <button class="btn btn-danger" (click)="onOkClick()" cdkFocusInitial>{{ t('deleteButton') }}</button>
+</div>

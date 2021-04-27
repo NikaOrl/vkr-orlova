@@ -11,16 +11,11 @@ import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
 
 export class MarksApiServiceStub {
-  public getMarks(disciplineId: number, groupId: number): Promise<ITableData> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() =>
-        resolve({
-          marks: [{ id: 1, markValue: '1' } as IMark, { id: 2, markValue: '2' } as IMark],
-          jobs: [{ id: 1, jobValue: '1' } as IJob, { id: 2, jobValue: '2' } as IJob],
-          students: [{ id: 1 } as IStudent, { id: 2 } as IStudent],
-        })
-      );
-      setTimeout(() => reject(new Error('ignored')));
+  public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
+    return of({
+      marks: [{ id: 1, markValue: '1' } as IMark, { id: 2, markValue: '2' } as IMark],
+      jobs: [{ id: 1, jobValue: '1' } as IJob, { id: 2, jobValue: '2' } as IJob],
+      students: [{ id: 1 } as IStudent, { id: 2 } as IStudent],
     });
   }
 
@@ -35,18 +30,12 @@ export class MarksApiServiceStub {
     ]);
   }
 
-  public updateMarks(marks: IMark[]): Promise<{ result: IMark[] }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 } as IMark, { id: 2 } as IMark] }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public updateMarks(marks: IMark[]): Observable<{ result: IMark[] }> {
+    return of({ result: [{ id: 1 } as IMark, { id: 2 } as IMark] });
   }
 
-  public updateJobs(jobs: IJob[]): Promise<{ result: IJob[] }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 } as IJob, { id: 2 } as IJob] }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
+  public updateJobs(jobs: IJob[]): Observable<{ result: IJob[] }> {
+    return of({ result: [{ id: 1 } as IJob, { id: 2 } as IJob] });
   }
 
   public addJobsAndMarks(jobs: IJob[], marks: IMark[]): Promise<{ result: IMark[] }> {
@@ -90,7 +79,7 @@ describe('MarksApiService', () => {
   it('should getMarks', () => {
     const dummyUsers: ITableData = { marks: [{ id: 1 } as IMark, { id: 1 } as IMark] } as ITableData;
 
-    service.getMarks(1, 1).then(users => {
+    service.getMarks(1, 1).subscribe(users => {
       expect(users.marks.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
@@ -116,7 +105,7 @@ describe('MarksApiService', () => {
   it('should updateMarks', () => {
     const dummyUsers: { status: string } = { status: 'success' };
 
-    service.updateMarks([]).then(users => {
+    service.updateMarks([]).subscribe(users => {
       expect(users).toEqual(dummyUsers);
     });
 
@@ -128,7 +117,7 @@ describe('MarksApiService', () => {
   it('should updateJobs', () => {
     const dummyUsers: { status: string } = { status: 'success' };
 
-    service.updateJobs([]).then(users => {
+    service.updateJobs([]).subscribe(users => {
       expect(users).toEqual(dummyUsers);
     });
 

@@ -196,7 +196,7 @@ export class MarksEditComponent implements OnInit {
   }
 
   private getMarks(): void {
-    this.api.getMarks(this.selectedDisciplineId, this.selectedGroupId).then(
+    this.api.getMarks(this.selectedDisciplineId, this.selectedGroupId).subscribe(
       res => {
         this.marks = [...res.marks];
         this.jobs = [...res.jobs];
@@ -213,7 +213,7 @@ export class MarksEditComponent implements OnInit {
   }
 
   private updateMarks(newMarks: IMark[]): void {
-    this.api.updateMarks(newMarks).then(
+    this.api.updateMarks(newMarks).subscribe(
       res => {
         console.log('marks were updated');
       },
@@ -224,7 +224,7 @@ export class MarksEditComponent implements OnInit {
   }
 
   private updateJobs(newJobs: IJob[]): void {
-    this.api.updateJobs(newJobs).then(
+    this.api.updateJobs(newJobs).subscribe(
       res => {
         console.log('jobs were updated');
       },

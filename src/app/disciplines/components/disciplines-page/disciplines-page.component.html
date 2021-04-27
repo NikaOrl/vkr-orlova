@@ -1,7 +1,11 @@
 <app-header></app-header>
 <div class="container" *transloco="let t; read: 'disciplines'">
   <mat-list>
-    <div mat-subheader>{{ t('disciplines') }}</div>
+    <div class="header-container">
+      <div mat-subheader class="title">{{ t('disciplines') }}</div>
+      <button class="add-button btn btn-success" (click)="addDiscipline()">{{ t('addButton') }}</button>
+    </div>
+
     <mat-list-item *ngFor="let discipline of disciplines | async">
       <div mat-line>{{ discipline.disciplineValue }}</div>
       <div mat-line *ngFor="let teacher of getDisciplineTeachers(discipline)">
@@ -16,6 +20,7 @@
       <button mat-raised-button color="primary" routerLink="/marks/{{ discipline.id }}">
         {{ t('journalButton') }}
       </button>
+      <button class="btn btn-danger" (click)="delete(discipline)">{{ t('deleteButton') }}</button>
       <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>

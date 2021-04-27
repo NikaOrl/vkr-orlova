@@ -5,7 +5,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { DISCIPLINES, HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
-import { IDiscipline } from '../models/discipline.model';
+import { IDiscipline, IDisciplineBase } from '../models/discipline.model';
 import { IDisciplineGroup } from '../models/group-students.model';
 import { ITeacher } from '../../teachers/models/teacher.model';
 
@@ -166,6 +166,21 @@ export class DisciplinesApiService {
   public updateDiscipline(discipline: IDiscipline): Observable<{ status: string }> {
     return this.http
       .put<{ status: string }>(`${DISCIPLINES}/${discipline.id}`, discipline, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
+  }
+
+  public addDiscipline(discipline: IDisciplineBase): Observable<number[]> {
+    return this.http.post<number[]>(`${DISCIPLINES}`, discipline, HTTP_OPTIONS).pipe(catchError(this.handleError));
+  }
+
+  public deleteDiscipline(disciplineId: number): Observable<number> {
+    return this.http
+      .delete<number>(`${DISCIPLINES}`, {
+        ...HTTP_OPTIONS,
+        params: {
+          id: `${disciplineId}`,
+        },
+      })
       .pipe(catchError(this.handleError));
   }
 

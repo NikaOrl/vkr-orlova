@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CdkTableModule } from '@angular/cdk/table';
 
 import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 import { MarksTableComponent } from './marks-table.component';
@@ -33,6 +34,7 @@ describe('MarksTableComponent', () => {
         MatAutocompleteModule,
         NoopAnimationsModule,
         MatDialogModule,
+        CdkTableModule,
         getTranslocoModule(),
       ],
       providers: [
