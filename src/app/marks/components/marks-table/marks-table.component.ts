@@ -10,11 +10,11 @@ import { IStudentMark } from '../../models/student-marks.model';
 import { MarksDialogComponent } from '../marks-dialog/marks-dialog.component';
 import { IDialogData } from '../../models/dialog-data.model';
 import { IColumn } from '../../models/column.model';
-import { IDiscipline } from '../../models/discipline.model';
 import { ITableData } from '../../models/table-data.model';
 import { IMark } from '../../models/marks.model';
 import { IJob } from '../../models/jobs.model';
-import { IGroup } from 'src/app/groups/models/group.model';
+import { IGroup } from '../../../groups/models/group.model';
+import { IDiscipline } from '../../../disciplines/models/discipline.model';
 
 @Component({
   selector: 'app-marks-table',

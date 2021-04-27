@@ -7,3 +7,4 @@ export const API_PREFIX: string = '/api';
 export const STUDENTS: string = `${API_PREFIX}/students`;
 export const MARKS: string = `${API_PREFIX}/marks`;
 export const TEACHERS: string = `${API_PREFIX}/teachers`;
+export const DISCIPLINE: string = `${API_PREFIX}/discipline`;

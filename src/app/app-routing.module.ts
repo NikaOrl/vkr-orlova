@@ -22,6 +22,11 @@ const routes: Routes = [
     loadChildren: () => import('./teachers/teachers.module').then(m => m.TeachersModule),
   },
   {
+    path: 'disciplines',
+    canLoad: [AuthGuard],
+    loadChildren: () => import('./disciplines/disciplines.module').then(m => m.DisciplinesModule),
+  },
+  {
     path: '',
     redirectTo: '/marks',
     pathMatch: 'full',
