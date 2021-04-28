@@ -11,14 +11,14 @@
       <div mat-line *ngFor="let teacher of getDisciplineTeachers(discipline)">
         {{ teacher.firstName }} {{ teacher.lastName }}
       </div>
+      <button mat-raised-button color="primary" routerLink="/marks/{{ discipline.id }}">
+        {{ t('journalButton') }}
+      </button>
       <button mat-raised-button color="primary" (click)="openStudentsDialog(discipline.id, discipline.disciplineValue)">
         {{ t('studentsGroupsButton') }}
       </button>
       <button mat-raised-button color="primary" (click)="openEditDialog(discipline)">
         {{ t('editButton') }}
-      </button>
-      <button mat-raised-button color="primary" routerLink="/marks/{{ discipline.id }}">
-        {{ t('journalButton') }}
       </button>
       <button class="btn btn-danger" (click)="delete(discipline)">{{ t('deleteButton') }}</button>
       <mat-divider></mat-divider>
