@@ -1,4 +1,4 @@
 export interface IGroup {
-  id: number;
-  groupNumber: number;
+  id: string;
+  groupNumber: string;
 }

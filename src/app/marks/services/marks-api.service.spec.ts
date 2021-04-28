@@ -13,14 +13,14 @@ import { IDiscipline } from '../../disciplines/models/discipline.model';
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
     return of({
-      marks: [{ id: 1, markValue: '1' } as IMark, { id: 2, markValue: '2' } as IMark],
-      jobs: [{ id: 1, jobValue: '1' } as IJob, { id: 2, jobValue: '2' } as IJob],
-      students: [{ id: 1 } as IStudent, { id: 2 } as IStudent],
+      marks: [{ id: '1', markValue: '1' } as IMark, { id: '2', markValue: '2' } as IMark],
+      jobs: [{ id: '1', jobValue: '1' } as IJob, { id: '2', jobValue: '2' } as IJob],
+      students: [{ id: '1' } as IStudent, { id: '2' } as IStudent],
     });
   }
 
   public getDisciplines(): Observable<IDiscipline[]> {
-    return of([{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline]);
+    return of([{ id: '1' } as IDiscipline, { id: '2' } as IDiscipline]);
   }
 
   public getGroups(): Observable<unknown> {
@@ -31,16 +31,16 @@ export class MarksApiServiceStub {
   }
 
   public updateMarks(marks: IMark[]): Observable<{ result: IMark[] }> {
-    return of({ result: [{ id: 1 } as IMark, { id: 2 } as IMark] });
+    return of({ result: [{ id: '1' } as IMark, { id: '2' } as IMark] });
   }
 
   public updateJobs(jobs: IJob[]): Observable<{ result: IJob[] }> {
-    return of({ result: [{ id: 1 } as IJob, { id: 2 } as IJob] });
+    return of({ result: [{ id: '1' } as IJob, { id: '2' } as IJob] });
   }
 
   public addJobsAndMarks(jobs: IJob[], marks: IMark[]): Promise<{ result: IMark[] }> {
     return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: 1 } as IMark, { id: 2 } as IMark] }));
+      setTimeout(() => resolve({ result: [{ id: '1' } as IMark, { id: '2' } as IMark] }));
       setTimeout(() => reject(new Error('ignored')));
     });
   }
@@ -77,9 +77,9 @@ describe('MarksApiService', () => {
   });
 
   it('should getMarks', () => {
-    const dummyUsers: ITableData = { marks: [{ id: 1 } as IMark, { id: 1 } as IMark] } as ITableData;
+    const dummyUsers: ITableData = { marks: [{ id: '1' } as IMark, { id: '1' } as IMark] } as ITableData;
 
-    service.getMarks(1, 1).subscribe(users => {
+    service.getMarks('1', '1').subscribe(users => {
       expect(users.marks.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
@@ -90,7 +90,7 @@ describe('MarksApiService', () => {
   });
 
   it('should getDisciplines', () => {
-    const dummyUsers: IDiscipline[] = [{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline];
+    const dummyUsers: IDiscipline[] = [{ id: '1' } as IDiscipline, { id: '2' } as IDiscipline];
 
     service.getDisciplines().subscribe(users => {
       expect(users.length).toBe(2);
@@ -127,7 +127,7 @@ describe('MarksApiService', () => {
   });
 
   it('should addJobsAndMarks', () => {
-    const dummyUsers: IJob[] = [{ id: 1 } as IJob, { id: 2 } as IJob];
+    const dummyUsers: IJob[] = [{ id: '1' } as IJob, { id: '2' } as IJob];
 
     service.addJobsAndMarks(
       ([{ id: 1, first: '1' }] as unknown) as IJob[],

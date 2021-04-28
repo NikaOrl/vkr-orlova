@@ -29,8 +29,8 @@ export class MarksEditComponent implements OnInit {
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
 
-  public selectedGroupId: number;
-  public selectedDisciplineId: number;
+  public selectedGroupId: string;
+  public selectedDisciplineId: string;
 
   private ELEMENT_DATA: IStudentMark[] = [];
 
@@ -53,8 +53,8 @@ export class MarksEditComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
-    this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
+    this.selectedDisciplineId = this.route.snapshot.paramMap.get('disciplineId');
+    this.selectedGroupId = this.route.snapshot.paramMap.get('groupId');
     this.getMarks();
   }
 
@@ -98,7 +98,7 @@ export class MarksEditComponent implements OnInit {
       if (this.oldJobsJSON[index] && this.oldJobsJSON[index] !== JSON.stringify(value)) {
         newJobs.push(value);
       }
-      if (value.id < 0) {
+      if (+value.id < 0) {
         addedJobs.push(value);
       }
     });
@@ -131,7 +131,7 @@ export class MarksEditComponent implements OnInit {
     this.saved = false;
     this.addedJobsNumber++;
     this.jobs.push({
-      id: -this.addedJobsNumber,
+      id: `${-this.addedJobsNumber}`,
       disciplineId: this.selectedDisciplineId,
       jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
@@ -141,7 +141,7 @@ export class MarksEditComponent implements OnInit {
       this.marks.push({
         id: null,
         studentId: student.id,
-        jobId: -this.addedJobsNumber,
+        jobId: `${-this.addedJobsNumber}`,
         markValue: '',
         deleted: false,
       });
@@ -157,7 +157,7 @@ export class MarksEditComponent implements OnInit {
     this.deletedJobsIds.delete(e);
   }
 
-  public cancelAdd(e: number): void {
+  public cancelAdd(e: string): void {
     const index: number = this.jobs.findIndex(v => v.id === e);
     this.jobs.splice(index, 1);
     const markIndexes: number[] = [];
@@ -191,7 +191,7 @@ export class MarksEditComponent implements OnInit {
     return this.dialogService.confirm('Discard changes?');
   }
 
-  public getMaxPoint(jobId: number): number {
+  public getMaxPoint(jobId: string): number {
     return this.jobs.find(job => job.id === jobId).maxPoint;
   }
 
@@ -293,7 +293,7 @@ export class MarksEditComponent implements OnInit {
         columnDef: index => `${row.jobValue}-${index}`,
         header: `${row.jobValue}`,
         cell: (cellRow, studentIndex) => {
-          const jobId: number = row.id;
+          const jobId: string = row.id;
           const jsonMarks: string[] = this.marks.map(mark => JSON.stringify(mark));
           const newMark: IMark = {
             id: null,

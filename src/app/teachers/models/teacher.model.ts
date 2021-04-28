@@ -1,7 +1,7 @@
 export interface ITeacher {
   firstName: string;
   lastName: string;
-  id: number;
+  id: string;
   email: string;
   isAdmin: boolean;
   deleted: boolean;

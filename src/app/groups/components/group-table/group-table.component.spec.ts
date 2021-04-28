@@ -59,11 +59,11 @@ describe('GroupTableComponent', () => {
 
   it('should filter groups', () => {
     component.groups = [
-      { id: 1, groupNumber: 1 },
-      { id: 2, groupNumber: 2 },
+      { id: '1', groupNumber: '1' },
+      { id: '2', groupNumber: '2' },
     ];
     component.selectValue = '1';
     component.filter();
-    expect(component.filteredGroups).toEqual([{ id: 1, groupNumber: 1 }]);
+    expect(component.filteredGroups).toEqual([{ id: '1', groupNumber: '1' }]);
   });
 });

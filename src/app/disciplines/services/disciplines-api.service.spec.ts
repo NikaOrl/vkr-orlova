@@ -9,14 +9,14 @@ import { IDisciplineGroup } from '../models/group-students.model';
 
 export const mockGroupStudents: IDisciplineGroup[] = [
   {
-    id: 1,
-    groupNumber: 5381,
+    id: '1',
+    groupNumber: '5381',
     students: [
       {
-        id: 1,
+        id: '1',
         firstName: 'Ivan',
         lastName: 'Ivanov',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: false,
       },
     ],
@@ -25,7 +25,7 @@ export const mockGroupStudents: IDisciplineGroup[] = [
 
 export class DisciplinesApiServiceStub {
   public getDisciplines(): Observable<IDiscipline[]> {
-    return of([{ id: 1 } as IDiscipline, { id: 2 } as IDiscipline]);
+    return of([{ id: '1' } as IDiscipline, { id: '2' } as IDiscipline]);
   }
 
   public getTeachers(): Observable<ITeacher[]> {

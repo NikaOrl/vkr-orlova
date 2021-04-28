@@ -1,3 +1,3 @@
 export interface IDialogData {
-  disciplineId: number;
+  disciplineId: string;
 }

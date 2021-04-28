@@ -56,6 +56,18 @@ input {
 }
 
 .students-filter {
+  display: inline;
   margin: 0 20px;
   font-size: 14px;
+}
+
+.edit-name {
+  display: inline;
+  margin: 0 20px;
+  font-size: 14px;
+}
+
+.menu-container {
+  display: flex;
+  justify-content: space-between;
 }

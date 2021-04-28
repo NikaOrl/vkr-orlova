@@ -11,7 +11,7 @@
       <div mat-line *ngFor="let teacher of getDisciplineTeachers(discipline)">
         {{ teacher.firstName }} {{ teacher.lastName }}
       </div>
-      <button mat-raised-button color="primary" (click)="openStudentsDialog(discipline.id)">
+      <button mat-raised-button color="primary" (click)="openStudentsDialog(discipline.id, discipline.disciplineValue)">
         {{ t('studentsGroupsButton') }}
       </button>
       <button mat-raised-button color="primary" (click)="openEditDialog(discipline)">

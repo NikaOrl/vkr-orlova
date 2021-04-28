@@ -29,12 +29,14 @@ export class GroupTableComponent implements OnInit {
     this.api.getGroups().subscribe(
       groups => {
         this.groups = groups;
-        const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
+        const selectedGroupId: string = this.route.snapshot.paramMap.get('groupId');
         this.selectedGroup = selectedGroupId ? this.groups.find(group => group.id === selectedGroupId) : this.groups[0];
         this.selectValue = this.selectedGroup?.groupNumber ? this.selectedGroup.groupNumber.toString() : '';
         this.filteredGroups = this.groups;
 
-        this.getStudents(this.selectedGroup.id);
+        if (this.selectedGroup) {
+          this.getStudents(this.selectedGroup.id);
+        }
       },
       err => {
         console.log(err);
@@ -63,7 +65,7 @@ export class GroupTableComponent implements OnInit {
     this.getStudents(this.selectedGroup.id);
   }
 
-  public getStudents(groupId: number): void {
+  public getStudents(groupId: string): void {
     this.api.getStudents(groupId).subscribe(
       res => {
         this.ELEMENT_DATA = res;

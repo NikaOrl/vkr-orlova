@@ -14,8 +14,8 @@ export class GroupsApiServiceStub {
 
   public getGroups(): Observable<unknown> {
     return of([
-      { id: 1, groupNumber: 1 },
-      { id: 2, groupNumber: 2 },
+      { id: '1', groupNumber: '1' },
+      { id: '2', groupNumber: '2' },
     ]);
   }
 
@@ -29,6 +29,18 @@ export class GroupsApiServiceStub {
 
   public deleteStudents(studentsIds: Set<number>): Observable<unknown> {
     return of('groups');
+  }
+
+  public getGroup(groupId: string): Observable<IGroup> {
+    return of({ id: '1', groupNumber: '1' });
+  }
+
+  public addGroup(groupName: string, addedStudents: IStudent[]): Observable<IGroup> {
+    return of({ id: '1', groupNumber: '1' });
+  }
+
+  public updateGroup(groupId: string, groupName: string): Observable<IGroup> {
+    return of({ id: '1', groupNumber: '1' });
   }
 }
 
@@ -58,7 +70,7 @@ describe('GroupsApiService', () => {
   it('should getStudents', () => {
     const dummyUsers: IStudent[] = [{ lastName: 'John' } as IStudent, { lastName: 'Doe' } as IStudent];
 
-    service.getStudents(1).subscribe(users => {
+    service.getStudents('1').subscribe(users => {
       expect(users.length).toBe(2);
       expect(users).toEqual(dummyUsers);
     });
@@ -69,7 +81,7 @@ describe('GroupsApiService', () => {
   });
 
   it('should getGroups', () => {
-    const dummyUsers: IGroup[] = [{ id: 1 } as IGroup, { id: 2 } as IGroup];
+    const dummyUsers: IGroup[] = [{ id: '1' } as IGroup, { id: '2' } as IGroup];
 
     service.getGroups().subscribe(users => {
       expect(users.length).toBe(2);
@@ -107,7 +119,7 @@ describe('GroupsApiService', () => {
   });
 
   it('should deleteStudents', () => {
-    service.deleteStudents(new Set([1, 2])).subscribe(users => {
+    service.deleteStudents(new Set(['1', '2'])).subscribe(users => {
       expect(users).toEqual(2);
     });
 

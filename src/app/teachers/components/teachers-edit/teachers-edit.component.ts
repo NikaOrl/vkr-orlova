@@ -20,7 +20,7 @@ export class TeachersEditComponent implements OnInit {
   @ViewChild(MatSort) public sort: MatSort;
 
   private ELEMENT_DATA: ITeacher[] = [];
-  private deletedTeachersIds: Set<number> = new Set();
+  private deletedTeachersIds: Set<string> = new Set();
   private oldTeachersJSON: string[];
   private saved: boolean = true;
 
