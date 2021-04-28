@@ -12,12 +12,12 @@ import { DisciplinesApiService } from '../../services/disciplines-api.service';
  * Node for item
  */
 export class DisciplineGroupNode {
-  public id: number;
-  public groupNumber: number;
+  public id: string;
+  public groupNumber: string;
   public students: DisciplineGroupNode[];
   public firstName: string;
   public lastName: string;
-  public groupId: number;
+  public groupId: string;
   public isInDiscipline: boolean;
 }
 
@@ -26,8 +26,8 @@ export class DisciplineGroupFlatNode {
   public item: string;
   public level: number;
   public expandable: boolean;
-  public id: number;
-  public parentId: number;
+  public id: string;
+  public parentId: string;
 }
 
 @Component({
@@ -36,6 +36,8 @@ export class DisciplineGroupFlatNode {
   styleUrls: ['./discipline-students-dialog.component.scss'],
 })
 export class DisciplineStudentsDialogComponent implements OnInit {
+  public disciplineName: string = '';
+
   public treeControl: FlatTreeControl<DisciplineGroupFlatNode>;
 
   public dataSource: MatTreeFlatDataSource<DisciplineGroupNode, DisciplineGroupFlatNode>;
@@ -56,11 +58,12 @@ export class DisciplineStudentsDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<DisciplineStudentsDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { disciplineId: number },
+    @Inject(MAT_DIALOG_DATA) public data: { disciplineId: string; disciplineName: string },
     private api: DisciplinesApiService
   ) {}
 
   public ngOnInit(): void {
+    this.disciplineName = this.data.disciplineName;
     this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
     this.treeControl = new FlatTreeControl<DisciplineGroupFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);

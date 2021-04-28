@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { GroupsApiService } from '../../services/groups-api.service';
 import { IStudent } from '../../models/student.model';
 import { DialogService } from '../../../core/services/dialog.service';
+import { IGroup } from '../../models/group.model';
 
 @Component({
   selector: 'app-groups-edit',
@@ -18,10 +19,13 @@ export class GroupsEditComponent implements OnInit {
   public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'delete', 'headStudent'];
   public dataSource: MatTableDataSource<IStudent> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
-  public selectedGroupId: number;
+  public selectedGroupId: string;
+
+  public groupName: string = '';
+  public group: IGroup;
 
   private ELEMENT_DATA: IStudent[] = [];
-  private deletedStudentsIds: Set<number> = new Set();
+  private deletedStudentsIds: Set<string> = new Set();
   private oldStudentsJSON: string[];
   private saved: boolean = true;
 
@@ -33,8 +37,15 @@ export class GroupsEditComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.selectedGroupId = +this.route.snapshot.paramMap.get('groupId');
-    this.getStudents(this.selectedGroupId);
+    this.selectedGroupId = this.route.snapshot.paramMap.get('groupId');
+    if (this.selectedGroupId) {
+      this.api.getGroup(this.selectedGroupId).subscribe((group: IGroup) => {
+        this.group = group;
+        this.groupName = group.groupNumber;
+      });
+
+      this.getStudents(this.selectedGroupId);
+    }
   }
 
   public applyFilter(filterValue: string): void {
@@ -45,25 +56,38 @@ export class GroupsEditComponent implements OnInit {
     const newStudents: IStudent[] = [];
     const addedStudents: IStudent[] = [];
     this.ELEMENT_DATA.forEach((value, index) => {
-      if (this.oldStudentsJSON[index] !== JSON.stringify(value)) {
+      if (this.oldStudentsJSON && this.oldStudentsJSON[index] !== JSON.stringify(value)) {
         newStudents.push(value);
       }
       if (value.id === null) {
         addedStudents.push(value);
       }
     });
-    if (newStudents.length > 0 || addedStudents.length > 0 || this.deletedStudentsIds.size > 0) {
-      if (newStudents.length > 0) {
-        this.updateStudents(newStudents);
-      }
-      if (addedStudents.length > 0) {
-        this.addStudents(addedStudents);
-      }
-      if (this.deletedStudentsIds.size > 0) {
-        this.deleteStudents();
+    if (
+      !this.group ||
+      this.group.groupNumber !== this.groupName ||
+      newStudents.length > 0 ||
+      addedStudents.length > 0 ||
+      this.deletedStudentsIds.size > 0
+    ) {
+      if (!this.group) {
+        this.addGroup(addedStudents);
+      } else {
+        if (this.group.groupNumber !== this.groupName) {
+          this.updateGroup();
+        }
+        if (newStudents.length > 0) {
+          this.updateStudents(newStudents);
+        }
+        if (addedStudents.length > 0) {
+          this.addStudents(addedStudents);
+        }
+        if (this.deletedStudentsIds.size > 0) {
+          this.deleteStudents();
+        }
+        this.router.navigate([`/groups/${this.selectedGroupId}`]);
       }
       this.saved = true;
-      this.router.navigate([`/groups/${this.selectedGroupId}`]);
     } else {
       alert('no changes to save!');
     }
@@ -128,7 +152,7 @@ export class GroupsEditComponent implements OnInit {
     return this.dialogService.confirm('Discard changes?');
   }
 
-  private getStudents(groupId: number): void {
+  private getStudents(groupId: string): void {
     this.api.getStudents(groupId).subscribe(
       res => {
         this.ELEMENT_DATA = res;
@@ -168,6 +192,29 @@ export class GroupsEditComponent implements OnInit {
     this.api.deleteStudents(this.deletedStudentsIds).subscribe(
       res => {
         console.log('students were deleted');
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  private addGroup(addedStudents: IStudent[]): void {
+    this.api.addGroup(this.groupName, addedStudents).subscribe(
+      res => {
+        console.log('group was added');
+        this.router.navigate([`/groups/${res.id}`]);
+      },
+      err => {
+        console.log(err);
+      }
+    );
+  }
+
+  private updateGroup(): void {
+    this.api.updateGroup(this.group.id, this.groupName).subscribe(
+      res => {
+        console.log('group was added');
       },
       err => {
         console.log(err);

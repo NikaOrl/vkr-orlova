@@ -76,13 +76,13 @@ describe('MarksEditComponent', () => {
     expect(component.isDeleted(1)).toBe(true);
     expect(component.isDeleted(2)).toBe(false);
 
-    component.markChange('5', { id: 1, markValue: '1' } as IMark);
+    component.markChange('5', { id: '1', markValue: '1' } as IMark);
     component.jobChange('5', 1);
 
     component.save();
 
     expect(component.canDeactivate()).toBe(true);
-    component.cancelAdd(-1);
+    component.cancelAdd('-1');
 
     component.cancelDelete(1);
     expect(component.isDeleted(1)).toBe(false);

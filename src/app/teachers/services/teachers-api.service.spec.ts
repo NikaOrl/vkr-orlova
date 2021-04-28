@@ -8,7 +8,7 @@ import { Observable, of } from 'rxjs';
 
 export class TeachersApiServiceStub {
   public getTeachers(): Observable<ITeacher[]> {
-    return of([{ id: 1 } as ITeacher, { id: 2 } as ITeacher]);
+    return of([{ id: '1' } as ITeacher, { id: '2' } as ITeacher]);
   }
 
   public updateTeachers(teachers: ITeacher[]): Observable<{ status: string }> {
@@ -91,7 +91,7 @@ describe('TeachersApiService', () => {
   it('should deleteTeachers', () => {
     const dummyUsers: number = 2;
 
-    service.deleteTeachers(new Set([1, 2])).subscribe(users => {
+    service.deleteTeachers(new Set(['1', '2'])).subscribe(users => {
       expect(users).toEqual(dummyUsers);
     });
 

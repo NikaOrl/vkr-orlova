@@ -11,118 +11,118 @@ import { ITeacher } from '../../teachers/models/teacher.model';
 
 export const mockGroupStudents: IDisciplineGroup[] = [
   {
-    id: 1,
-    groupNumber: 5381,
+    id: '1',
+    groupNumber: '5381',
     students: [
       {
-        id: 1,
+        id: '1',
         firstName: 'Ivan',
         lastName: 'Ivanov',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: false,
       },
       {
-        id: 2,
+        id: '2',
         firstName: 'Petr',
         lastName: 'Petrov',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 3,
+        id: '3',
         firstName: 'Vasia',
         lastName: 'Vasiliev',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 5,
+        id: '5',
         firstName: 'Tolya',
         lastName: 'Popov',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 6,
+        id: '6',
         firstName: 'Andrei',
         lastName: 'Markoff',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 7,
+        id: '7',
         firstName: 'Sachar',
         lastName: 'Dobrow',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 8,
+        id: '8',
         firstName: 'Kostya',
         lastName: 'Levitsky',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 9,
+        id: '9',
         firstName: 'Kolya',
         lastName: 'Morein',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 10,
+        id: '10',
         firstName: 'Anton',
         lastName: 'Markov',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
       {
-        id: 11,
+        id: '11',
         firstName: 'Stenya',
         lastName: 'Polakoff',
-        groupId: 1,
+        groupId: '1',
         isInDiscipline: true,
       },
     ],
   },
   {
-    id: 2,
-    groupNumber: 5382,
+    id: '2',
+    groupNumber: '5382',
     students: [
       {
-        id: 2,
+        id: '2',
         firstName: 'Ivan',
         lastName: 'Ivanov',
-        groupId: 2,
+        groupId: '2',
         isInDiscipline: false,
       },
       {
-        id: 2,
+        id: '2',
         firstName: 'Petr',
         lastName: 'Petrov',
-        groupId: 2,
+        groupId: '2',
         isInDiscipline: false,
       },
       {
-        id: 3,
+        id: '3',
         firstName: 'Vasia',
         lastName: 'Vasiliev',
-        groupId: 2,
+        groupId: '2',
         isInDiscipline: false,
       },
       {
-        id: 5,
+        id: '5',
         firstName: 'Tolya',
         lastName: 'Popov',
-        groupId: 2,
+        groupId: '2',
         isInDiscipline: true,
       },
       {
-        id: 6,
+        id: '6',
         firstName: 'Andrei',
         lastName: 'Markoff',
-        groupId: 2,
+        groupId: '2',
         isInDiscipline: true,
       },
     ],
@@ -147,7 +147,7 @@ export class DisciplinesApiService {
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public getGroupsAndStudents(disciplineId: number): Observable<IDisciplineGroup[]> {
+  public getGroupsAndStudents(disciplineId: string): Observable<IDisciplineGroup[]> {
     // return this.http
     //   .get<IDisciplineGroup[]>(`${DISCIPLINES}/${disciplineId}/students`, HTTP_OPTIONS)
     //   .pipe(map(this.extractData), catchError(this.handleError));
@@ -155,7 +155,7 @@ export class DisciplinesApiService {
   }
 
   public updateGroupsAndStudents(
-    disciplineId: number,
+    disciplineId: string,
     groupsAndStudentsData: IDisciplineGroup[]
   ): Observable<{ status: string }> {
     return this.http
@@ -173,7 +173,7 @@ export class DisciplinesApiService {
     return this.http.post<number[]>(`${DISCIPLINES}`, discipline, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public deleteDiscipline(disciplineId: number): Observable<number> {
+  public deleteDiscipline(disciplineId: string): Observable<number> {
     return this.http
       .delete<number>(`${DISCIPLINES}`, {
         ...HTTP_OPTIONS,

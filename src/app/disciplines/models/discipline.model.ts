@@ -1,8 +1,8 @@
 export interface IDisciplineBase {
   disciplineValue: string;
-  semesterId: number;
-  teacherIds: number[];
+  semesterId: string;
+  teacherIds: string[];
 }
 export interface IDiscipline extends IDisciplineBase {
-  id: number;
+  id: string;
 }

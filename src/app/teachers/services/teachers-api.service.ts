@@ -31,12 +31,12 @@ export class TeachersApiService {
     );
   }
 
-  public deleteTeachers(teachersIds: Set<number>): Observable<number> {
+  public deleteTeachers(teachersIds: Set<string>): Observable<number> {
     return this.http
       .delete<number>(`${TEACHERS}`, {
         ...HTTP_OPTIONS,
         params: {
-          ids: [...teachersIds].map(id => id.toString()),
+          ids: [...teachersIds],
         },
       })
       .pipe(catchError(this.handleError));

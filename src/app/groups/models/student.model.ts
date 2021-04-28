@@ -1,10 +1,10 @@
 export interface IStudent {
   firstName: string;
   lastName: string;
-  id: number;
+  id: string;
   numberInList: number;
   email: string;
-  groupId: number;
+  groupId: string;
   headStudent: boolean;
   deleted: boolean;
 }

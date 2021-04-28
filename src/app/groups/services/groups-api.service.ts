@@ -14,10 +14,26 @@ import { GROUPS, HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
 export class GroupsApiService {
   constructor(private http: HttpClient) {}
 
-  public getStudents(groupId: number): Observable<IStudent[]> {
+  public getStudents(groupId: string): Observable<IStudent[]> {
     return this.http
       .get<IStudent[]>(`${STUDENTS}/${groupId}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError));
+  }
+
+  public getGroup(groupId: string): Observable<IGroup> {
+    return this.http.get<IGroup>(`${GROUPS}/${groupId}`, HTTP_OPTIONS).pipe(catchError(this.handleError));
+  }
+
+  public addGroup(groupName: string, addedStudents: IStudent[]): Observable<IGroup> {
+    return this.http
+      .post<IGroup>(`${GROUPS}`, { groupName, students: addedStudents }, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
+  }
+
+  public updateGroup(groupId: string, groupName: string): Observable<IGroup> {
+    return this.http
+      .put<IGroup>(`${GROUPS}/${groupId}`, { groupName, id: groupId }, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
   }
 
   public getGroups(): Observable<IGroup[]> {
@@ -32,7 +48,7 @@ export class GroupsApiService {
     return this.http.post<number[]>(`${STUDENTS}`, students, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public deleteStudents(studentsIds: Set<number>): Observable<number> {
+  public deleteStudents(studentsIds: Set<string>): Observable<number> {
     return this.http
       .delete<number>(`${STUDENTS}`, {
         ...HTTP_OPTIONS,

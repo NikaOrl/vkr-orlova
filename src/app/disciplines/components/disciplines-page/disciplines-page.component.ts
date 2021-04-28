@@ -33,10 +33,10 @@ export class DisciplinesPageComponent implements OnInit {
     }
   }
 
-  public openStudentsDialog(disciplineId: number): void {
+  public openStudentsDialog(disciplineId: string, disciplineName: string): void {
     this.dialog.open(DisciplineStudentsDialogComponent, {
       width: '550px',
-      data: { disciplineId },
+      data: { disciplineId, disciplineName },
     });
   }
 

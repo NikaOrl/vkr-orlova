@@ -71,18 +71,18 @@ describe('GroupsEditComponent', () => {
 
     component.add();
     expect(component.isAdded({ id: null } as IStudent)).toBe(true);
-    expect(component.isAdded({ id: 2 } as IStudent)).toBe(false);
+    expect(component.isAdded({ id: '2' } as IStudent)).toBe(false);
 
-    component.delete({ id: 1 } as IStudent);
-    expect(component.isDeleted({ id: 1 } as IStudent)).toBe(true);
-    expect(component.isDeleted({ id: 2 } as IStudent)).toBe(false);
+    component.delete({ id: '1' } as IStudent);
+    expect(component.isDeleted({ id: '1' } as IStudent)).toBe(true);
+    expect(component.isDeleted({ id: '2' } as IStudent)).toBe(false);
     component.unsaved();
     component.save();
 
     expect(component.canDeactivate()).toBe(true);
     component.cancelAdd({ id: null } as IStudent);
 
-    component.cancelDelete({ id: 1 } as IStudent);
-    expect(component.isDeleted({ id: 1 } as IStudent)).toBe(false);
+    component.cancelDelete({ id: '1' } as IStudent);
+    expect(component.isDeleted({ id: '1' } as IStudent)).toBe(false);
   });
 });

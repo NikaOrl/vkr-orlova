@@ -46,7 +46,10 @@
     "cancel": "Отменить",
     "addButton": "Добавить студента",
     "backButton": "Назад",
-    "saveButton": "Сохранить"
+    "saveButton": "Сохранить",
+    "addGroupButton": "Добавить группу",
+    "groupName": "Номер группы",
+    "requiredError": "Заполните обязательное поле"
   },
   "teachers": {
     "teachersFilter": "Поиск по имени",

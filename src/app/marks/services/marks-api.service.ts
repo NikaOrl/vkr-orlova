@@ -17,7 +17,7 @@ import { IDiscipline } from '../../disciplines/models/discipline.model';
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
+  public getMarks(disciplineId: string, groupId: string): Observable<ITableData> {
     return this.http
       .get<ITableData>(`${MARKS}`, {
         ...HTTP_OPTIONS,
@@ -58,12 +58,12 @@ export class MarksApiService {
         });
         job.id = null;
         this.http
-          .post<number[]>(`${JOBS}`, job, HTTP_OPTIONS)
+          .post<string[]>(`${JOBS}`, job, HTTP_OPTIONS)
           .pipe(catchError(this.handleError))
           .toPromise()
           .then(result => {
             if (result) {
-              const jobId: number = +result[0];
+              const jobId: string = result[0];
 
               jobMarks.forEach(mark => {
                 mark.jobId = jobId;

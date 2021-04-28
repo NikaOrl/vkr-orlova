@@ -1,13 +1,13 @@
 export interface IDisciplineGroup {
-  id: number; // group Id
-  groupNumber: number;
+  id: string; // group Id
+  groupNumber: string;
   students: IDisciplineGroupStudent[];
 }
 
 export interface IDisciplineGroupStudent {
   firstName: string;
   lastName: string;
-  id: number;
-  groupId: number;
+  id: string;
+  groupId: string;
   isInDiscipline: boolean;
 }

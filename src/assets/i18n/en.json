@@ -46,7 +46,10 @@
     "cancel": "Cancel",
     "addButton": "Add student",
     "backButton": "Back",
-    "saveButton": "Save"
+    "saveButton": "Save",
+    "addGroupButton": "Add group",
+    "groupName": "Group Number",
+    "requiredError": "Group Number is required"
   },
   "teachers": {
     "teachersFilter": "Teachers filter",

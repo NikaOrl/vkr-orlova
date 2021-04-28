@@ -1,7 +1,7 @@
 export interface IMark {
-  id: number;
-  studentId: number;
-  jobId: number;
+  id: string;
+  studentId: string;
+  jobId: string;
   markValue: string;
   deleted: boolean;
 }

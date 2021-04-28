@@ -61,16 +61,16 @@ describe('MarksTableComponent', () => {
   });
 
   it('should filter groups', () => {
-    component.groups = [{ id: 1, groupNumber: 1 } as IGroup, { id: 2, groupNumber: 2 } as IGroup];
+    component.groups = [{ id: '1', groupNumber: '1' } as IGroup, { id: '2', groupNumber: '2' } as IGroup];
 
     component.groupSelectValue = '0';
     component.filterGroups();
     expect(component.filteredGroups).toEqual([]);
-    component.selectedGroup = { id: 1, groupNumber: 1 } as IGroup;
+    component.selectedGroup = { id: '1', groupNumber: '1' } as IGroup;
     component.onSelectChange();
 
     component.groupSelectValue = '1';
     component.filterGroups();
-    expect(component.filteredGroups).toEqual([{ id: 1, groupNumber: 1 } as IGroup]);
+    expect(component.filteredGroups).toEqual([{ id: '1', groupNumber: '1' } as IGroup]);
   });
 });

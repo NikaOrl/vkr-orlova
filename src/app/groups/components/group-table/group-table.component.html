@@ -3,6 +3,9 @@
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
   <div class="edit-button">
+    <button class="add-button btn btn-success" routerLink="/groups/edit">
+      {{ t('addGroupButton') }}
+    </button>
     <button *ngIf="selectedGroup" mat-raised-button color="primary" routerLink="/groups/edit/{{ selectedGroup.id }}">
       {{ t('editGroupButton') }}
     </button>

@@ -5,5 +5,5 @@ export interface IColumn {
   header: string;
   cell: (cellRow: IJob, studentIndex?: number) => string;
   mark?: (cellRow: IJob) => string;
-  jobId?: number;
+  jobId?: string;
 }

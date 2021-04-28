@@ -39,7 +39,7 @@ export class MarksTableComponent implements OnInit {
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
 
   public editLink: string = '';
-  public selectedDisciplineId: number;
+  public selectedDisciplineId: string;
 
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -53,7 +53,7 @@ export class MarksTableComponent implements OnInit {
   ) {}
 
   public ngOnInit(): void {
-    this.selectedDisciplineId = +this.route.snapshot.paramMap.get('disciplineId');
+    this.selectedDisciplineId = this.route.snapshot.paramMap.get('disciplineId');
     if (!this.selectedDisciplineId) {
       this.api.getDisciplines().subscribe(disciplines => {
         if (disciplines[0]) {
@@ -65,7 +65,7 @@ export class MarksTableComponent implements OnInit {
 
     this.api.getGroups().subscribe(groups => {
       this.groups = groups;
-      const selectedGroupId: number = +this.route.snapshot.paramMap.get('groupId');
+      const selectedGroupId: string = this.route.snapshot.paramMap.get('groupId');
       this.selectedGroup = selectedGroupId ? this.groups.find(d => d.id === selectedGroupId) : this.groups[0];
       this.filteredGroups = this.groups;
       this.groupSelectValue = this.selectedGroup?.groupNumber ? this.selectedGroup.groupNumber.toString() : '';
