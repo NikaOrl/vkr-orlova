@@ -102,8 +102,6 @@ export class MarksEditJobsComponent implements OnInit {
    * then rebuild the tree.
    * */
   public drop(event: CdkDragDrop<string[]>): void {
-    // console.log('origin/destination', event.previousIndex, event.currentIndex);
-
     // ignore drops outside of the tree
     if (!event.isPointerOverContainer) return;
 
@@ -131,26 +129,36 @@ export class MarksEditJobsComponent implements OnInit {
     }
 
     // determine where to insert the node
-    console.log(visibleNodes, event.currentIndex);
 
-    const nodeAtDest: ModuleNode = visibleNodes[event.currentIndex];
+    let nodeAtDest: ModuleNode =
+      visibleNodes[event.previousIndex > event.currentIndex ? event.currentIndex : event.currentIndex + 1];
+    let nodeAtDestFlatNode: ModuleFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
+
+    const node: ModuleFlatNode = event.item.data;
+
+    if (node.parentId === nodeAtDestFlatNode.parentId) {
+      nodeAtDest = visibleNodes[event.currentIndex];
+      nodeAtDestFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
+    }
     const newSiblings: ModuleNode[] = findNodeSiblings(changedData, nodeAtDest.id);
-    console.log(findNodeSiblings(changedData, nodeAtDest.id));
+    // console.log(visibleNodes, nodeAtDest.id, event.currentIndex);
+
+    // console.log(findNodeSiblings(changedData, nodeAtDest.id));
     if (!newSiblings) return;
     const insertIndex: number = newSiblings.findIndex(s => s.id === nodeAtDest.id);
 
     // remove the node from its old place
-    const node: ModuleFlatNode = event.item.data;
+    console.log('origin/destination', node, event.previousIndex, event.currentIndex, nodeAtDestFlatNode);
+
     const siblings: ModuleNode[] = findNodeSiblings(changedData, node.id);
     const siblingIndex: number = siblings.findIndex(n => n.id === node.id);
     const nodeToInsert: ModuleNode = siblings.splice(siblingIndex, 1)[0];
     if (nodeAtDest.id === nodeToInsert.id) return;
 
     // ensure validity of drop - must be same level
-    const nodeAtDestFlatNode: ModuleFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
 
     // if (this.validateDrop && nodeAtDestFlatNode.level !== node.level) {
-    if (node.level === 0 && nodeAtDestFlatNode.level !== 0) {
+    if (node.id.match('module') && nodeAtDestFlatNode.level !== 0) {
       alert('You cannot add module into another module');
       return;
     }
