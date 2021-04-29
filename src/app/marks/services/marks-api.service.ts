@@ -7,39 +7,44 @@ import { catchError, map } from 'rxjs/operators';
 import { IJob } from '../models/jobs.model';
 import { IMark } from '../models/marks.model';
 import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS } from '../../core/http-constants';
-import { ITableData } from '../models/table-data.model';
+import { ITableData, ITableDataFromBE } from '../models/table-data.model';
 import { IGroup } from '../../groups/models/group.model';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
-import { IMarksModule } from '../models/module-jobs.model';
+import { IMarksModule, IMarksTreeValues } from '../models/module-jobs.model';
 
-const mockModulesJobs: IMarksModule[] = [
+const mockModulesJobs: IMarksTreeValues[] = [
   {
     id: '1',
     moduleName: 'Module 1',
     jobs: [
-      { id: '0', jobValue: 'Job 1', moduleId: '1' },
-      { id: '1', jobValue: 'Job 2', moduleId: '1' },
-      { id: '2', jobValue: 'Job 3', moduleId: '1' },
+      { id: '0', jobValue: 'Job 1', moduleId: '1', numberInList: 1 },
+      { id: '1', jobValue: 'Job 2', moduleId: '1', numberInList: 2 },
+      { id: '2', jobValue: 'Job 3', moduleId: '1', numberInList: 3 },
     ],
+    numberInList: 1,
   },
   {
     id: '2',
     moduleName: 'Module 2',
     jobs: [
-      { id: '3', jobValue: 'Job 4', moduleId: '2' },
-      { id: '4', jobValue: 'Job 5', moduleId: '2' },
-      { id: '5', jobValue: 'Job 6', moduleId: '2' },
+      { id: '3', jobValue: 'Job 4', moduleId: '2', numberInList: 1 },
+      { id: '4', jobValue: 'Job 5', moduleId: '2', numberInList: 2 },
+      { id: '5', jobValue: 'Job 6', moduleId: '2', numberInList: 3 },
     ],
+    numberInList: 2,
   },
+  { id: '9', jobValue: 'Job 10', moduleId: null, numberInList: 3 },
   {
     id: '3',
     moduleName: 'Module 3',
     jobs: [
-      { id: '6', jobValue: 'Job 7', moduleId: '3' },
-      { id: '7', jobValue: 'Job 8', moduleId: '3' },
-      { id: '8', jobValue: 'Job 9', moduleId: '3' },
+      { id: '6', jobValue: 'Job 7', moduleId: '3', numberInList: 1 },
+      { id: '7', jobValue: 'Job 8', moduleId: '3', numberInList: 2 },
+      { id: '8', jobValue: 'Job 9', moduleId: '3', numberInList: 1 },
     ],
+    numberInList: 4,
   },
+  { id: '10', jobValue: 'Job 11', moduleId: null, numberInList: 1 },
 ];
 
 @Injectable({
@@ -48,9 +53,9 @@ const mockModulesJobs: IMarksModule[] = [
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  public getMarks(disciplineId: string, groupId: string): Observable<ITableData> {
+  public getMarks(disciplineId: string, groupId: string): Observable<ITableDataFromBE> {
     return this.http
-      .get<ITableData>(`${MARKS}`, {
+      .get<ITableDataFromBE>(`${MARKS}`, {
         ...HTTP_OPTIONS,
         params: {
           groupId: groupId.toString(),
@@ -134,7 +139,7 @@ export class MarksApiService {
     ]);
   }
 
-  public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksModule[]> {
+  public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksTreeValues[]> {
     // return this.http
     //   .get<IMarksModule[]>(`${MARKS}/${disciplineId}/${groupId}/jobs`, HTTP_OPTIONS)
     //   .pipe(map(this.extractData), catchError(this.handleError));

@@ -1,39 +1,61 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl" cdkDropList (cdkDropListDropped)="drop($event)">
-  <mat-tree-node
-    *matTreeNodeDef="let node"
-    matTreeNodeToggle
-    matTreeNodePadding
-    cdkDrag
-    [cdkDragData]="node"
-    (mouseenter)="dragHover(node)"
-    (mouseleave)="dragHoverEnd()"
-    (cdkDragStarted)="dragStart()"
-    (cdkDragReleased)="dragEnd()"
-  >
+<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
     <button mat-icon-button disabled></button>
-    {{ node.item }}
+    <div
+      class="checklist-leaf-node"
+      [ngClass]="
+        dragNodeExpandOverNode === node
+          ? {
+              'drop-above': dragNodeExpandOverArea === 'above',
+              'drop-below': dragNodeExpandOverArea === 'below',
+              'drop-center': dragNodeExpandOverArea === 'center'
+            }
+          : ''
+      "
+      draggable="true"
+      (dragstart)="handleDragStart($event, node)"
+      (dragover)="handleDragOver($event, node)"
+      (drop)="handleDrop($event, node)"
+      (dragend)="handleDragEnd($event)"
+    >
+      {{ node.item }}
+    </div>
   </mat-tree-node>
 
-  <mat-tree-node
-    *matTreeNodeDef="let node; when: hasChild"
-    matTreeNodePadding
-    cdkDrag
-    [cdkDragData]="node"
-    (mouseenter)="dragHover(node)"
-    (mouseleave)="dragHoverEnd()"
-    (cdkDragStarted)="dragStart()"
-    (cdkDragReleased)="dragEnd()"
-  >
-    <button
-      mat-icon-button
-      matTreeNodeToggle
-      (click)="expansionModel.toggle(node.id)"
-      [attr.aria-label]="'toggle ' + node.item"
-    >
+  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
+    <button mat-icon-button disabled></button>
+    <mat-form-field>
+      <input matInput #itemValue placeholder="New item..." />
+    </mat-form-field>
+    <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
+  </mat-tree-node>
+
+  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
+    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
       <mat-icon class="mat-icon-rtl-mirror">
         {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
       </mat-icon>
     </button>
-    {{ node.item }}
+    <div
+      [ngClass]="
+        dragNodeExpandOverNode === node
+          ? {
+              'drop-above': dragNodeExpandOverArea === 'above',
+              'drop-below': dragNodeExpandOverArea === 'below',
+              'drop-center': dragNodeExpandOverArea === 'center'
+            }
+          : ''
+      "
+      draggable="true"
+      (dragstart)="handleDragStart($event, node)"
+      (dragover)="handleDragOver($event, node)"
+      (drop)="handleDrop($event, node)"
+      (dragend)="handleDragEnd($event)"
+    >
+      {{ node.item }}
+    </div>
+    <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
   </mat-tree-node>
 </mat-tree>
+
+<span #emptyItem></span>

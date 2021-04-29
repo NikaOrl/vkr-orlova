@@ -1,11 +1,9 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { FlatTreeControl } from '@angular/cdk/tree';
-import { Component, Injectable, Input, OnInit } from '@angular/core';
-import { MatCheckboxChange } from '@angular/material/checkbox';
-import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { IMarksModule } from '../../models/module-jobs.model';
+import { Component, Injectable, ElementRef, ViewChild, Input } from '@angular/core';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { BehaviorSubject } from 'rxjs';
+import { IMarksModule, IMarksTreeValues } from '../../models/module-jobs.model';
 import { MarksApiService } from '../../services/marks-api.service';
 
 export class ModuleNode {
@@ -18,229 +16,342 @@ export class ModuleNode {
 
 /** Flat item node with expandable and level information */
 export class ModuleFlatNode {
-  constructor(
-    public item: string,
-    public level: number,
-    public expandable: boolean,
-    public id: string,
-    public parentId: string
-  ) {}
+  public item: string;
+  public level: number;
+  public expandable: boolean;
+  public id: string;
+  public parentId: string;
+}
+
+/**
+ * Checklist database, it can build a tree structured Json object.
+ * Each node in Json object represents a to-do item or a category.
+ * If a node is a category, it has jobs items and new items can be added under the category.
+ */
+@Injectable()
+export class ChecklistDatabase {
+  public dataChange = new BehaviorSubject<ModuleNode[]>([]);
+
+  get data(): ModuleNode[] {
+    return this.dataChange.value;
+  }
+
+  constructor(private api: MarksApiService) {
+    this.initialize();
+  }
+
+  public initialize() {
+    // Build the tree nodes from Json object. The result is a list of `ModuleNode` with nested
+    //     file node as jobs.
+    this.api.getModulesAndGroups('1', '2').subscribe((data: IMarksTreeValues[]) => {
+      // this.mainData = data;
+      this.dataChange.next((data as unknown) as ModuleNode[]);
+    });
+  }
+
+  /** Add an item to to-do list */
+  public insertItem(parent: ModuleNode, nodeFrom: ModuleNode): ModuleNode {
+    console.log(parent, nodeFrom);
+    const newItem = { ...nodeFrom } as ModuleNode;
+
+    if ((nodeFrom.jobs && parent) || !parent.jobs) {
+      return;
+    }
+    parent.jobs.push(newItem);
+    this.dataChange.next(this.data);
+    return newItem;
+  }
+
+  public insertItemAbove(nodeTo: ModuleNode, nodeFrom: ModuleNode): ModuleNode {
+    const parentNode = this.getParentFromNodes(nodeTo);
+
+    const newItem = { ...nodeFrom } as ModuleNode;
+    if (nodeFrom.jobs && parentNode) {
+      return;
+    }
+    if (parentNode != null) {
+      parentNode.jobs.splice(parentNode.jobs.indexOf(nodeTo), 0, newItem);
+    } else {
+      this.data.splice(this.data.indexOf(nodeTo), 0, newItem);
+    }
+    this.dataChange.next(this.data);
+    return newItem;
+  }
+
+  public insertItemBelow(nodeTo: ModuleNode, nodeFrom: ModuleNode): ModuleNode {
+    const parentNode = this.getParentFromNodes(nodeTo);
+
+    const newItem = { ...nodeFrom } as ModuleNode;
+    if (nodeFrom.jobs && parentNode) {
+      return;
+    }
+    if (parentNode != null) {
+      parentNode.jobs.splice(parentNode.jobs.indexOf(nodeTo) + 1, 0, newItem);
+    } else {
+      this.data.splice(this.data.indexOf(nodeTo) + 1, 0, newItem);
+    }
+    this.dataChange.next(this.data);
+    return newItem;
+  }
+
+  public getParentFromNodes(node: ModuleNode): ModuleNode {
+    for (let i = 0; i < this.data.length; ++i) {
+      const currentRoot = this.data[i];
+      const parent = this.getParent(currentRoot, node);
+      if (parent != null) {
+        return parent;
+      }
+    }
+    return null;
+  }
+
+  public getParent(currentRoot: ModuleNode, node: ModuleNode): ModuleNode {
+    if (currentRoot.jobs && currentRoot.jobs.length > 0) {
+      for (let i = 0; i < currentRoot.jobs.length; ++i) {
+        const child = currentRoot.jobs[i];
+        if (child === node) {
+          return currentRoot;
+        } else if (child.jobs && child.jobs.length > 0) {
+          const parent = this.getParent(child, node);
+          if (parent != null) {
+            return parent;
+          }
+        }
+      }
+    }
+    return null;
+  }
+
+  public updateItem(node: ModuleNode, name: string) {
+    // node.item = name;
+    this.dataChange.next(this.data);
+  }
+
+  public deleteItem(node: ModuleNode) {
+    this.deleteNode(this.data, node);
+    this.dataChange.next(this.data);
+  }
+
+  public copyPasteItem(from: ModuleNode, to: ModuleNode): ModuleNode {
+    const newItem = this.insertItem(to, from);
+    // if (from.jobs) {
+    //   from.jobs.forEach(child => {
+    //     this.copyPasteItem(child, newItem);
+    //   });
+    // }
+    return newItem;
+  }
+
+  public copyPasteItemAbove(from: ModuleNode, to: ModuleNode): ModuleNode {
+    const newItem = this.insertItemAbove(to, from);
+    // if (newItem && from.jobs) {
+    //   from.jobs.forEach(child => {
+    //     this.copyPasteItem(child, newItem);
+    //   });
+    // }
+    return newItem;
+  }
+
+  public copyPasteItemBelow(from: ModuleNode, to: ModuleNode): ModuleNode {
+    const newItem = this.insertItemBelow(to, from);
+    // if (newItem && from.jobs) {
+    //   from.jobs.forEach(child => {
+    //     this.copyPasteItem(child, newItem);
+    //   });
+    // }
+    return newItem;
+  }
+
+  public deleteNode(nodes: ModuleNode[], nodeToDelete: ModuleNode) {
+    const index = nodes.indexOf(nodeToDelete, 0);
+    if (index > -1) {
+      nodes.splice(index, 1);
+    } else {
+      nodes.forEach(node => {
+        if (node.jobs && node.jobs.length > 0) {
+          this.deleteNode(node.jobs, nodeToDelete);
+        }
+      });
+    }
+  }
 }
 
 @Component({
   selector: 'app-marks-edit-jobs',
   templateUrl: './marks-edit-jobs.component.html',
   styleUrls: ['./marks-edit-jobs.component.scss'],
+  providers: [ChecklistDatabase],
 })
-export class MarksEditJobsComponent implements OnInit {
+export class MarksEditJobsComponent {
   @Input() public selectedGroupId: string;
   @Input() public selectedDisciplineId: string;
+  /** Map from flat node to nested node. This helps us finding the nested node to be modified */
+  public flatNodeMap = new Map<ModuleFlatNode, ModuleNode>();
+
+  /** Map from nested node to flattened node. This helps us to keep the same object for selection */
+  public nestedNodeMap = new Map<ModuleNode, ModuleFlatNode>();
+
+  /** A selected parent node to be inserted */
+  public selectedParent: ModuleFlatNode | null = null;
+
+  /** The new item's name */
+  public newItemName = '';
 
   public treeControl: FlatTreeControl<ModuleFlatNode>;
+
   public treeFlattener: MatTreeFlattener<ModuleNode, ModuleFlatNode>;
+
   public dataSource: MatTreeFlatDataSource<ModuleNode, ModuleFlatNode>;
-  // expansion model tracks expansion state
-  public expansionModel: SelectionModel<string> = new SelectionModel<string>(true);
-  public dragging: boolean = false;
-  // tslint:disable-next-line: no-any
-  public expandTimeout: any;
-  public expandDelay: number = 1000;
-  public validateDrop: boolean = false;
 
-  constructor(private api: MarksApiService) {}
+  /** The selection for checklist */
+  public checklistSelection = new SelectionModel<ModuleFlatNode>(true /* multiple */);
 
-  public ngOnInit(): void {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this._getLevel, this._isExpandable, this._getChildren);
-    this.treeControl = new FlatTreeControl<ModuleFlatNode>(this._getLevel, this._isExpandable);
+  /* Drag and drop */
+  public dragNode: any;
+  public dragNodeExpandOverWaitTimeMs = 500;
+  public dragNodeExpandOverNode: any;
+  public dragNodeExpandOverTime: number = 0;
+  public dragNodeExpandOverArea: string;
+  @ViewChild('emptyItem') public emptyItem: ElementRef;
+
+  constructor(private database: ChecklistDatabase) {
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this.getLevel, this.isExpandable, this.getChildren);
+    this.treeControl = new FlatTreeControl<ModuleFlatNode>(this.getLevel, this.isExpandable);
     this.dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
-    this.api.getModulesAndGroups(this.selectedDisciplineId, this.selectedGroupId).subscribe((data: IMarksModule[]) => {
-      this.dataSource.data = data.map((module: IMarksModule) => ({
-        ...module,
-        id: `module-${module.id}`,
-      })) as ModuleNode[];
+    database.dataChange.subscribe(data => {
+      // this.dataSource.data = [];
+      this.dataSource.data = data;
     });
   }
 
-  public transformer = (node: ModuleNode, level: number) => {
-    return new ModuleFlatNode(
-      node.jobs ? node.moduleName : node.jobValue,
-      level,
-      !!node.jobs,
-      node.id,
-      node.moduleId ? `module-${node.moduleId}` : null
-    );
-  };
+  public getLevel = (node: ModuleFlatNode) => node.level;
+
+  public isExpandable = (node: ModuleFlatNode) => node.expandable;
+
+  public getChildren = (node: ModuleNode): ModuleNode[] => node.jobs;
+
   public hasChild = (_: number, _nodeData: ModuleFlatNode) => _nodeData.expandable;
 
-  // DRAG AND DROP METHODS
-
-  public shouldValidate(event: MatCheckboxChange): void {
-    this.validateDrop = event.checked;
-  }
+  public hasNoContent = (_: number, _nodeData: ModuleFlatNode) => _nodeData.item === '';
 
   /**
-   * This constructs an array of nodes that matches the DOM
+   * Transformer to convert nested node to flat node. Record the nodes in maps for later use.
    */
-  public visibleNodes(): ModuleNode[] {
-    const result: ModuleNode[] = [];
+  public transformer = (node: ModuleNode, level: number) => {
+    const existingNode = this.nestedNodeMap.get(node);
+    const flatNode = existingNode && existingNode.id === node.id ? existingNode : new ModuleFlatNode();
+    flatNode.item = node.jobs ? node.moduleName : node.jobValue;
+    flatNode.level = level;
+    flatNode.expandable = node.jobs && node.jobs.length > 0;
+    this.flatNodeMap.set(flatNode, node);
+    this.nestedNodeMap.set(node, flatNode);
+    return flatNode;
+  };
 
-    function addExpandedChildren(node: ModuleNode, expanded: string[]): void {
-      result.push(node);
-      if (expanded.includes(node.id)) {
-        node.jobs.map(child => addExpandedChildren(child, expanded));
+  /** Whether all the descendants of the node are selected */
+  public descendantsAllSelected(node: ModuleFlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    return descendants.every(child => this.checklistSelection.isSelected(child));
+  }
+
+  /** Whether part of the descendants are selected */
+  public descendantsPartiallySelected(node: ModuleFlatNode): boolean {
+    const descendants = this.treeControl.getDescendants(node);
+    const result = descendants.some(child => this.checklistSelection.isSelected(child));
+    return result && !this.descendantsAllSelected(node);
+  }
+
+  /** Toggle the to-do item selection. Select/deselect all the descendants node */
+  public todoItemSelectionToggle(node: ModuleFlatNode): void {
+    this.checklistSelection.toggle(node);
+    const descendants = this.treeControl.getDescendants(node);
+    this.checklistSelection.isSelected(node)
+      ? this.checklistSelection.select(...descendants)
+      : this.checklistSelection.deselect(...descendants);
+  }
+
+  /** Select the category so we can insert the new item. */
+  public addNewItem(node: ModuleFlatNode) {
+    const parentNode = this.flatNodeMap.get(node);
+    // this.database.insertItem(parentNode, );
+    this.treeControl.expand(node);
+  }
+
+  /** Save the node to database */
+  public saveNode(node: ModuleFlatNode, itemValue: string) {
+    const nestedNode = this.flatNodeMap.get(node);
+    this.database.updateItem(nestedNode, itemValue);
+  }
+
+  public handleDragStart(event, node) {
+    // Required by Firefox (https://stackoverflow.com/questions/19055264/why-doesnt-html5-drag-and-drop-work-in-firefox)
+    event.dataTransfer.setData('foo', 'bar');
+    event.dataTransfer.setDragImage(this.emptyItem.nativeElement, 0, 0);
+    this.dragNode = node;
+    this.treeControl.collapse(node);
+  }
+
+  public handleDragOver(event, node) {
+    event.preventDefault();
+
+    const y = event.offsetY;
+
+    if (this.dragNodeExpandOverTime !== y) {
+      // console.log(111);
+      this.dragNodeExpandOverTime = y;
+
+      // Handle node expand
+      if (node !== this.dragNodeExpandOverNode) {
+        //   if (this.dragNode !== node && !this.treeControl.isExpanded(node)) {
+        //     if (new Date().getTime() - this.dragNodeExpandOverTime > this.dragNodeExpandOverWaitTimeMs) {
+        //       this.treeControl.expand(node);
+        //     }
+        //   }
+        // } else {
+        this.dragNodeExpandOverNode = node;
+        // this.dragNodeExpandOverTime = new Date().getTime();
+      }
+
+      // Handle drag area
+      // const percentageX = event.offsetX / event.target.clientWidth;
+      const percentageY = y / event.target.clientHeight;
+      if (percentageY < 0.25) {
+        this.dragNodeExpandOverArea = 'above';
+      } else if (percentageY > 0.75) {
+        this.dragNodeExpandOverArea = 'below';
+      } else {
+        this.dragNodeExpandOverArea = 'center';
       }
     }
-    this.dataSource.data.forEach(node => {
-      addExpandedChildren(node, this.expansionModel.selected);
-    });
-    return result;
   }
 
-  /**
-   * Handle the drop - here we rearrange the data based on the drop event,
-   * then rebuild the tree.
-   * */
-  public drop(event: CdkDragDrop<string[]>): void {
-    // ignore drops outside of the tree
-    if (!event.isPointerOverContainer) return;
-
-    // construct a list of visible nodes, this will match the DOM.
-    // the cdkDragDrop event.currentIndex jives with visible nodes.
-    // it calls rememberExpandedTreeNodes to persist expand state
-    const visibleNodes: ModuleNode[] = this.visibleNodes();
-
-    // deep clone the data source so we can mutate it
-    const changedData: ModuleNode[] = JSON.parse(JSON.stringify(this.dataSource.data));
-
-    // recursive find function to find siblings of node
-    function findNodeSiblings(arr: ModuleNode[], id: string): ModuleNode[] {
-      let result: ModuleNode[];
-      let subResult: ModuleNode[];
-      arr.forEach((item, i) => {
-        if (item.id === id) {
-          result = arr;
-        } else if (item.jobs) {
-          subResult = findNodeSiblings(item.jobs, id);
-          if (subResult) result = subResult;
-        }
-      });
-      return result;
-    }
-
-    // determine where to insert the node
-
-    let nodeAtDest: ModuleNode =
-      visibleNodes[event.previousIndex > event.currentIndex ? event.currentIndex : event.currentIndex + 1];
-    let nodeAtDestFlatNode: ModuleFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
-
-    const node: ModuleFlatNode = event.item.data;
-
-    if (node.parentId === nodeAtDestFlatNode.parentId) {
-      nodeAtDest = visibleNodes[event.currentIndex];
-      nodeAtDestFlatNode = this.treeControl.dataNodes.find(n => nodeAtDest.id === n.id);
-    }
-    const newSiblings: ModuleNode[] = findNodeSiblings(changedData, nodeAtDest.id);
-    // console.log(visibleNodes, nodeAtDest.id, event.currentIndex);
-
-    // console.log(findNodeSiblings(changedData, nodeAtDest.id));
-    if (!newSiblings) return;
-    const insertIndex: number = newSiblings.findIndex(s => s.id === nodeAtDest.id);
-
-    // remove the node from its old place
-    console.log('origin/destination', node, event.previousIndex, event.currentIndex, nodeAtDestFlatNode);
-
-    const siblings: ModuleNode[] = findNodeSiblings(changedData, node.id);
-    const siblingIndex: number = siblings.findIndex(n => n.id === node.id);
-    const nodeToInsert: ModuleNode = siblings.splice(siblingIndex, 1)[0];
-    if (nodeAtDest.id === nodeToInsert.id) return;
-
-    // ensure validity of drop - must be same level
-
-    // if (this.validateDrop && nodeAtDestFlatNode.level !== node.level) {
-    if (node.id.match('module') && nodeAtDestFlatNode.level !== 0) {
-      alert('You cannot add module into another module');
-      return;
-    }
-
-    // insert node
-    newSiblings.splice(insertIndex, 0, nodeToInsert);
-
-    // rebuild tree with mutated data
-    this.rebuildTreeForData(changedData);
-  }
-
-  /**
-   * Experimental - opening tree nodes as you drag over them
-   */
-  public dragStart(): void {
-    this.dragging = true;
-  }
-  public dragEnd(): void {
-    this.dragging = false;
-  }
-  public dragHover(node: ModuleFlatNode): void {
-    if (this.dragging) {
-      clearTimeout(this.expandTimeout);
-      this.expandTimeout = setTimeout(() => {
-        this.treeControl.expand(node);
-      }, this.expandDelay);
-    }
-  }
-  public dragHoverEnd(): void {
-    if (this.dragging) {
-      clearTimeout(this.expandTimeout);
-    }
-  }
-
-  /**
-   * The following methods are for persisting the tree expand state
-   * after being rebuilt
-   */
-
-  public rebuildTreeForData(data: ModuleNode[]): void {
-    this.dataSource.data = data;
-    this.expansionModel.selected.forEach(id => {
-      const node: ModuleFlatNode = this.treeControl.dataNodes.find(n => n.id === id);
-      this.treeControl.expand(node);
-    });
-  }
-  private _getLevel = (node: ModuleFlatNode) => node.level;
-  private _isExpandable = (node: ModuleFlatNode) => node.expandable;
-  private _getChildren = (node: ModuleNode): Observable<ModuleNode[]> => of(node.jobs);
-
-  /**
-   * Not used but you might need this to programmatically expand nodes
-   * to reveal a particular node
-   */
-  ///////// !!! TODO remove or use
-  private expandNodesById(flatNodes: ModuleFlatNode[], ids: string[]): void {
-    if (!flatNodes || flatNodes.length === 0) return;
-    const idSet: Set<string> = new Set(ids);
-    return flatNodes.forEach(node => {
-      if (idSet.has(node.id)) {
-        this.treeControl.expand(node);
-        let parent: ModuleFlatNode = this.getParentNode(node);
-        while (parent) {
-          this.treeControl.expand(parent);
-          parent = this.getParentNode(parent);
-        }
+  public handleDrop(event, node) {
+    event.preventDefault();
+    if (node !== this.dragNode) {
+      let newItem: ModuleNode;
+      if (this.dragNodeExpandOverArea === 'above') {
+        newItem = this.database.copyPasteItemAbove(this.flatNodeMap.get(this.dragNode), this.flatNodeMap.get(node));
+      } else if (this.dragNodeExpandOverArea === 'below') {
+        newItem = this.database.copyPasteItemBelow(this.flatNodeMap.get(this.dragNode), this.flatNodeMap.get(node));
+      } else {
+        newItem = this.database.copyPasteItem(this.flatNodeMap.get(this.dragNode), this.flatNodeMap.get(node));
       }
-    });
-  }
-
-  private getParentNode(node: ModuleFlatNode): ModuleFlatNode | null {
-    const currentLevel: number = node.level;
-    if (currentLevel < 1) {
-      return null;
-    }
-    const startIndex: number = this.treeControl.dataNodes.indexOf(node) - 1;
-    for (let i: number = startIndex; i >= 0; i--) {
-      const currentNode: ModuleFlatNode = this.treeControl.dataNodes[i];
-      if (currentNode.level < currentLevel) {
-        return currentNode;
+      if (newItem) {
+        this.database.deleteItem(this.flatNodeMap.get(this.dragNode));
+        this.treeControl.expandDescendants(this.nestedNodeMap.get(newItem));
+      } else {
+        alert('You cannot add module into another module');
       }
     }
-    return null;
+    this.dragNode = null;
+    this.dragNodeExpandOverNode = null;
+    this.dragNodeExpandOverTime = 0;
+  }
+
+  public handleDragEnd(event) {
+    this.dragNode = null;
+    this.dragNodeExpandOverNode = null;
+    this.dragNodeExpandOverTime = 0;
   }
 }

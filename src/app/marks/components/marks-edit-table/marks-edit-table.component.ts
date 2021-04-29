@@ -129,6 +129,8 @@ export class MarksEditTableComponent implements OnInit {
       jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
       maxPoint: null,
+      numberInList: 0,
+      moduleId: null,
     });
     this.students.forEach(student => {
       this.marks.push({

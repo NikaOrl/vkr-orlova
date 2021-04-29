@@ -26,6 +26,7 @@ import { MarksEditTableComponent } from './components/marks-edit-table/marks-edi
 import { MarksEditJobsComponent } from './components/marks-edit-jobs/marks-edit-jobs.component';
 import { MatTreeModule } from '@angular/material/tree';
 import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { MatIconModule } from '@angular/material/icon';
     DragDropModule,
     MatTreeModule,
     MatIconModule,
+    MatCheckboxModule,
     HttpClientModule,
     CdkTableModule,
     FormsModule,
