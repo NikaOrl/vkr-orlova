@@ -29,7 +29,14 @@
     "selectGroupDropDown": "Выбрать группу",
     "selectDisciplineDropDown": "Выбрать дисциплину",
     "sumPoint": "Суммарный балл",
-    "result": "Оценка"
+    "result": "Оценка",
+    "moduleName": "Название модуля",
+    "requiredError": "Заполните обязательное поле",
+    "deteleModuleMessage": "Этот модуль и все работы в нем будут удалены после сохранения.",
+    "addModuleMessage": "Этот модуль будет добавлен после сохранения.",
+    "addModuleButton": "Добавить модуль",
+    "marksTab": "Журнал оценок",
+    "modulesTab": "Управление модулями"
   },
   "groups": {
     "editGroupButton": "Редактировать группу",

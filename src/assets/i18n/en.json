@@ -29,7 +29,14 @@
     "selectGroupDropDown": "Select group",
     "selectDisciplineDropDown": "Select discipline",
     "sumPoint": "Total score",
-    "result": "Grade"
+    "result": "Grade",
+    "moduleName": "Module Name",
+    "requiredError": "Module Name is required",
+    "deteleModuleMessage": "This module and all its jobs will be deleted after save.",
+    "addModuleMessage": "This module will be added after save.",
+    "addModuleButton": "Add Module",
+    "marksTab": "Marks settings",
+    "modulesTab": "Modules settings"
   },
   "groups": {
     "editGroupButton": "Edit group",

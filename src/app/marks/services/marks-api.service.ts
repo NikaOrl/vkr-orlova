@@ -10,9 +10,9 @@ import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS } from '../../core/http-
 import { ITableData, ITableDataFromBE } from '../models/table-data.model';
 import { IGroup } from '../../groups/models/group.model';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
-import { IMarksModule, IMarksTreeValues } from '../models/module-jobs.model';
+import { IMarksModule } from '../models/module-jobs.model';
 
-const mockModulesJobs: IMarksTreeValues[] = [
+const mockModulesJobs: IMarksModule[] = [
   {
     id: '1',
     moduleName: 'Module 1',
@@ -33,7 +33,6 @@ const mockModulesJobs: IMarksTreeValues[] = [
     ],
     numberInList: 2,
   },
-  { id: '9', jobValue: 'Job 10', moduleId: null, numberInList: 3 },
   {
     id: '3',
     moduleName: 'Module 3',
@@ -44,7 +43,6 @@ const mockModulesJobs: IMarksTreeValues[] = [
     ],
     numberInList: 4,
   },
-  { id: '10', jobValue: 'Job 11', moduleId: null, numberInList: 1 },
 ];
 
 @Injectable({
@@ -139,11 +137,21 @@ export class MarksApiService {
     ]);
   }
 
-  public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksTreeValues[]> {
+  public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksModule[]> {
     // return this.http
     //   .get<IMarksModule[]>(`${MARKS}/${disciplineId}/${groupId}/jobs`, HTTP_OPTIONS)
     //   .pipe(map(this.extractData), catchError(this.handleError));
     return of(mockModulesJobs);
+  }
+
+  public updateModulesAndGroups(
+    disciplineId: string,
+    groupId: string,
+    modules: IMarksModule[]
+  ): Observable<{ status: string }> {
+    return this.http
+      .put<{ status: string }>(`${MARKS}/${disciplineId}/${groupId}/jobs`, modules, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

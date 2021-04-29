@@ -3,6 +3,7 @@ export interface IMarksModule {
   moduleName: string;
   jobs: IMarksModuleJob[];
   numberInList: number;
+  deleted?: boolean;
 }
 
 export interface IMarksModuleJob {
@@ -11,5 +12,3 @@ export interface IMarksModuleJob {
   moduleId: string;
   numberInList: number;
 }
-
-export type IMarksTreeValues = IMarksModule | IMarksModuleJob;

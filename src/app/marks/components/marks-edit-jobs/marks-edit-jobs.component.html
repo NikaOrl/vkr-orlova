@@ -1,61 +1,68 @@
-<mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-  <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle matTreeNodePadding>
-    <button mat-icon-button disabled></button>
-    <div
-      class="checklist-leaf-node"
-      [ngClass]="
-        dragNodeExpandOverNode === node
-          ? {
-              'drop-above': dragNodeExpandOverArea === 'above',
-              'drop-below': dragNodeExpandOverArea === 'below',
-              'drop-center': dragNodeExpandOverArea === 'center'
-            }
-          : ''
-      "
-      draggable="true"
-      (dragstart)="handleDragStart($event, node)"
-      (dragover)="handleDragOver($event, node)"
-      (drop)="handleDrop($event, node)"
-      (dragend)="handleDragEnd($event)"
-    >
-      {{ node.item }}
+<form [formGroup]="modulesForm" (ngSubmit)="save()" *transloco="let t; read: 'marks'">
+  <div
+    class="dd-container"
+    cdkDropList
+    id="main"
+    [cdkDropListData]="modules"
+    [cdkDropListConnectedTo]="connectedTo"
+    (cdkDropListDropped)="drop($event)"
+    cdkDropListOrientation="horizontal"
+  >
+    <div class="parent" *ngFor="let module of modules" cdkDrag>
+      <div
+        class="drag-container"
+        [ngClass]="{
+          'alert-danger': module.isDeleted,
+          'alert-success': module.isAdded
+        }"
+      >
+        <div class="section-heading">
+          <mat-form-field appearance="standard">
+            <mat-label>{{ t('moduleName') }}</mat-label>
+            <input matInput [formControlName]="getControl(module)" required />
+            <mat-error *ngIf="modulesForm.get(getControl(module)).invalid">{{ t('requiredError') }}</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div
+          cdkDropList
+          id="{{ module.id }}"
+          [cdkDropListData]="module.jobs"
+          [cdkDropListConnectedTo]="connectedTo"
+          class="item-list"
+          (cdkDropListDropped)="drop($event)"
+        >
+          <div class="item-box" *ngFor="let job of module.jobs" cdkDrag>
+            {{ job.jobValue }}
+          </div>
+        </div>
+        <div class="message input-cell--content" *ngIf="module.isDeleted">
+          {{ t('deteleModuleMessage') }}
+          <a (click)="cancelDelete(module)" class="cancel">{{ t('cancel') }}</a>
+        </div>
+        <div class="message input-cell--content" *ngIf="module.isAdded">
+          {{ t('addModuleMessage') }}
+          <a (click)="cancelAdd(module)" class="cancel">{{ t('cancel') }}</a>
+        </div>
+        <button class="delete-button" (click)="delete(module)" *ngIf="!module.isAdded && !module.isDeleted">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
     </div>
-  </mat-tree-node>
-
-  <mat-tree-node *matTreeNodeDef="let node; when: hasNoContent" matTreeNodePadding>
-    <button mat-icon-button disabled></button>
-    <mat-form-field>
-      <input matInput #itemValue placeholder="New item..." />
-    </mat-form-field>
-    <button mat-button (click)="saveNode(node, itemValue.value)">Save</button>
-  </mat-tree-node>
-
-  <mat-tree-node *matTreeNodeDef="let node; when: hasChild" matTreeNodePadding>
-    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.filename">
-      <mat-icon class="mat-icon-rtl-mirror">
-        {{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
-      </mat-icon>
+  </div>
+  <div class="buttons">
+    <button (click)="add()" type="button" class="add-button btn btn-success">{{ t('addModuleButton') }}</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      routerLink="/marks/{{ selectedDisciplineId }}/{{ selectedGroupId }}"
+      class="router-button"
+    >
+      {{ t('backButton') }}
     </button>
-    <div
-      [ngClass]="
-        dragNodeExpandOverNode === node
-          ? {
-              'drop-above': dragNodeExpandOverArea === 'above',
-              'drop-below': dragNodeExpandOverArea === 'below',
-              'drop-center': dragNodeExpandOverArea === 'center'
-            }
-          : ''
-      "
-      draggable="true"
-      (dragstart)="handleDragStart($event, node)"
-      (dragover)="handleDragOver($event, node)"
-      (drop)="handleDrop($event, node)"
-      (dragend)="handleDragEnd($event)"
-    >
-      {{ node.item }}
-    </div>
-    <button mat-icon-button (click)="addNewItem(node)"><mat-icon>add</mat-icon></button>
-  </mat-tree-node>
-</mat-tree>
-
-<span #emptyItem></span>
+    <button mat-raised-button color="primary" type="submit" class="router-button">
+      {{ t('saveButton') }}
+    </button>
+  </div>
+</form>

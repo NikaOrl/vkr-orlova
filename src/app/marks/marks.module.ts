@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -48,13 +48,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatDialogModule,
     MatAutocompleteModule,
     MatTabsModule,
-    DragDropModule,
-    MatTreeModule,
     MatIconModule,
-    MatCheckboxModule,
+    DragDropModule,
     HttpClientModule,
     CdkTableModule,
     FormsModule,
+    ReactiveFormsModule,
     SharedModule,
     TranslocoRootModule,
     MarksRoutingModule,
