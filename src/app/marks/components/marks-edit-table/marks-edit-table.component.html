@@ -3,7 +3,7 @@
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
 </div>
-<form (ngSubmit)="save()" ngNativeValidate *transloco="let t; read: 'marks'">
+<form ngNativeValidate *transloco="let t; read: 'marks'">
   <div class="scroll-table">
     <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
       <!-- studentName Column -->
@@ -124,6 +124,11 @@
     >
       {{ t('backButton') }}
     </button>
-    <button mat-raised-button color="primary" type="submit" class="router-button">{{ t('saveButton') }}</button>
+    <button mat-raised-button color="primary" (click)="save()" type="submit" class="router-button">
+      {{ t('saveButton') }}
+    </button>
+    <button mat-raised-button color="primary" (click)="saveAndClose()" type="submit" class="router-button">
+      {{ t('saveAndCloseButton') }}
+    </button>
   </div>
 </form>

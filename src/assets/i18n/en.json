@@ -32,11 +32,15 @@
     "result": "Grade",
     "moduleName": "Module Name",
     "requiredError": "Module Name is required",
-    "deteleModuleMessage": "This module and all its jobs will be deleted after save.",
+    "deteleModuleMessage": "This module will be deleted after save.",
     "addModuleMessage": "This module will be added after save.",
     "addModuleButton": "Add Module",
     "marksTab": "Marks settings",
-    "modulesTab": "Modules settings"
+    "modulesTab": "Modules settings",
+    "cancelModuleDelete": "Cancel and return jobs to the module.",
+    "jobsOutOfModuleError": "There should be no jobs out of a module. Please, drag&drop them on some module to save.",
+    "saveAndCloseButton": "Save and close",
+    "modulesInformMessage": "On this tab you can drag&drop jobs between modules and in one module to order them. Also, you can  drag&drop modules to order them. To add/delete/edit jobs, please, use tab 'Marks settings'"
   },
   "groups": {
     "editGroupButton": "Edit group",

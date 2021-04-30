@@ -3,12 +3,14 @@
     <app-marks-edit-table
       [selectedGroupId]="selectedGroupId"
       [selectedDisciplineId]="selectedDisciplineId"
+      (setSaved)="setMarksSaved($event)"
     ></app-marks-edit-table>
   </mat-tab>
   <mat-tab [label]="t('modulesTab')">
     <app-marks-edit-jobs
       [selectedGroupId]="selectedGroupId"
       [selectedDisciplineId]="selectedDisciplineId"
+      (setSaved)="setModulesSaved($event)"
     ></app-marks-edit-jobs>
   </mat-tab>
 </mat-tab-group>

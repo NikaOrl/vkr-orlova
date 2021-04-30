@@ -1,16 +1,13 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-
-import { Observable } from 'rxjs';
 
 import { MarksApiService } from '../../services/marks-api.service';
 import { IStudentMark } from '../../models/student-marks.model';
 import { IMark } from '../../models/marks.model';
 import { IJob } from '../../models/jobs.model';
 import { IStudent } from 'src/app/groups/models/student.model';
-import { DialogService } from 'src/app/core/services/dialog.service';
 import { IColumn } from '../../models/column.model';
 import { ITableData } from '../../models/table-data.model';
 
@@ -22,6 +19,7 @@ import { ITableData } from '../../models/table-data.model';
 export class MarksEditTableComponent implements OnInit {
   @Input() public selectedGroupId: string;
   @Input() public selectedDisciplineId: string;
+  @Output() public setSaved: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   public columns: IColumn[];
   public maxPointFuilds: IColumn[];
@@ -43,12 +41,14 @@ export class MarksEditTableComponent implements OnInit {
   private oldJobsJSON: string[];
   private addedJobsNumber: number = 0;
 
-  private saved: boolean = true;
-
-  constructor(private router: Router, private api: MarksApiService, private dialogService: DialogService) {}
+  constructor(private router: Router, private api: MarksApiService) {}
 
   public ngOnInit(): void {
     this.getMarks();
+  }
+
+  set saved(value: boolean) {
+    this.setSaved.emit(value);
   }
 
   public applyFilter(filterValue: string): void {
@@ -74,7 +74,7 @@ export class MarksEditTableComponent implements OnInit {
     this.jobs[jobNumber].maxPoint = e;
   }
 
-  public save(): void {
+  public save(redirect: boolean): void {
     const newMarks: IMark[] = [];
     const addedMarks: IMark[] = [];
     this.marks.forEach((value, index) => {
@@ -109,10 +109,16 @@ export class MarksEditTableComponent implements OnInit {
         this.addJobsAndMarks(addedJobs, addedMarks);
       }
       this.saved = true;
-      this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
+      if (redirect) {
+        this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
+      }
     } else {
       alert('no changes to save!');
     }
+  }
+
+  public saveAndClose(): void {
+    this.save(true);
   }
 
   public delete(e: number): void {
@@ -177,13 +183,6 @@ export class MarksEditTableComponent implements OnInit {
 
   public isAdded(row: number): boolean {
     return row < 0;
-  }
-
-  public canDeactivate(): Observable<boolean> | Promise<boolean> | boolean {
-    if (this.saved) {
-      return true;
-    }
-    return this.dialogService.confirm('Discard changes?');
   }
 
   public getMaxPoint(jobId: string): number {
