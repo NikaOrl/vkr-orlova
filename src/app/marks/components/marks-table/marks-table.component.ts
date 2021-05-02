@@ -11,10 +11,15 @@ import { MarksDialogComponent } from '../marks-dialog/marks-dialog.component';
 import { IDialogData } from '../../models/dialog-data.model';
 import { IColumn } from '../../models/column.model';
 import { ITableData } from '../../models/table-data.model';
-import { IMark } from '../../models/marks.model';
-import { IJob } from '../../models/jobs.model';
+import { IMark } from '../../models/mark.model';
+import { IJob } from '../../models/job.model';
 import { IGroup } from '../../../groups/models/group.model';
-import { IDiscipline } from '../../../disciplines/models/discipline.model';
+import { IModule } from '../../models/module.model';
+
+interface TableModule extends IModule {
+  numberOfJobs: number;
+  isReal: boolean;
+}
 
 @Component({
   selector: 'app-marks-table',
@@ -31,6 +36,7 @@ export class MarksTableComponent implements OnInit {
 
   public columns: IColumn[];
   public maxPointFuilds: IColumn[];
+  public moduleFuilds: IColumn[];
 
   public displayedColumns: string[];
   public displayedMaxPointColumns: string[];
@@ -44,6 +50,7 @@ export class MarksTableComponent implements OnInit {
   @ViewChild(MatSort) public sort: MatSort;
 
   private jobs: IJob[];
+  private modules: IModule[];
 
   constructor(
     private router: Router,
@@ -119,7 +126,19 @@ export class MarksTableComponent implements OnInit {
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
           this.jobs = res.jobs;
-          this.maxPointFuilds = this.jobs.map(row => {
+          // this.modules = res.modules;
+          const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
+          this.moduleFuilds = modules.map(row => {
+            return {
+              columnDef: index => `module-${index}`,
+              header: `${row}`,
+              number: row.numberOfJobs,
+              isReal: row.isReal,
+              cell: () => null,
+            };
+          });
+
+          this.maxPointFuilds = jobs.map(row => {
             return {
               columnDef: index => `maxPoint-${index}`,
               header: `${row.maxPoint}`,
@@ -127,7 +146,7 @@ export class MarksTableComponent implements OnInit {
             };
           });
 
-          this.columns = this.jobs.map((row, index) => {
+          this.columns = jobs.map((row, index) => {
             return {
               columnDef: columnIndex => `${row.jobValue}-${columnIndex}`,
               header: `${row.jobValue}`,
@@ -225,5 +244,29 @@ export class MarksTableComponent implements OnInit {
       option => `${option.groupNumber}`.toLowerCase().indexOf(filterValue) === 0
     );
     this.groupSelectValue = filterValue;
+  }
+
+  private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {
+    const orderedModules: TableModule[] = [];
+    const orderedJobs: IJob[] = [];
+    const topLevelNumber: number = this.modules.length + this.jobs.filter((job: IJob) => !job.moduleId).length;
+    for (let i: number = 0; i < topLevelNumber; ++i) {
+      const module: IModule = this.modules.find(m => m.numberInList === i);
+      if (module) {
+        const moduleJobs: IJob[] = this.jobs.filter(job => job.moduleId === module.id);
+
+        const tableModule: TableModule = { ...module, numberOfJobs: moduleJobs.length, isReal: true };
+        orderedModules.push(tableModule);
+        orderedJobs.push(...moduleJobs);
+      } else {
+        const job: IJob = this.jobs.find(j => j.numberInList === i);
+
+        if (job) {
+          orderedModules.push({ numberOfJobs: 1, isReal: false, numberInList: i, id: null, moduleName: null });
+          orderedJobs.push(job);
+        }
+      }
+    }
+    return { jobs: orderedJobs, modules: orderedModules };
   }
 }

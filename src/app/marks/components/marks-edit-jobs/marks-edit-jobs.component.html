@@ -1,0 +1,94 @@
+<ng-container *transloco="let t; read: 'marks'">
+  <div class="info-message">{{ t('modulesInformMessage') }}</div>
+  <div *ngIf="jobsOutOfModule.length > 0" class="jobs-validation">
+    <div class="jobs-container" [ngClass]="formSubmitAttempt ? 'jobs-error' : ''">
+      <div class="section-heading">Out-of-module jobs</div>
+
+      <div
+        cdkDropList
+        [cdkDropListData]="jobsOutOfModule"
+        [cdkDropListConnectedTo]="connectedTo"
+        class="jobs-list"
+        (cdkDropListDropped)="drop($event)"
+        cdkDropListOrientation="horizontal"
+      >
+        <div class="item-box" *ngFor="let job of jobsOutOfModule" cdkDrag>
+          {{ job.jobValue }}
+        </div>
+      </div>
+    </div>
+    <mat-error *ngIf="formSubmitAttempt">{{ t('jobsOutOfModuleError') }}</mat-error>
+  </div>
+  <form [formGroup]="modulesForm">
+    <div
+      class="dd-container"
+      cdkDropList
+      id="main"
+      [cdkDropListData]="modules"
+      [cdkDropListConnectedTo]="connectedTo"
+      (cdkDropListDropped)="drop($event)"
+      cdkDropListOrientation="horizontal"
+    >
+      <div class="parent" *ngFor="let module of modules" cdkDrag>
+        <div
+          class="drag-container"
+          [ngClass]="{
+            'alert-danger': module.isDeleted,
+            'alert-success': module.isAdded
+          }"
+        >
+          <div class="section-heading">
+            <mat-form-field appearance="standard">
+              <mat-label>{{ t('moduleName') }}</mat-label>
+              <input matInput [formControlName]="getControl(module)" required />
+              <mat-error *ngIf="modulesForm.get(getControl(module)).invalid">{{ t('requiredError') }}</mat-error>
+            </mat-form-field>
+          </div>
+
+          <div
+            cdkDropList
+            id="{{ module.id }}"
+            [cdkDropListData]="module.jobs"
+            [cdkDropListConnectedTo]="connectedTo"
+            class="item-list"
+            (cdkDropListDropped)="drop($event)"
+            *ngIf="!module.isDeleted"
+          >
+            <div class="item-box" *ngFor="let job of module.jobs" cdkDrag>
+              {{ job.jobValue }}
+            </div>
+          </div>
+          <div class="message input-cell--content" *ngIf="module.isDeleted">
+            {{ t('deteleModuleMessage') }}
+            <a (click)="cancelDelete(module)" class="cancel">{{ t('cancelModuleDelete') }}</a>
+          </div>
+          <div class="message input-cell--content" *ngIf="module.isAdded">
+            {{ t('addModuleMessage') }}
+            <a (click)="cancelAdd(module)" class="cancel">{{ t('cancel') }}</a>
+          </div>
+          <button class="delete-button" (click)="delete(module)" *ngIf="!module.isAdded && !module.isDeleted">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="buttons">
+      <button (click)="add()" type="button" class="add-button btn btn-success">{{ t('addModuleButton') }}</button>
+      <button
+        mat-raised-button
+        color="primary"
+        type="button"
+        routerLink="/marks/{{ selectedDisciplineId }}/{{ selectedGroupId }}"
+        class="router-button"
+      >
+        {{ t('backButton') }}
+      </button>
+      <button mat-raised-button color="primary" (click)="save()" type="submit" class="router-button">
+        {{ t('saveButton') }}
+      </button>
+      <button mat-raised-button color="primary" (click)="saveAndClose()" type="submit" class="router-button">
+        {{ t('saveAndCloseButton') }}
+      </button>
+    </div>
+  </form>
+</ng-container>

@@ -1,4 +1,4 @@
-import { IJob } from './jobs.model';
+import { IJob } from './job.model';
 
 export interface IColumn {
   columnDef: (index: number) => string;
