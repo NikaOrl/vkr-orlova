@@ -11,8 +11,8 @@ import { MarksDialogComponent } from '../marks-dialog/marks-dialog.component';
 import { IDialogData } from '../../models/dialog-data.model';
 import { IColumn } from '../../models/column.model';
 import { ITableData } from '../../models/table-data.model';
-import { IMark } from '../../models/marks.model';
-import { IJob } from '../../models/jobs.model';
+import { IMark } from '../../models/mark.model';
+import { IJob } from '../../models/job.model';
 import { IGroup } from '../../../groups/models/group.model';
 import { IModule } from '../../models/module.model';
 
@@ -126,7 +126,7 @@ export class MarksTableComponent implements OnInit {
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
           this.jobs = res.jobs;
-          this.modules = res.modules;
+          // this.modules = res.modules;
           const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
           this.moduleFuilds = modules.map(row => {
             return {

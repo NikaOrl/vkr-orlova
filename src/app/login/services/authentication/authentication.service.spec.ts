@@ -41,7 +41,7 @@ describe('AuthenticationService', () => {
   });
 
   it('should login', () => {
-    const dummyUser: IUser = { token: 'John' } as IUser;
+    const dummyUser: IUser = { token: 'mocUser', isAdmin: false } as IUser;
 
     // tslint:disable-next-line: deprecation
     service.login('user', 'password').subscribe(user => {

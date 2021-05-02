@@ -5,8 +5,8 @@ import { Router } from '@angular/router';
 
 import { MarksApiService } from '../../services/marks-api.service';
 import { IStudentMark } from '../../models/student-marks.model';
-import { IMark } from '../../models/marks.model';
-import { IJob } from '../../models/jobs.model';
+import { IMark } from '../../models/mark.model';
+import { IJob } from '../../models/job.model';
 import { IStudent } from 'src/app/groups/models/student.model';
 import { IColumn } from '../../models/column.model';
 import { ITableData } from '../../models/table-data.model';
@@ -74,7 +74,7 @@ export class MarksEditTableComponent implements OnInit {
     this.jobs[jobNumber].maxPoint = e;
   }
 
-  public save(redirect: boolean): void {
+  public save(): void {
     const newMarks: IMark[] = [];
     const addedMarks: IMark[] = [];
     this.marks.forEach((value, index) => {
@@ -109,16 +109,12 @@ export class MarksEditTableComponent implements OnInit {
         this.addJobsAndMarks(addedJobs, addedMarks);
       }
       this.saved = true;
-      if (redirect) {
+      if (document.activeElement.id === 'redirect-button') {
         this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
       }
     } else {
       alert('no changes to save!');
     }
-  }
-
-  public saveAndClose(): void {
-    this.save(true);
   }
 
   public delete(e: number): void {

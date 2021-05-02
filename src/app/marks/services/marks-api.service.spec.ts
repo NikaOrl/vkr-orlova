@@ -2,13 +2,14 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
 
-import { MarksApiService } from './marks-api.service';
-import { IJob } from '../models/jobs.model';
-import { IMark } from '../models/marks.model';
-import { ITableData } from '../models/table-data.model';
+import { MarksApiService, mockAttendance } from './marks-api.service';
+import { IJob } from '../models/job.model';
+import { IMark } from '../models/mark.model';
+import { IAttendancesTableData, IAttendancesTableDataAttendance, ITableData } from '../models/table-data.model';
 import { IStudent } from '../../groups/models/student.model';
 import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
+import { IMarksModule } from '../models/module-jobs.model';
 
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
@@ -17,6 +18,18 @@ export class MarksApiServiceStub {
       jobs: [{ id: '1', jobValue: '1' } as IJob, { id: '2', jobValue: '2' } as IJob],
       students: [{ id: '1' } as IStudent, { id: '2' } as IStudent],
     });
+  }
+
+  public getAttendanceMarks(disciplineId: number, groupId: number): Observable<IAttendancesTableData> {
+    return of(mockAttendance);
+  }
+
+  public updateAttendances(attendances: IAttendancesTableDataAttendance[]): Observable<{ status: string }> {
+    return of({ status: 'test' });
+  }
+
+  public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksModule[]> {
+    return of([]);
   }
 
   public getDisciplines(): Observable<IDiscipline[]> {

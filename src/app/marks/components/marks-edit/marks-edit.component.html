@@ -6,6 +6,13 @@
       (setSaved)="setMarksSaved($event)"
     ></app-marks-edit-table>
   </mat-tab>
+  <mat-tab [label]="t('attendanceTab')">
+    <app-marks-edit-attendance
+      [selectedGroupId]="selectedGroupId"
+      [selectedDisciplineId]="selectedDisciplineId"
+      (setSaved)="setAttendanceSaved($event)"
+    ></app-marks-edit-attendance>
+  </mat-tab>
   <mat-tab [label]="t('modulesTab')">
     <app-marks-edit-jobs
       [selectedGroupId]="selectedGroupId"

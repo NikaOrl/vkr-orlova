@@ -4,15 +4,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { IJob } from '../models/jobs.model';
-import { IMark } from '../models/marks.model';
-import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS } from '../../core/http-constants';
-import { ITableData, ITableDataFromBE } from '../models/table-data.model';
+import { IJob } from '../models/job.model';
+import { IMark } from '../models/mark.model';
+import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS, ATTENDANCES } from '../../core/http-constants';
+import { IAttendancesTableData, IAttendancesTableDataAttendance, ITableData } from '../models/table-data.model';
 import { IGroup } from '../../groups/models/group.model';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
 import { IMarksModule } from '../models/module-jobs.model';
 
-const mockModulesJobs: IMarksModule[] = [
+export const mockModulesJobs: IMarksModule[] = [
   {
     id: '1',
     moduleName: 'Module 1',
@@ -45,15 +45,76 @@ const mockModulesJobs: IMarksModule[] = [
   },
 ];
 
+export const mockAttendance: IAttendancesTableData = {
+  students: [
+    {
+      id: '0',
+      firstName: 'Ivan',
+      lastName: 'Ivanov',
+      numberInList: 1,
+      email: 'ivan@stud.com',
+      groupId: '1',
+      headStudent: true,
+      deleted: false,
+    },
+    {
+      id: '1',
+      firstName: 'Petr',
+      lastName: 'Petrov',
+      numberInList: 2,
+      email: 'petr@stud.com',
+      groupId: '1',
+      headStudent: false,
+      deleted: false,
+    },
+    {
+      id: '2',
+      firstName: 'Vasia',
+      lastName: 'Vasiliev',
+      numberInList: 3,
+      email: 'vasia@stud.com',
+      groupId: '1',
+      headStudent: false,
+      deleted: false,
+    },
+  ],
+  attendances: [
+    {
+      id: '0',
+      disciplineId: '0',
+      attendanceName: '01/01',
+      deleted: false,
+      numberInList: 0,
+      attendanceMarks: [
+        { id: '0', studentId: '0', attendanceId: '0', attendanceMarkValue: true, deleted: false },
+        { id: '1', studentId: '1', attendanceId: '0', attendanceMarkValue: false, deleted: false },
+        { id: '2', studentId: '2', attendanceId: '0', attendanceMarkValue: true, deleted: false },
+      ],
+    },
+    {
+      id: '1',
+      disciplineId: '1',
+      attendanceName: '02/01',
+      deleted: false,
+      numberInList: 1,
+      attendanceMarks: [
+        { id: '3', studentId: '0', attendanceId: '1', attendanceMarkValue: false, deleted: false },
+        { id: '4', studentId: '1', attendanceId: '1', attendanceMarkValue: false, deleted: false },
+        { id: '5', studentId: '2', attendanceId: '1', attendanceMarkValue: true, deleted: false },
+      ],
+    },
+  ],
+};
+
 @Injectable({
   providedIn: 'root',
 })
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  public getMarks(disciplineId: string, groupId: string): Observable<ITableDataFromBE> {
+  public getMarks(disciplineId: string, groupId: string): Observable<ITableData> {
     return this.http
-      .get<ITableDataFromBE>(`${MARKS}`, {
+      .get<ITableData>(`${MARKS}`, {
         ...HTTP_OPTIONS,
         params: {
           groupId: groupId.toString(),
@@ -151,6 +212,25 @@ export class MarksApiService {
   ): Observable<{ status: string }> {
     return this.http
       .put<{ status: string }>(`${MARKS}/${disciplineId}/${groupId}/jobs`, modules, HTTP_OPTIONS)
+      .pipe(catchError(this.handleError));
+  }
+
+  public getAttendanceMarks(disciplineId: string, groupId: string): Observable<IAttendancesTableData> {
+    return of(mockAttendance);
+    // return this.http
+    //   .get<IAttendancesTableData>(`${ATTENDANCES}`, {
+    //     ...HTTP_OPTIONS,
+    //     params: {
+    //       groupId: groupId.toString(),
+    //       disciplineId: disciplineId.toString(),
+    //     },
+    //   })
+    //   .pipe(catchError(this.handleError));
+  }
+
+  public updateAttendances(attendances: IAttendancesTableDataAttendance[]): Observable<{ status: string }> {
+    return this.http
+      .put<{ status: string }>(`${ATTENDANCES}`, attendances, HTTP_OPTIONS)
       .pipe(catchError(this.handleError));
   }
 

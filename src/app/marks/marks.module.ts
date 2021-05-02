@@ -14,6 +14,8 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CdkTableModule } from '@angular/cdk/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 import { MarksTableComponent } from './components/marks-table/marks-table.component';
 import { MarksPageComponent } from './components/marks-page/marks-page.component';
@@ -24,9 +26,7 @@ import { SharedModule } from '../shared/shared.module';
 import { TranslocoRootModule } from '../transloco/transloco-root.module';
 import { MarksEditTableComponent } from './components/marks-edit-table/marks-edit-table.component';
 import { MarksEditJobsComponent } from './components/marks-edit-jobs/marks-edit-jobs.component';
-import { MatTreeModule } from '@angular/material/tree';
-import { MatIconModule } from '@angular/material/icon';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MarksEditAttendanceComponent } from './components/marks-edit-attendance/marks-edit-attendance.component';
 
 @NgModule({
   declarations: [
@@ -36,6 +36,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MarksDialogComponent,
     MarksEditTableComponent,
     MarksEditJobsComponent,
+    MarksEditAttendanceComponent,
   ],
   imports: [
     CommonModule,
@@ -49,6 +50,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatAutocompleteModule,
     MatTabsModule,
     MatIconModule,
+    MatCheckboxModule,
     DragDropModule,
     HttpClientModule,
     CdkTableModule,

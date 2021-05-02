@@ -15,47 +15,24 @@
         <td mat-footer-cell *matFooterCellDef class="students-cell"></td>
       </ng-container>
 
-      <ng-container matColumnDef="maxPointHeader">
-        <th mat-header-cell *matHeaderCellDef>{{ t('maxPoint') }}</th>
-      </ng-container>
-      <ng-container *ngFor="let column of maxPointFuilds; let i = index" [cdkColumnDef]="column.columnDef(i)">
-        <th
-          md-header-cell
-          *cdkHeaderCellDef
-          [ngClass]="{
-            'alert-danger': isDeleted(column.jobId),
-            'alert-success': isAdded(column.jobId)
-          }"
-          class="input-cell"
-        >
-          <input
-            type="number"
-            class="input-cell--content"
-            [ngModel]="column.header"
-            (ngModelChange)="maxPointChange($event, i)"
-            name="maxPoint-{{ i }}"
-          />
-        </th>
-      </ng-container>
-
       <!-- Generic column definition -->
       <ng-container *ngFor="let column of columns; let i = index" [cdkColumnDef]="column.columnDef(i)">
         <th
           md-header-cell
           *cdkHeaderCellDef
           [ngClass]="{
-            'alert-danger': isDeleted(column.jobId),
-            'alert-success': isAdded(column.jobId)
+            'alert-danger': isDeleted(column.attendanceId),
+            'alert-success': isAdded(column.attendanceId)
           }"
           class="input-cell"
         >
           <input
-            [required]="!isDeleted(column.jobId)"
+            [required]="!isDeleted(column.attendanceId)"
             minlength="2"
             type="text"
             class="input-cell--content"
             [ngModel]="column.header"
-            (ngModelChange)="jobChange($event, i)"
+            (ngModelChange)="attendanceChange($event, i)"
             name="header-{{ i }}"
           />
         </th>
@@ -63,51 +40,49 @@
           md-cell
           *cdkCellDef="let row; let ind = index"
           [ngClass]="{
-            'alert-danger': isDeleted(column.jobId),
-            'alert-success': isAdded(column.jobId)
+            'alert-danger': isDeleted(column.attendanceId),
+            'alert-success': isAdded(column.attendanceId)
           }"
           class="input-cell"
         >
-          <input
-            minlength="1"
-            type="number"
-            [max]="getMaxPoint(column.jobId)"
-            class="input-cell--content"
-            [ngModel]="column.cell(row, ind)"
-            (ngModelChange)="markChange($event, column.mark(row))"
+          <mat-checkbox
+            [checked]="column.cell(row, column.attendanceId)"
+            (change)="attendanceMarkChange($event, column.attendanceId, ind)"
             name="row-{{ ind }}-{{ i }}"
-          />
+          ></mat-checkbox>
         </td>
         <td
           md-footer-cell
           *cdkFooterCellDef
           [ngClass]="{
-            'alert-danger': isDeleted(column.jobId),
-            'alert-success': isAdded(column.jobId)
+            'alert-danger': isDeleted(column.attendanceId),
+            'alert-success': isAdded(column.attendanceId)
           }"
           class="delete-td input-cell"
         >
           <button
-            *ngIf="!isDeleted(column.jobId) && !isAdded(column.jobId)"
-            (click)="delete(column.jobId)"
+            *ngIf="!isDeleted(column.attendanceId) && !isAdded(column.attendanceId)"
+            (click)="delete(column.attendanceId)"
             type="button"
             class="btn btn-danger"
           >
             {{ t('delete') }}
           </button>
-          <div class="message input-cell--content" *ngIf="isDeleted(column.jobId) && !isAdded(column.jobId)">
+          <div
+            class="message input-cell--content"
+            *ngIf="isDeleted(column.attendanceId) && !isAdded(column.attendanceId)"
+          >
             {{ t('deteleMessage') }}
-            <a (click)="cancelDelete(column.jobId)" class="cancel">{{ t('cancel') }}</a>
+            <a (click)="cancelDelete(column.attendanceId)" class="cancel">{{ t('cancel') }}</a>
           </div>
-          <div class="message input-cell--content" *ngIf="isAdded(column.jobId)">
+          <div class="message input-cell--content" *ngIf="isAdded(column.attendanceId)">
             {{ t('addMessage') }}
-            <a (click)="cancelAdd(column.jobId)" class="cancel">{{ t('cancel') }}</a>
+            <a (click)="cancelAdd(column.attendanceId)" class="cancel">{{ t('cancel') }}</a>
           </div>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-header-row *matHeaderRowDef="displayedMaxPointColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
       <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
     </table>
@@ -127,7 +102,7 @@
     <button mat-raised-button color="primary" type="submit" class="router-button">
       {{ t('saveButton') }}
     </button>
-    <button mat-raised-button color="primary" id="redirect-button" type="submit" class="router-button">
+    <button mat-raised-button color="primary" type="submit" id="redirect-button" class="router-button">
       {{ t('saveAndCloseButton') }}
     </button>
   </div>
