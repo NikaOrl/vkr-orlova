@@ -5,9 +5,8 @@ import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { IJob } from '../models/job.model';
-import { IMark } from '../models/mark.model';
-import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS, ATTENDANCES } from '../../core/http-constants';
-import { IAttendancesTableData, IAttendancesTableDataAttendance, ITableData } from '../models/table-data.model';
+import { HTTP_OPTIONS, MARKS, GROUPS, DISCIPLINES, JOBS, ATTENDANCES, MODULES } from '../../core/http-constants';
+import { IAttendancesTableData, IAttendancesTableDataAttendance, ITableDataFromBE } from '../models/table-data.model';
 import { IGroup } from '../../groups/models/group.model';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
 import { IMarksModule } from '../models/module-jobs.model';
@@ -112,9 +111,9 @@ export const mockAttendance: IAttendancesTableData = {
 export class MarksApiService {
   constructor(private http: HttpClient) {}
 
-  public getMarks(disciplineId: string, groupId: string): Observable<ITableData> {
+  public getMarks(disciplineId: string, groupId: string): Observable<ITableDataFromBE> {
     return this.http
-      .get<ITableData>(`${MARKS}`, {
+      .get<ITableDataFromBE>(`${MARKS}`, {
         ...HTTP_OPTIONS,
         params: {
           groupId: groupId.toString(),
@@ -134,75 +133,23 @@ export class MarksApiService {
     return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public updateMarks(marks: IMark[]): Observable<{ status: string }> {
-    return this.http.put<{ status: string }>(`${MARKS}`, marks, HTTP_OPTIONS).pipe(catchError(this.handleError));
-  }
-
   public updateJobs(jobs: IJob[]): Observable<{ status: string }> {
     return this.http.put<{ status: string }>(`${JOBS}`, jobs, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public addJobsAndMarks(jobs: IJob[], marks: IMark[]): Promise<void[]> {
-    return Promise.all([
-      jobs.forEach(job => {
-        const jobMarks: IMark[] = [];
-        marks.forEach(mark => {
-          if (mark.jobId === job.id) {
-            jobMarks.push(mark);
-          }
-        });
-        job.id = null;
-        this.http
-          .post<string[]>(`${JOBS}`, job, HTTP_OPTIONS)
-          .pipe(catchError(this.handleError))
-          .toPromise()
-          .then(result => {
-            if (result) {
-              const jobId: string = result[0];
-
-              jobMarks.forEach(mark => {
-                mark.jobId = jobId;
-                return mark;
-              });
-              this.http
-                .post<number[]>(`${MARKS}`, jobMarks, HTTP_OPTIONS)
-                .pipe(catchError(this.handleError))
-                .toPromise();
-            }
-          });
-      }),
-    ]);
-  }
-
-  // tslint:disable-next-line: no-any
-  public deleteJobs(jobsIds: Set<number>): Promise<any> {
-    return Promise.all([
-      this.http
-        .delete(`${MARKS}`, {
-          ...HTTP_OPTIONS,
-          params: {
-            ids: [...jobsIds].map(id => id.toString()),
-          },
-        })
-        .pipe(catchError(this.handleError))
-        .toPromise(),
-      this.http
-        .delete(`${JOBS}`, {
-          ...HTTP_OPTIONS,
-          params: {
-            ids: [...jobsIds].map(id => id.toString()),
-          },
-        })
-        .pipe(catchError(this.handleError))
-        .toPromise(),
-    ]);
-  }
-
   public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksModule[]> {
-    // return this.http
-    //   .get<IMarksModule[]>(`${MARKS}/${disciplineId}/${groupId}/jobs`, HTTP_OPTIONS)
-    //   .pipe(map(this.extractData), catchError(this.handleError));
-    return of(mockModulesJobs);
+    return (
+      this.http
+        // .get<IMarksModule[]>(`${MODULES}/jobs/${disciplineId}/${groupId}`, HTTP_OPTIONS)
+        .get<IMarksModule[]>(`${MODULES}/jobs`, {
+          ...HTTP_OPTIONS,
+          params: {
+            groupId: groupId.toString(),
+            disciplineId: disciplineId.toString(),
+          },
+        })
+        .pipe(map(this.extractData), catchError(this.handleError))
+    );
   }
 
   public updateModulesAndGroups(

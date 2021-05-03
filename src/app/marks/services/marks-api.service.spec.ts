@@ -5,7 +5,13 @@ import { Observable, of } from 'rxjs';
 import { MarksApiService, mockAttendance } from './marks-api.service';
 import { IJob } from '../models/job.model';
 import { IMark } from '../models/mark.model';
-import { IAttendancesTableData, IAttendancesTableDataAttendance, ITableData } from '../models/table-data.model';
+import {
+  IAttendancesTableData,
+  IAttendancesTableDataAttendance,
+  ITableData,
+  ITableDataFromBE,
+  ITableDataJob,
+} from '../models/table-data.model';
 import { IStudent } from '../../groups/models/student.model';
 import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
@@ -14,8 +20,26 @@ import { IMarksModule } from '../models/module-jobs.model';
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
     return of({
-      marks: [{ id: '1', markValue: '1' } as IMark, { id: '2', markValue: '2' } as IMark],
-      jobs: [{ id: '1', jobValue: '1' } as IJob, { id: '2', jobValue: '2' } as IJob],
+      jobs: [
+        {
+          id: '1',
+          jobValue: '1',
+          deleted: false,
+          marks: [
+            { id: '1', markValue: '1', studentId: '1' } as IMark,
+            { id: '2', markValue: '2', studentId: '2' } as IMark,
+          ],
+        } as ITableDataJob,
+        {
+          id: '2',
+          jobValue: '2',
+          deleted: false,
+          marks: [
+            { id: '1', markValue: '1', studentId: '1' } as IMark,
+            { id: '2', markValue: '2', studentId: '2' } as IMark,
+          ],
+        } as ITableDataJob,
+      ],
       students: [{ id: '1' } as IStudent, { id: '2' } as IStudent],
     });
   }
@@ -90,10 +114,14 @@ describe('MarksApiService', () => {
   });
 
   it('should getMarks', () => {
-    const dummyUsers: ITableData = { marks: [{ id: '1' } as IMark, { id: '1' } as IMark] } as ITableData;
+    const dummyUsers: ITableDataFromBE = {
+      students: [],
+      jobs: [{ marks: [{ id: '1', jobId: '0' } as IMark, { id: '1', jobId: '0' } as IMark] }],
+      modules: [],
+    } as ITableDataFromBE;
 
     service.getMarks('1', '1').subscribe(users => {
-      expect(users.marks.length).toBe(2);
+      expect(users.jobs.length).toBe(1);
       expect(users).toEqual(dummyUsers);
     });
 
@@ -115,18 +143,6 @@ describe('MarksApiService', () => {
     req.flush(dummyUsers);
   });
 
-  it('should updateMarks', () => {
-    const dummyUsers: { status: string } = { status: 'success' };
-
-    service.updateMarks([]).subscribe(users => {
-      expect(users).toEqual(dummyUsers);
-    });
-
-    const req: TestRequest = httpMock.expectOne(`${MARKS}`);
-    expect(req.request.method).toBe('PUT');
-    req.flush(dummyUsers);
-  });
-
   it('should updateJobs', () => {
     const dummyUsers: { status: string } = { status: 'success' };
 
@@ -136,35 +152,6 @@ describe('MarksApiService', () => {
 
     const req: TestRequest = httpMock.expectOne(`${JOBS}`);
     expect(req.request.method).toBe('PUT');
-    req.flush(dummyUsers);
-  });
-
-  it('should addJobsAndMarks', () => {
-    const dummyUsers: IJob[] = [{ id: '1' } as IJob, { id: '2' } as IJob];
-
-    service.addJobsAndMarks(
-      ([{ id: 1, first: '1' }] as unknown) as IJob[],
-      ([
-        { jobId: 1, first: '1' },
-        { jobId: 1, second: '2' },
-      ] as unknown) as IMark[]
-    );
-    const req2: TestRequest = httpMock.expectOne(`${JOBS}`);
-    expect(req2.request.method).toBe('POST');
-    req2.flush(dummyUsers);
-  });
-
-  it('should deleteStudents', () => {
-    const dummyUsers: number = 2;
-
-    service.deleteJobs(new Set([1, 2])).then(users => {
-      expect(users).toBe(2);
-    });
-
-    const req: TestRequest = httpMock.expectOne(`${JOBS}?ids=1&ids=2`);
-    const req2: TestRequest = httpMock.expectOne(`${MARKS}?ids=1&ids=2`);
-    expect(req.request.method).toBe('DELETE');
-    expect(req2.request.method).toBe('DELETE');
     req.flush(dummyUsers);
   });
 });

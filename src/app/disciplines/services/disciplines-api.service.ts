@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { DISCIPLINES, HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
@@ -148,10 +148,9 @@ export class DisciplinesApiService {
   }
 
   public getGroupsAndStudents(disciplineId: string): Observable<IDisciplineGroup[]> {
-    // return this.http
-    //   .get<IDisciplineGroup[]>(`${DISCIPLINES}/${disciplineId}/students`, HTTP_OPTIONS)
-    //   .pipe(map(this.extractData), catchError(this.handleError));
-    return of(mockGroupStudents);
+    return this.http
+      .get<IDisciplineGroup[]>(`${DISCIPLINES}/${disciplineId}/students`, HTTP_OPTIONS)
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public updateGroupsAndStudents(

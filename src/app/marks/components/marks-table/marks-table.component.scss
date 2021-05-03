@@ -12,10 +12,20 @@ table {
   & .mark-cell {
     min-width: 80px;
     padding: 0 8px;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.12);
   }
 
   & .student-cell {
     min-width: 120px;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  & .module-cell {
+    min-width: 120px;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.12);
   }
 }
 
@@ -44,5 +54,28 @@ th {
 
   & .disciplines-filter {
     position: relative;
+  }
+}
+
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+  padding-left: 0;
+}
+
+th.mat-header-cell:last-of-type,
+td.mat-cell:last-of-type,
+td.mat-footer-cell:last-of-type {
+  padding-right: 0;
+}
+
+:host ::ng-deep {
+  .mat-sort-header-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .mat-sort-header-content {
+    width: min-content;
   }
 }

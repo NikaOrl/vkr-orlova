@@ -77,20 +77,26 @@ export class DisciplineStudentsDialogComponent implements OnInit {
 
   /** Whether all the descendants of the node are selected. */
   public descendantsAllSelected(node: DisciplineGroupFlatNode): boolean {
-    const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
-    const descAllSelected: boolean =
-      descendants.length > 0 &&
-      descendants.every(child => {
-        return this.checklistSelection.isSelected(child);
-      });
-    return descAllSelected;
+    if (node && this.treeControl.dataNodes) {
+      const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
+      const descAllSelected: boolean =
+        descendants.length > 0 &&
+        descendants.every(child => {
+          return this.checklistSelection.isSelected(child);
+        });
+      return descAllSelected;
+    }
+    return false;
   }
 
   /** Whether part of the descendants are selected */
   public descendantsPartiallySelected(node: DisciplineGroupFlatNode): boolean {
-    const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
-    const result: boolean = descendants.some(child => this.checklistSelection.isSelected(child));
-    return result && !this.descendantsAllSelected(node);
+    if (node && this.treeControl.dataNodes) {
+      const descendants: DisciplineGroupFlatNode[] = this.treeControl.getDescendants(node);
+      const result: boolean = descendants.some(child => this.checklistSelection.isSelected(child));
+      return result && !this.descendantsAllSelected(node);
+    }
+    return false;
   }
 
   /** Toggle the item selection. Select/deselect all the descendants node */

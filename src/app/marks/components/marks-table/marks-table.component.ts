@@ -38,6 +38,7 @@ export class MarksTableComponent implements OnInit {
   public maxPointFuilds: IColumn[];
   public moduleFuilds: IColumn[];
 
+  public displayedModulesColumns: string[];
   public displayedColumns: string[];
   public displayedMaxPointColumns: string[];
 
@@ -49,8 +50,8 @@ export class MarksTableComponent implements OnInit {
 
   @ViewChild(MatSort) public sort: MatSort;
 
-  private jobs: IJob[];
-  private modules: IModule[];
+  private jobs: IJob[] = [];
+  private modules: IModule[] = [];
 
   constructor(
     private router: Router,
@@ -103,10 +104,10 @@ export class MarksTableComponent implements OnInit {
 
   public parseGetMarksResult(result: ITableData): IStudentMark[] {
     const marksAndStudents: IStudentMark[] = result.students.map(student => {
-      const studentMarks: IMark[] = result.marks.filter(mark => +mark.studentId === +student.id);
+      const studentMarks: IMark[] = result.jobs.map(job => job.marks.find(mark => mark.studentId === student.id));
       const markObject: { [key: number]: IMark } = {};
       studentMarks.forEach(mark => {
-        const jobIndex: number = result.jobs.findIndex(job => +mark.jobId === +job.id);
+        const jobIndex: number = result.jobs.findIndex(job => mark.jobId === job.id);
         markObject[jobIndex] = mark;
       });
       return {
@@ -126,12 +127,12 @@ export class MarksTableComponent implements OnInit {
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
           this.jobs = res.jobs;
-          // this.modules = res.modules;
+          this.modules = res.modules;
           const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
           this.moduleFuilds = modules.map(row => {
             return {
               columnDef: index => `module-${index}`,
-              header: `${row}`,
+              header: `${row.moduleName}`,
               number: row.numberOfJobs,
               isReal: row.isReal,
               cell: () => null,
@@ -158,6 +159,7 @@ export class MarksTableComponent implements OnInit {
               },
             };
           });
+          this.displayedModulesColumns = ['moduleFuild', ...this.moduleFuilds.map((x, i) => x.columnDef(i))];
           this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i)), 'sumPoints', 'mark'];
           this.displayedMaxPointColumns = [
             'maxPointFuild',
