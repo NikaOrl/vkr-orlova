@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { DisciplineDialogComponent } from './discipline-dialog.component';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
@@ -27,6 +28,7 @@ describe('DisciplineDialogComponent', () => {
         MatAutocompleteModule,
         MatFormFieldModule,
         MatInputModule,
+        MatSlideToggleModule,
         NoopAnimationsModule,
         getTranslocoModule(),
       ],

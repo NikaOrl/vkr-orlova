@@ -12,9 +12,7 @@
     "email": "Email"
   },
   "marks": {
-    "choosePointsTitle": "Select the number of points for each grade",
     "backButton": "Back",
-    "okButton": "Ok",
     "studentsFilter": "Students filter",
     "studentsTitle": "Students Jobs",
     "maxPoint": "Max Point",
@@ -25,7 +23,6 @@
     "addButton": "Add job",
     "saveButton": "Save",
     "editMarksButton": "Edit marks",
-    "choosePointsButton": "Select points",
     "selectGroupDropDown": "Select group",
     "selectDisciplineDropDown": "Select discipline",
     "sumPoint": "Total score",
@@ -41,7 +38,9 @@
     "jobsOutOfModuleError": "There should be no jobs out of a module. Please, drag&drop them on some module to save.",
     "saveAndCloseButton": "Save and close",
     "modulesInformMessage": "On this tab you can drag&drop jobs between modules and in one module to order them. Also, you can  drag&drop modules to order them. To add/delete/edit jobs, please, use tab 'Marks settings'",
-    "attendanceTab": "Attendance Journal"
+    "attendanceTab": "Attendance Journal",
+    "attendanceTitle": "Attendance",
+    "attendancePointsTitle": "Attendance Sum Points"
   },
   "groups": {
     "editGroupButton": "Edit group",
@@ -84,7 +83,7 @@
   "disciplines": {
     "editDialogTitle": "Edit the discipline",
     "disciplineName": "Discipline name",
-    "requiredError": "Discipline name is required",
+    "requiredError": "This field is required",
     "addTeacherPlaceholder": "Add teacher...",
     "studentsDialogTitle": "Select Groups/Students for the discipline",
     "cancelButton": "Cancel",
@@ -96,6 +95,10 @@
     "deleteDialogTitle": "Are you sure that you want to delete discipline",
     "okButton": "Ok",
     "deleteButton": "Delete",
-    "addButton": "Add discipline"
+    "addButton": "Add discipline",
+    "pointsTitle": "Points required for a grade:",
+    "requiredMinError": "This field is required and must be bigger than 1",
+    "attendanceWeight": "Attendance weight",
+    "attendanceSwitcher": "Counting with points for a attendance"
   }
 }

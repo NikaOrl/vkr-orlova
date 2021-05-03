@@ -21,7 +21,6 @@ import { MarksTableComponent } from './components/marks-table/marks-table.compon
 import { MarksPageComponent } from './components/marks-page/marks-page.component';
 import { MarksRoutingModule } from './marks-routing.module';
 import { MarksEditComponent } from './components/marks-edit/marks-edit.component';
-import { MarksDialogComponent } from './components/marks-dialog/marks-dialog.component';
 import { SharedModule } from '../shared/shared.module';
 import { TranslocoRootModule } from '../transloco/transloco-root.module';
 import { MarksEditTableComponent } from './components/marks-edit-table/marks-edit-table.component';
@@ -33,7 +32,6 @@ import { MarksEditAttendanceComponent } from './components/marks-edit-attendance
     MarksTableComponent,
     MarksPageComponent,
     MarksEditComponent,
-    MarksDialogComponent,
     MarksEditTableComponent,
     MarksEditJobsComponent,
     MarksEditAttendanceComponent,

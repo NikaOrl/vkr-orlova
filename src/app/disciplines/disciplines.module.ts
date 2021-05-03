@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { DisciplinesPageComponent } from './components/disciplines-page/disciplines-page.component';
 import { DisciplinesRoutingModule } from './disciplines-routing.module';
@@ -38,6 +39,7 @@ import { DisciplineDeleteDialogComponent } from './components/discipline-delete-
     MatChipsModule,
     MatAutocompleteModule,
     MatInputModule,
+    MatSlideToggleModule,
     SharedModule,
     ReactiveFormsModule,
     TranslocoRootModule,

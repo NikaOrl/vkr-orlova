@@ -75,7 +75,7 @@ export class MarksEditAttendanceComponent implements OnInit {
       this.api.updateAttendances(this.attendances).subscribe(res => {
         this.saved = true;
         if (document.activeElement.id === 'redirect-button') {
-          this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
+          this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroupId}`]);
         }
       });
     } else {

@@ -19,7 +19,7 @@ import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../.
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
 
-describe('MarksEditComponent', () => {
+describe('MarksEditTableComponent', () => {
   let component: MarksEditTableComponent;
   let fixture: ComponentFixture<MarksEditTableComponent>;
 
@@ -69,19 +69,19 @@ describe('MarksEditComponent', () => {
     component.save();
 
     component.add();
-    expect(component.isAdded(-1)).toBe(true);
-    expect(component.isAdded(1)).toBe(false);
+    expect(component.isAdded('-1')).toBe(true);
+    expect(component.isAdded('1')).toBe(false);
 
-    component.delete(1);
-    expect(component.isDeleted(1)).toBe(true);
-    expect(component.isDeleted(2)).toBe(false);
+    component.delete('1');
+    expect(component.isDeleted('1')).toBe(true);
+    expect(component.isDeleted('2')).toBe(false);
 
-    component.markChange('5', { id: '1', markValue: '1' } as IMark);
+    component.markChange(5, '0', 1);
     component.jobChange('5', 1);
 
     component.cancelAdd('-1');
 
-    component.cancelDelete(1);
-    expect(component.isDeleted(1)).toBe(false);
+    component.cancelDelete('1');
+    expect(component.isDeleted('1')).toBe(false);
   });
 });

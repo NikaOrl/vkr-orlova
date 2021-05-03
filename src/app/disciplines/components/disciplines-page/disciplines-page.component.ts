@@ -42,7 +42,7 @@ export class DisciplinesPageComponent implements OnInit {
 
   public openEditDialog(discipline: IDiscipline): void {
     this.dialog.open(DisciplineDialogComponent, {
-      width: '550px',
+      width: '1000px',
       data: { discipline, teachers: this.teachers },
     });
   }

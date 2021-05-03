@@ -1,7 +1,7 @@
 $black: #000;
 
 .scroll-table {
-  padding: 15px 15px 15px 0;
+  padding: 15px 0 15px;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -12,10 +12,22 @@ table {
   & .mark-cell {
     min-width: 80px;
     padding: 0 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    text-align: center;
   }
 
   & .student-cell {
     min-width: 120px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    text-align: center;
+  }
+
+  .mat-table-sticky-border-elem-right {
+    border-left: 5px double #e0e0e0;
+  }
+
+  .mat-table-sticky-border-elem-left {
+    border-right: 5px double #e0e0e0;
   }
 }
 
@@ -44,5 +56,38 @@ th {
 
   & .disciplines-filter {
     position: relative;
+  }
+}
+
+th.mat-header-cell:first-of-type,
+td.mat-cell:first-of-type,
+td.mat-footer-cell:first-of-type {
+  padding-left: 0;
+}
+
+th.mat-header-cell:last-of-type,
+td.mat-cell:last-of-type,
+td.mat-footer-cell:last-of-type {
+  padding-right: 0;
+}
+
+:host ::ng-deep {
+  .mat-sort-header-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .mat-sort-header-content {
+    width: min-content;
+  }
+}
+
+.above-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .scroller {
+    width: 1300px;
+    height: 1px;
   }
 }
