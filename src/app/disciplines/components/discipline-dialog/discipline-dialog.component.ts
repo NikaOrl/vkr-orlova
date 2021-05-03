@@ -11,7 +11,13 @@ import { ITeacher } from '../../../teachers/models/teacher.model';
 import { IDiscipline, IDisciplineBase } from '../../models/discipline.model';
 import { DisciplinesApiService } from '../../services/disciplines-api.service';
 
-const newDiscipline: IDisciplineBase = { disciplineValue: '', semesterId: null, teacherIds: [] };
+const newDiscipline: IDisciplineBase = {
+  disciplineValue: '',
+  semesterId: null,
+  teacherIds: [],
+  countWithAttendance: true,
+  marksAreas: { three: 0, four: 0, five: 0 },
+};
 
 @Component({
   selector: 'app-discipline-dialog',
@@ -26,6 +32,11 @@ export class DisciplineDialogComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public disciplineForm: FormGroup = new FormGroup({
     disciplineName: new FormControl('', [Validators.required]),
+    countWithAttendance: new FormControl(true),
+    three: new FormControl('', [Validators.required, Validators.min(1)]),
+    four: new FormControl('', [Validators.required, Validators.min(1)]),
+    five: new FormControl('', [Validators.required, Validators.min(1)]),
+    attendanceWeight: new FormControl(null, [Validators.min(1)]),
   });
   public teacherCtrl: FormControl = new FormControl();
   public filteredTeachers: Observable<ITeacher[]>;
@@ -44,6 +55,19 @@ export class DisciplineDialogComponent implements OnInit {
     this.discipline = this.data.discipline ? this.data.discipline : newDiscipline;
 
     this.disciplineForm.controls.disciplineName.setValue(this.discipline ? this.discipline.disciplineValue : '');
+    this.disciplineForm.controls.countWithAttendance.setValue(
+      this.discipline ? this.discipline.countWithAttendance : false
+    );
+    this.disciplineForm.controls.three.setValue(
+      this.discipline && this.discipline.marksAreas ? this.discipline.marksAreas.three : 0
+    );
+    this.disciplineForm.controls.four.setValue(
+      this.discipline && this.discipline.marksAreas ? this.discipline.marksAreas.four : 0
+    );
+    this.disciplineForm.controls.five.setValue(
+      this.discipline && this.discipline.marksAreas ? this.discipline.marksAreas.five : 0
+    );
+    this.disciplineForm.controls.attendanceWeight.setValue(this.discipline ? this.discipline.attendanceWeight : null);
 
     if (this.data.teachers) {
       this.selectedTeachers = this.data.teachers.filter(
@@ -82,6 +106,13 @@ export class DisciplineDialogComponent implements OnInit {
   public onSaveClick(): void {
     if (this.disciplineForm.valid) {
       this.discipline.disciplineValue = this.disciplineForm.controls.disciplineName.value;
+      this.discipline.attendanceWeight = this.disciplineForm.controls.attendanceWeight.value;
+      this.discipline.countWithAttendance = this.disciplineForm.controls.countWithAttendance.value;
+      this.discipline.marksAreas = {
+        three: this.disciplineForm.controls.three.value,
+        four: this.disciplineForm.controls.four.value,
+        five: this.disciplineForm.controls.five.value,
+      };
       this.discipline.teacherIds = this.selectedTeachers.map(teacher => teacher.id);
       if (this.data.discipline) {
         this.api.updateDiscipline(this.discipline as IDiscipline).subscribe(res => {

@@ -8,22 +8,23 @@ import { IMark } from '../models/mark.model';
 import {
   IAttendancesTableData,
   IAttendancesTableDataAttendance,
-  ITableData,
   ITableDataFromBE,
   ITableDataJob,
+  ITableDataStudent,
 } from '../models/table-data.model';
-import { IStudent } from '../../groups/models/student.model';
 import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
 import { IMarksModule } from '../models/module-jobs.model';
+import { IModule } from '../models/module.model';
 
 export class MarksApiServiceStub {
-  public getMarks(disciplineId: number, groupId: number): Observable<ITableData> {
+  public getMarks(disciplineId: number, groupId: number): Observable<ITableDataFromBE> {
     return of({
       jobs: [
         {
           id: '1',
           jobValue: '1',
+          moduleId: '1',
           deleted: false,
           marks: [
             { id: '1', markValue: '1', studentId: '1' } as IMark,
@@ -33,6 +34,7 @@ export class MarksApiServiceStub {
         {
           id: '2',
           jobValue: '2',
+          moduleId: '1',
           deleted: false,
           marks: [
             { id: '1', markValue: '1', studentId: '1' } as IMark,
@@ -40,7 +42,11 @@ export class MarksApiServiceStub {
           ],
         } as ITableDataJob,
       ],
-      students: [{ id: '1' } as IStudent, { id: '2' } as IStudent],
+      students: [{ id: '1' } as ITableDataStudent, { id: '2' } as ITableDataStudent],
+      modules: [{ id: '1' } as IModule],
+      maxAttendance: 10,
+      attendanceWeight: 10,
+      countWithAttendance: false,
     });
   }
 

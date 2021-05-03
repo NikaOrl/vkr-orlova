@@ -79,7 +79,7 @@ export class MarksEditJobsComponent implements OnInit {
           this.saved = true;
 
           if (redirect) {
-            this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
+            this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroupId}`]);
           }
         });
     }

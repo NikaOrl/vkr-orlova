@@ -7,9 +7,9 @@ import { MarksApiService } from '../../services/marks-api.service';
 import { IStudentMark } from '../../models/student-marks.model';
 import { IMark } from '../../models/mark.model';
 import { IJob } from '../../models/job.model';
-import { IStudent } from 'src/app/groups/models/student.model';
 import { IColumn } from '../../models/column.model';
-import { ITableData, ITableDataJob } from '../../models/table-data.model';
+import { ITableData, ITableDataJob, ITableDataStudent, TableModule } from '../../models/table-data.model';
+import { IModule } from '../../models/module.model';
 
 @Component({
   selector: 'app-marks-edit-table',
@@ -23,7 +23,9 @@ export class MarksEditTableComponent implements OnInit {
 
   public columns: IColumn[];
   public maxPointFuilds: IColumn[];
+  public moduleFuilds: IColumn[];
 
+  public displayedModulesColumns: string[];
   public displayedColumns: string[];
   public displayedMaxPointColumns: string[];
 
@@ -32,8 +34,9 @@ export class MarksEditTableComponent implements OnInit {
 
   private ELEMENT_DATA: IStudentMark[] = [];
 
-  private jobs: ITableDataJob[];
-  private students: IStudent[];
+  private modules: IModule[] = [];
+  private jobs: ITableDataJob[] = [];
+  private students: ITableDataStudent[];
 
   private addedJobsNumber: number = 0;
 
@@ -51,19 +54,14 @@ export class MarksEditTableComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public markChange(e: string, jobId: string, ind: number): void {
+  public markChange(e: number, jobId: string, ind: number): void {
     this.saved = false;
     this.jobs = this.jobs.map(a => ({
       ...a,
       marks: a.marks.map((mark, index) =>
-        ind === index && mark.jobId === jobId ? { ...mark, attendanceMarkValue: e } : mark
+        ind === index && mark.jobId === jobId ? { ...mark, markValue: `${e}` } : mark
       ),
     }));
-
-    this.updateTableData({
-      students: this.students,
-      jobs: this.jobs,
-    });
   }
 
   public jobChange(e: string, jobNumber: number): void {
@@ -81,7 +79,7 @@ export class MarksEditTableComponent implements OnInit {
       this.api.updateJobs(this.jobs).subscribe(res => {
         this.saved = true;
         if (document.activeElement.id === 'redirect-button') {
-          this.router.navigate([`/marks/${this.selectedGroupId}/${this.selectedDisciplineId}`]);
+          this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroupId}`]);
         }
       });
     } else {
@@ -161,6 +159,7 @@ export class MarksEditTableComponent implements OnInit {
   private getMarks(): void {
     this.api.getMarks(this.selectedDisciplineId, this.selectedGroupId).subscribe(
       res => {
+        this.modules = [...res.modules];
         this.jobs = [...res.jobs];
         this.students = res.students;
         this.updateTableData(res);
@@ -193,18 +192,31 @@ export class MarksEditTableComponent implements OnInit {
     this.ELEMENT_DATA = this.parseGetMarksResult(dataObj);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
-    this.columns = this.jobs.map((row, index) => {
+
+    const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
+
+    this.moduleFuilds = modules.map(row => {
+      return {
+        columnDef: index => `module-${index}`,
+        header: `${row.moduleName}`,
+        number: row.numberOfJobs,
+        cell: () => null,
+      };
+    });
+
+    this.columns = jobs.map((row, index) => {
       return {
         columnDef: i => `${row.jobValue}-${i}`,
         header: `${row.jobValue}`,
         cell: (cellRow, jobId) => {
-          return cellRow[jobId] && cellRow[jobId].markValue;
+          const mark: string = cellRow[jobId] && cellRow[jobId].markValue;
+          return mark && +mark ? +mark : null;
         },
         mark: cellRow => cellRow[`${row.id}`],
         jobId: row.id,
       };
     });
-    this.maxPointFuilds = this.jobs.map(row => {
+    this.maxPointFuilds = jobs.map(row => {
       return {
         columnDef: index => `maxPoint-${index}`,
         header: `${row.maxPoint}`,
@@ -214,7 +226,30 @@ export class MarksEditTableComponent implements OnInit {
         jobId: row.id,
       };
     });
+    this.displayedModulesColumns = ['moduleFuild', ...this.moduleFuilds.map((x, i) => x.columnDef(i))];
     this.displayedColumns = ['studentName', ...this.columns.map((x, i) => x.columnDef(i))];
     this.displayedMaxPointColumns = ['maxPointHeader', ...this.maxPointFuilds.map((x, i) => x.columnDef(i))];
+  }
+
+  private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {
+    const orderedModules: TableModule[] = [];
+    const orderedJobs: IJob[] = [];
+    let lastModuleInListNumber: number = 0;
+    this.modules.forEach(module => {
+      if (module.numberInList > lastModuleInListNumber) {
+        lastModuleInListNumber = module.numberInList;
+      }
+    });
+    for (let i: number = 0; i <= lastModuleInListNumber; ++i) {
+      const module: IModule = this.modules.find(m => m.numberInList === i);
+      if (module) {
+        const moduleJobs: IJob[] = this.jobs.filter(job => job.moduleId === module.id);
+
+        const tableModule: TableModule = { ...module, numberOfJobs: moduleJobs.length };
+        orderedModules.push(tableModule);
+        orderedJobs.push(...moduleJobs);
+      }
+    }
+    return { jobs: orderedJobs, modules: orderedModules };
   }
 }

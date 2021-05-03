@@ -1,41 +1,86 @@
 <h1 mat-dialog-title *transloco="let t; read: 'disciplines'">{{ t('editDialogTitle') }}</h1>
 <form [formGroup]="disciplineForm" (ngSubmit)="onSaveClick()">
-  <div mat-dialog-content *transloco="let t; read: 'disciplines'">
+  <div mat-dialog-content *transloco="let t; read: 'disciplines'" class="dialog-container">
     <div>
-      <mat-form-field appearance="standard">
-        <mat-label>{{ t('disciplineName') }}</mat-label>
-        <input matInput formControlName="disciplineName" required />
-        <mat-error *ngIf="disciplineForm.controls.disciplineName.invalid">{{ t('requiredError') }}</mat-error>
-      </mat-form-field>
-    </div>
-
-    <div>
-      <mat-form-field class="example-chip-list">
-        <mat-chip-list #chipList ariaOrientation="vertical">
-          <mat-chip
-            *ngFor="let teacher of selectedTeachers"
-            [selectable]="selectable"
-            [removable]="removable"
-            (removed)="remove(teacher)"
-          >
-            {{ teacher.firstName }} {{ teacher.lastName }}
-            <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-          </mat-chip>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('disciplineName') }}</mat-label>
+          <input matInput formControlName="disciplineName" required />
+          <mat-error *ngIf="disciplineForm.controls.disciplineName.invalid">{{ t('requiredError') }}</mat-error>
+        </mat-form-field>
+      </div>
+      <mat-slide-toggle
+        class="example-margin"
+        color="primary"
+        labelPosition="before"
+        formControlName="countWithAttendance"
+      >
+        {{ t('attendanceSwitcher') }}
+      </mat-slide-toggle>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>{{ t('attendanceWeight') }}</mat-label>
           <input
-            [placeholder]="t('addTeacherPlaceholder')"
-            #teacherInput
-            [formControl]="teacherCtrl"
-            [matAutocomplete]="auto"
-            [matChipInputFor]="chipList"
-            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            matInput
+            type="number"
+            formControlName="attendanceWeight"
+            [readonly]="!disciplineForm.controls.countWithAttendance.value"
           />
-        </mat-chip-list>
-        <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-          <mat-option *ngFor="let teacher of filteredTeachers | async" [value]="teacher">
-            {{ teacher.firstName }} {{ teacher.lastName }}
-          </mat-option>
-        </mat-autocomplete>
-      </mat-form-field>
+          <mat-error *ngIf="disciplineForm.controls.attendanceWeight.invalid">{{ t('requiredMinError') }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="example-chip-list">
+          <mat-chip-list #chipList ariaOrientation="vertical">
+            <mat-chip
+              *ngFor="let teacher of selectedTeachers"
+              [selectable]="selectable"
+              [removable]="removable"
+              (removed)="remove(teacher)"
+            >
+              {{ teacher.firstName }} {{ teacher.lastName }}
+              <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+            </mat-chip>
+            <input
+              [placeholder]="t('addTeacherPlaceholder')"
+              #teacherInput
+              [formControl]="teacherCtrl"
+              [matAutocomplete]="auto"
+              [matChipInputFor]="chipList"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            />
+          </mat-chip-list>
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+            <mat-option *ngFor="let teacher of filteredTeachers | async" [value]="teacher">
+              {{ teacher.firstName }} {{ teacher.lastName }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="right-fields">
+      <span>{{ t('pointsTitle') }}</span>
+      <div>
+        <span>3:</span>
+        <mat-form-field>
+          <input matInput type="number" formControlName="three" />
+          <mat-error *ngIf="disciplineForm.controls.four.invalid">{{ t('requiredMinError') }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <span>4:</span>
+        <mat-form-field>
+          <input matInput type="number" formControlName="four" />
+          <mat-error *ngIf="disciplineForm.controls.four.invalid">{{ t('requiredMinError') }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <span>5:</span>
+        <mat-form-field>
+          <input matInput type="number" formControlName="five" />
+          <mat-error *ngIf="disciplineForm.controls.five.invalid">{{ t('requiredMinError') }}</mat-error>
+        </mat-form-field>
+      </div>
     </div>
   </div>
 

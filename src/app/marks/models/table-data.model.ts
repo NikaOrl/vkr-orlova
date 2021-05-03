@@ -6,12 +6,16 @@ import { IMark } from './mark.model';
 import { IModule } from './module.model';
 
 export interface ITableData {
-  students: IStudent[];
+  students: ITableDataStudent[];
   jobs: ITableDataJob[];
 }
 
 export interface ITableDataJob extends IJob {
   marks: IMark[];
+}
+
+export interface ITableDataStudent extends IStudent {
+  attendance: number;
 }
 
 export interface IAttendancesTableData {
@@ -25,4 +29,11 @@ export interface IAttendancesTableDataAttendance extends IAttendance {
 
 export interface ITableDataFromBE extends ITableData {
   modules: IModule[];
+  maxAttendance: number;
+  attendanceWeight: number;
+  countWithAttendance: boolean;
+}
+
+export interface TableModule extends IModule {
+  numberOfJobs: number;
 }

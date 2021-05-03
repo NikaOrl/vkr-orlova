@@ -1,7 +1,7 @@
 $black: #000;
 
 .scroll-table {
-  padding: 15px 15px 15px 0;
+  padding: 15px 0 15px;
   overflow-x: auto;
   overflow-y: hidden;
 }
@@ -12,20 +12,22 @@ table {
   & .mark-cell {
     min-width: 80px;
     padding: 0 8px;
-    text-align: center;
     border: 1px solid rgba(0, 0, 0, 0.12);
+    text-align: center;
   }
 
   & .student-cell {
     min-width: 120px;
-    text-align: center;
     border: 1px solid rgba(0, 0, 0, 0.12);
+    text-align: center;
   }
 
-  & .module-cell {
-    min-width: 120px;
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.12);
+  .mat-table-sticky-border-elem-right {
+    border-left: 5px double #e0e0e0;
+  }
+
+  .mat-table-sticky-border-elem-left {
+    border-right: 5px double #e0e0e0;
   }
 }
 
@@ -77,5 +79,15 @@ td.mat-footer-cell:last-of-type {
 
   .mat-sort-header-content {
     width: min-content;
+  }
+}
+
+.above-scroller {
+  overflow-x: auto;
+  overflow-y: hidden;
+
+  .scroller {
+    width: 1300px;
+    height: 1px;
   }
 }

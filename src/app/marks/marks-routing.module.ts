@@ -14,7 +14,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'edit/:groupId/:disciplineId',
+        path: 'edit/:disciplineId/:groupId',
         component: MarksEditComponent,
         canDeactivate: [CanDeactivateGuard],
       },

@@ -12,9 +12,7 @@
     "email": "email"
   },
   "marks": {
-    "choosePointsTitle": "Выберите количество баллов для каждой оценки",
     "backButton": "Назад",
-    "okButton": "Ок",
     "studentsFilter": "Поиск по имени",
     "studentsTitle": "Работы студентов",
     "maxPoint": "Максимальный балл",
@@ -25,7 +23,6 @@
     "addButton": "Добавить работу",
     "saveButton": "Сохранить",
     "editMarksButton": "Редактировать оценки",
-    "choosePointsButton": "Выбрать баллы",
     "selectGroupDropDown": "Выбрать группу",
     "selectDisciplineDropDown": "Выбрать дисциплину",
     "sumPoint": "Суммарный балл",
@@ -41,7 +38,9 @@
     "jobsOutOfModuleError": "Не должно быть работ вне модуля. Пожалуйста, перетащите эти работы в модули ниже.",
     "saveAndCloseButton": "Сохранить и выйти",
     "modulesInformMessage": "В этой вкладке вы можете перетаскивать работы между модулями, а также внутри модуля, чтобы задать им правильный порядок. Вы можете перетаскивать модули, чтобы задать порядок им. Чтобы добавить/удалить/изменить работу, пожалуйста, воспользуйтесь соседней вкладкой 'Журнал оценок'.",
-    "attendanceTab": "Журнал посещаемости"
+    "attendanceTab": "Журнал посещаемости",
+    "attendanceTitle": "Количество посещений",
+    "attendancePointsTitle": "Баллы за посещения"
   },
   "groups": {
     "editGroupButton": "Редактировать группу",
@@ -84,7 +83,7 @@
   "disciplines": {
     "editDialogTitle": "Редактировать дисциплину",
     "disciplineName": "Название дисциплины",
-    "requiredError": "Название должно быть заполнено",
+    "requiredError": "Это поле обязательно",
     "addTeacherPlaceholder": "Добавить преподавателя...",
     "studentsDialogTitle": "Выберите группы/студентов для дисциплины",
     "cancelButton": "Отменить",
@@ -96,6 +95,10 @@
     "deleteDialogTitle": "Вы уверены, что хотите удалить дисциплину",
     "okButton": "Ок",
     "deleteButton": "Удалить",
-    "addButton": "Добавить дисциплину"
+    "addButton": "Добавить дисциплину",
+    "pointsTitle": "Необходимое количество баллов для оценки:",
+    "requiredMinError": "Это поле обязательно и должно быть больше 1",
+    "attendanceWeight": "Балл за одно посещение",
+    "attendanceSwitcher": "Учет баллов за посещение"
   }
 }

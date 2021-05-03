@@ -11,3 +11,14 @@ span {
   justify-content: flex-end;
   gap: 12px;
 }
+
+.dialog-container {
+  display: flex;
+  justify-content: space-between;
+
+  .right-fields {
+    width: 50%;
+    padding-left: 25px;
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
+}
