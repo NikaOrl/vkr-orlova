@@ -6,6 +6,7 @@ import { IDiscipline } from 'src/app/disciplines/models/discipline.model';
 import { DisciplinesApiService } from './disciplines-api.service';
 import { ITeacher } from 'src/app/teachers/models/teacher.model';
 import { IDisciplineGroup } from '../models/group-students.model';
+import { ISemester } from '../models/semester.model';
 
 export const mockGroupStudents: IDisciplineGroup[] = [
   {
@@ -26,6 +27,10 @@ export const mockGroupStudents: IDisciplineGroup[] = [
 export class DisciplinesApiServiceStub {
   public getDisciplines(): Observable<IDiscipline[]> {
     return of([{ id: '1' } as IDiscipline, { id: '2' } as IDiscipline]);
+  }
+
+  public getSemesters(): Observable<ISemester[]> {
+    return of([{ id: '0', semesterName: 'test' }]);
   }
 
   public getTeachers(): Observable<ITeacher[]> {

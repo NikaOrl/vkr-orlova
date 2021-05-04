@@ -4,7 +4,9 @@
     "disciplines": "Disciplines",
     "groups": "Groups",
     "teachers": "Teachers",
-    "logout": "Logout"
+    "logout": "Logout",
+    "english": "English",
+    "russian": "Russian"
   },
   "login": {
     "login": "Login",
@@ -64,7 +66,9 @@
     "saveButton": "Save",
     "addGroupButton": "Add group",
     "groupName": "Group Number",
-    "requiredError": "Group Number is required"
+    "requiredError": "Group Number is required",
+    "starostaRole": "Starosta",
+    "studentRole": "Student"
   },
   "teachers": {
     "teachersFilter": "Teachers filter",
@@ -103,6 +107,10 @@
     "pointsTitle": "Points required for a grade:",
     "requiredMinError": "This field is required and must be bigger than 1",
     "attendanceWeight": "Attendance weight",
-    "attendanceSwitcher": "Counting with points for a attendance"
+    "attendanceSwitcher": "Counting with points for a attendance",
+    "selectSemesterDropDown": "Select semester",
+    "addSemesterButton": "Add semester",
+    "addDialogTitle": "Add discipline",
+    "semesterName": "Semester name"
   }
 }

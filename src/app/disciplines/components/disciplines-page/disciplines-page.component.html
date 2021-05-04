@@ -3,7 +3,28 @@
   <mat-list>
     <div class="header-container">
       <div mat-subheader class="title">{{ t('disciplines') }}</div>
-      <button class="add-button btn btn-success" (click)="addDiscipline()">{{ t('addButton') }}</button>
+      <div class="right-side-container">
+        <mat-form-field class="semesters-filter">
+          <mat-label>{{ t('selectSemesterDropDown') }}</mat-label>
+          <input type="text" matInput [(ngModel)]="selectValue" (ngModelChange)="filter()" [matAutocomplete]="auto" />
+          <mat-autocomplete
+            autoActiveFirstOption
+            #auto="matAutocomplete"
+            [displayWith]="displayFn"
+            (optionSelected)="selectSemester($event.option.value)"
+          >
+            <mat-option *ngFor="let semester of filteredSemesters" [value]="semester">
+              {{ semester.semesterName }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        <div>
+          <button class="add-button btn btn-success" (click)="addSemester()">{{ t('addSemesterButton') }}</button>
+        </div>
+        <div>
+          <button class="add-button btn btn-success" (click)="addDiscipline()">{{ t('addButton') }}</button>
+        </div>
+      </div>
     </div>
 
     <mat-list-item *ngFor="let discipline of disciplines | async">

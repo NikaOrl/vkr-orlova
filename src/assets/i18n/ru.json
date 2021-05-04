@@ -4,7 +4,9 @@
     "disciplines": "Дисциплины",
     "groups": "Группы",
     "teachers": "Преподаватели",
-    "logout": "Выйти"
+    "logout": "Выйти",
+    "english": "Английский",
+    "russian": "Русский"
   },
   "login": {
     "login": "Вход",
@@ -64,7 +66,9 @@
     "saveButton": "Сохранить",
     "addGroupButton": "Добавить группу",
     "groupName": "Номер группы",
-    "requiredError": "Заполните обязательное поле"
+    "requiredError": "Заполните обязательное поле",
+    "starostaRole": "Староста",
+    "studentRole": "Студент"
   },
   "teachers": {
     "teachersFilter": "Поиск по имени",
@@ -103,6 +107,10 @@
     "pointsTitle": "Необходимое количество баллов для оценки:",
     "requiredMinError": "Это поле обязательно и должно быть больше 1",
     "attendanceWeight": "Балл за одно посещение",
-    "attendanceSwitcher": "Учет баллов за посещение"
+    "attendanceSwitcher": "Учет баллов за посещение",
+    "selectSemesterDropDown": "Выберете семестр",
+    "addSemesterButton": "Добавить семестр",
+    "addDialogTitle": "Добавить дисциплину",
+    "semesterName": "Название семестра"
   }
 }

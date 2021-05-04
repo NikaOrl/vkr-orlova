@@ -1,4 +1,6 @@
-<h1 mat-dialog-title *transloco="let t; read: 'disciplines'">{{ t('editDialogTitle') }}</h1>
+<h1 mat-dialog-title *transloco="let t; read: 'disciplines'">
+  {{ data.discipline ? t('editDialogTitle') : t('addDialogTitle') }}
+</h1>
 <form [formGroup]="disciplineForm" (ngSubmit)="onSaveClick()">
   <div mat-dialog-content *transloco="let t; read: 'disciplines'" class="dialog-container">
     <div>
@@ -79,6 +81,22 @@
         <mat-form-field>
           <input matInput type="number" formControlName="five" />
           <mat-error *ngIf="disciplineForm.controls.five.invalid">{{ t('requiredMinError') }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field class="semesters-filter">
+          <mat-label>{{ t('selectSemesterDropDown') }}</mat-label>
+          <input type="text" matInput formControlName="semesterAuto" [matAutocomplete]="autoSemester" />
+          <mat-autocomplete
+            autoActiveFirstOption
+            #autoSemester="matAutocomplete"
+            [displayWith]="displayFn"
+            (optionSelected)="selectSemester($event.option.value)"
+          >
+            <mat-option *ngFor="let semester of filteredSemesters" [value]="semester">
+              {{ semester.semesterName }}
+            </mat-option>
+          </mat-autocomplete>
         </mat-form-field>
       </div>
     </div>

@@ -1,8 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MockComponent } from 'ng-mocks';
 
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatListModule } from '@angular/material/list';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { HeaderComponent } from '../../../shared/components/header/header.component';
 import { RouterLinkStubDirective } from '../../../shared/utils/tests-stubs';
@@ -18,7 +22,15 @@ describe('DisciplinesPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MatDialogModule, MatListModule, getTranslocoModule()],
+      imports: [
+        MatDialogModule,
+        MatListModule,
+        MatAutocompleteModule,
+        MatFormFieldModule,
+        MatInputModule,
+        NoopAnimationsModule,
+        getTranslocoModule(),
+      ],
       declarations: [DisciplinesPageComponent, MockComponent(HeaderComponent), RouterLinkStubDirective],
       providers: [{ provide: DisciplinesApiService, useClass: DisciplinesApiServiceStub }],
     }).compileComponents();
