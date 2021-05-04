@@ -10,6 +10,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ITeacher } from '../../../teachers/models/teacher.model';
 import { IDiscipline, IDisciplineBase } from '../../models/discipline.model';
 import { DisciplinesApiService } from '../../services/disciplines-api.service';
+import { ISemester } from '../../models/semester.model';
 
 const newDiscipline: IDisciplineBase = {
   disciplineValue: '',
@@ -30,12 +31,19 @@ export class DisciplineDialogComponent implements OnInit {
   public selectable: boolean = true;
   public removable: boolean = true;
   public separatorKeysCodes: number[] = [ENTER, COMMA];
+
+  public selectedSemester: ISemester;
+  public semesters: ISemester[];
+  public filteredSemesters: ISemester[];
+
   public disciplineForm: FormGroup = new FormGroup({
     disciplineName: new FormControl('', [Validators.required]),
     countWithAttendance: new FormControl(true),
     three: new FormControl('', [Validators.required, Validators.min(1)]),
     four: new FormControl('', [Validators.required, Validators.min(1)]),
     five: new FormControl('', [Validators.required, Validators.min(1)]),
+    semester: new FormControl('', [Validators.required]),
+    semesterAuto: new FormControl(''),
     attendanceWeight: new FormControl(null, [Validators.min(1)]),
   });
   public teacherCtrl: FormControl = new FormControl();
@@ -47,13 +55,22 @@ export class DisciplineDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<DisciplineDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { discipline?: IDiscipline; teachers: ITeacher[] },
+    @Inject(MAT_DIALOG_DATA) public data: { discipline?: IDiscipline; teachers: ITeacher[]; semesters: ISemester[] },
     private api: DisciplinesApiService
   ) {}
 
   public ngOnInit(): void {
     this.discipline = this.data.discipline ? this.data.discipline : newDiscipline;
+    this.semesters = this.data.semesters ? this.data.semesters : [];
+    const selectedSemesterId: string = this.data.discipline
+      ? this.discipline.semesterId
+      : this.semesters[this.semesters.length - 1].id;
+    this.filteredSemesters = this.semesters;
+    this.disciplineForm.controls.semesterAuto.valueChanges.subscribe(() => this.filter());
 
+    this.disciplineForm.controls.semesterAuto.setValue(
+      selectedSemesterId ? this.semesters.find(semester => semester.id === selectedSemesterId) : this.semesters[0]
+    );
     this.disciplineForm.controls.disciplineName.setValue(this.discipline ? this.discipline.disciplineValue : '');
     this.disciplineForm.controls.countWithAttendance.setValue(
       this.discipline ? this.discipline.countWithAttendance : false
@@ -85,6 +102,29 @@ export class DisciplineDialogComponent implements OnInit {
     }
   }
 
+  public selectSemester(semester: ISemester): void {
+    this.disciplineForm.controls.semester.setValue(semester);
+  }
+
+  public filter(): void {
+    const filterValue: string = this.displayFn(this.disciplineForm.controls.semesterAuto.value);
+    this.filteredSemesters = this.semesters.filter(
+      option => `${option.semesterName}`.toLowerCase().indexOf(`${filterValue}`.toLowerCase()) >= 0
+    );
+    if (this.disciplineForm.controls.semesterAuto.value !== filterValue) {
+      this.disciplineForm.controls.semesterAuto.setValue(filterValue);
+    }
+  }
+
+  public displayFn(semester: ISemester | string): string {
+    if (semester) {
+      return (semester as ISemester).semesterName
+        ? (semester as ISemester).semesterName.toString()
+        : (semester as string);
+    }
+    return '';
+  }
+
   public remove(teacher: ITeacher): void {
     const index: number = this.selectedTeachers.indexOf(teacher);
 
@@ -114,6 +154,7 @@ export class DisciplineDialogComponent implements OnInit {
         five: this.disciplineForm.controls.five.value,
       };
       this.discipline.teacherIds = this.selectedTeachers.map(teacher => teacher.id);
+      this.discipline.semesterId = this.disciplineForm.controls.semester.value.id;
       if (this.data.discipline) {
         this.api.updateDiscipline(this.discipline as IDiscipline).subscribe(res => {
           this.dialogRef.close();

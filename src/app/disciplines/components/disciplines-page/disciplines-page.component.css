@@ -12,3 +12,9 @@ button {
   padding: 0 16px;
   margin-bottom: 8px;
 }
+
+.right-side-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 15px;
+}

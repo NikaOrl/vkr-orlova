@@ -1,143 +1,42 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
-import { DISCIPLINES, HTTP_OPTIONS, TEACHERS } from '../../core/http-constants';
+import { DISCIPLINES, HTTP_OPTIONS, SEMESTERS, TEACHERS } from '../../core/http-constants';
 import { IDiscipline, IDisciplineBase } from '../models/discipline.model';
 import { IDisciplineGroup } from '../models/group-students.model';
 import { ITeacher } from '../../teachers/models/teacher.model';
+import { ISemester, ISemesterBase } from '../models/semester.model';
 
-export const mockGroupStudents: IDisciplineGroup[] = [
-  {
-    id: '1',
-    groupNumber: '5381',
-    students: [
-      {
-        id: '1',
-        firstName: 'Ivan',
-        lastName: 'Ivanov',
-        groupId: '1',
-        isInDiscipline: false,
-      },
-      {
-        id: '2',
-        firstName: 'Petr',
-        lastName: 'Petrov',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '3',
-        firstName: 'Vasia',
-        lastName: 'Vasiliev',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '5',
-        firstName: 'Tolya',
-        lastName: 'Popov',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '6',
-        firstName: 'Andrei',
-        lastName: 'Markoff',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '7',
-        firstName: 'Sachar',
-        lastName: 'Dobrow',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '8',
-        firstName: 'Kostya',
-        lastName: 'Levitsky',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '9',
-        firstName: 'Kolya',
-        lastName: 'Morein',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '10',
-        firstName: 'Anton',
-        lastName: 'Markov',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-      {
-        id: '11',
-        firstName: 'Stenya',
-        lastName: 'Polakoff',
-        groupId: '1',
-        isInDiscipline: true,
-      },
-    ],
-  },
-  {
-    id: '2',
-    groupNumber: '5382',
-    students: [
-      {
-        id: '2',
-        firstName: 'Ivan',
-        lastName: 'Ivanov',
-        groupId: '2',
-        isInDiscipline: false,
-      },
-      {
-        id: '2',
-        firstName: 'Petr',
-        lastName: 'Petrov',
-        groupId: '2',
-        isInDiscipline: false,
-      },
-      {
-        id: '3',
-        firstName: 'Vasia',
-        lastName: 'Vasiliev',
-        groupId: '2',
-        isInDiscipline: false,
-      },
-      {
-        id: '5',
-        firstName: 'Tolya',
-        lastName: 'Popov',
-        groupId: '2',
-        isInDiscipline: true,
-      },
-      {
-        id: '6',
-        firstName: 'Andrei',
-        lastName: 'Markoff',
-        groupId: '2',
-        isInDiscipline: true,
-      },
-    ],
-  },
+const mockSemesters: ISemester[] = [
+  { semesterName: 'Весна 2020', id: '0' },
+  { semesterName: 'Осень 2020', id: '1' },
+  { semesterName: 'Весна 2021', id: '2' },
+  { semesterName: 'Осень 2021', id: '3' },
 ];
-
 @Injectable({
   providedIn: 'root',
 })
 export class DisciplinesApiService {
   constructor(private http: HttpClient) {}
 
-  public getDisciplines(): Observable<IDiscipline[]> {
+  public getSemesters(): Observable<ISemester[]> {
+    return of(mockSemesters);
+    // return this.http
+    //   .get<ISemester[]>(`${SEMESTERS}`, HTTP_OPTIONS)
+    //   .pipe(map(this.extractData), catchError(this.handleError));
+  }
+
+  public getDisciplines(semesterId: string): Observable<IDiscipline[]> {
     return this.http
-      .get<IDiscipline[]>(`${DISCIPLINES}`, HTTP_OPTIONS)
+      .get<IDiscipline[]>(`${DISCIPLINES}`, {
+        ...HTTP_OPTIONS,
+        params: {
+          semesterId: `${semesterId}`,
+        },
+      })
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
@@ -170,6 +69,10 @@ export class DisciplinesApiService {
 
   public addDiscipline(discipline: IDisciplineBase): Observable<number[]> {
     return this.http.post<number[]>(`${DISCIPLINES}`, discipline, HTTP_OPTIONS).pipe(catchError(this.handleError));
+  }
+
+  public addSemester(semester: ISemesterBase): Observable<number[]> {
+    return this.http.post<number[]>(`${SEMESTERS}`, semester, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
   public deleteDiscipline(disciplineId: string): Observable<number> {

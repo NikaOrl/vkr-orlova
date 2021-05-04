@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { MatListModule } from '@angular/material/list';
 import { MatTreeModule } from '@angular/material/tree';
@@ -20,6 +20,7 @@ import { DisciplineStudentsDialogComponent } from './components/discipline-stude
 import { DisciplineDialogComponent } from './components/discipline-dialog/discipline-dialog.component';
 import { TranslocoRootModule } from '../transloco/transloco-root.module';
 import { DisciplineDeleteDialogComponent } from './components/discipline-delete-dialog/discipline-delete-dialog.component';
+import { DisciplineSemesterDialogComponent } from './components/discipline-semester-dialog/discipline-semester-dialog.component';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { DisciplineDeleteDialogComponent } from './components/discipline-delete-
     DisciplineStudentsDialogComponent,
     DisciplineDialogComponent,
     DisciplineDeleteDialogComponent,
+    DisciplineSemesterDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -42,6 +44,7 @@ import { DisciplineDeleteDialogComponent } from './components/discipline-delete-
     MatSlideToggleModule,
     SharedModule,
     ReactiveFormsModule,
+    FormsModule,
     TranslocoRootModule,
     DisciplinesRoutingModule,
   ],

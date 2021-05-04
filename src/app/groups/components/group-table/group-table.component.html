@@ -26,10 +26,18 @@
   </mat-form-field>
 </div>
 
-<table mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8" *transloco="let t; read: 'groups'">
+<table
+  mat-table
+  [dataSource]="dataSource"
+  matSort
+  class="mat-elevation-z8"
+  *transloco="let t; read: 'groups'"
+  matSortActive="numberInList"
+  matSortDirection="asc"
+>
   <!-- numberInList Column -->
   <ng-container matColumnDef="numberInList">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">No.</th>
+    <th mat-header-cell *matHeaderCellDef mat-sort-header="numberInList" class="cell">No.</th>
     <td mat-cell *matCellDef="let element" class="cell">
       {{ element.numberInList }}
     </td>
@@ -61,7 +69,7 @@
   <ng-container matColumnDef="headStudent">
     <th mat-header-cell *matHeaderCellDef mat-sort-header class="cell">{{ t('role') }}</th>
     <td mat-cell *matCellDef="let element" class="cell">
-      {{ element.headStudent ? 'Starosta' : 'Student' }}
+      {{ element.headStudent ? t('starostaRole') : t('studentRole') }}
     </td>
   </ng-container>
 

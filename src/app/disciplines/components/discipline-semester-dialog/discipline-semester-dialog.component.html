@@ -1,0 +1,14 @@
+<h1 mat-dialog-title *transloco="let t; read: 'disciplines'">{{ t('addSemesterButton') }}</h1>
+<form [formGroup]="semesterForm" (ngSubmit)="onSaveClick()">
+  <div mat-dialog-content *transloco="let t; read: 'disciplines'" class="dialog-container">
+    <mat-form-field appearance="outline">
+      <mat-label>{{ t('semesterName') }}</mat-label>
+      <input matInput formControlName="semesterName" required />
+      <mat-error *ngIf="semesterForm.controls.semesterName.invalid">{{ t('requiredError') }}</mat-error>
+    </mat-form-field>
+  </div>
+  <div mat-dialog-actions *transloco="let t; read: 'disciplines'" class="buttons-container">
+    <button mat-raised-button color="primary" type="button" (click)="onNoClick()">{{ t('cancelButton') }}</button>
+    <button mat-raised-button color="primary" type="submit" cdkFocusInitial>{{ t('saveButton') }}</button>
+  </div>
+</form>

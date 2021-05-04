@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TranslocoService } from '@ngneat/transloco';
 
-import { IUser } from '../../../core/interfaces/user.interface';
-
 interface ILanguage {
   code: string;
   label: string;
@@ -29,6 +27,10 @@ export class HeaderComponent implements OnInit {
       ? this.languageList.find((lang: ILanguage) => lang.code === storedCode)
       : this.languageList[0];
     this.translocoService.setActiveLang(this.siteLanguage.code);
+    this.translocoService.selectTranslateObject('header').subscribe(res => {
+      this.languageList[0].label = res.english;
+      this.languageList[1].label = res.russian;
+    });
   }
 
   public changeSiteLanguage(language: ILanguage): void {
@@ -43,6 +45,6 @@ export class HeaderComponent implements OnInit {
 
   public isTeachersShouldBeShown(): boolean {
     const user: string = localStorage.getItem('currentUser');
-    return user && user.length > 0 ? JSON.parse(user).isAdmin : false;
+    return user ? JSON.parse(user).isAdmin : false;
   }
 }
