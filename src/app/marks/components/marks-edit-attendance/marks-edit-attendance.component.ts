@@ -8,7 +8,7 @@ import { MarksApiService } from '../../services/marks-api.service';
 import { IStudentMark } from '../../models/student-marks.model';
 import { IAttendance } from '../../models/attendance.model';
 import { IStudent } from '../../../groups/models/student.model';
-import { IColumn } from '../../models/column.model';
+import { IEditColumn } from '../../models/column.model';
 import { IAttendancesTableData, IAttendancesTableDataAttendance } from '../../models/table-data.model';
 import { IAttendanceMark } from '../../models/attendance-mark.model';
 
@@ -22,7 +22,7 @@ export class MarksEditAttendanceComponent implements OnInit {
   @Input() public selectedDisciplineId: string;
   @Output() public setSaved: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  public columns: IColumn[];
+  public columns: IEditColumn[];
 
   public displayedColumns: string[];
 

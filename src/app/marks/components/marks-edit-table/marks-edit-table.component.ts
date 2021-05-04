@@ -7,7 +7,7 @@ import { MarksApiService } from '../../services/marks-api.service';
 import { IStudentMark } from '../../models/student-marks.model';
 import { IMark } from '../../models/mark.model';
 import { IJob } from '../../models/job.model';
-import { IColumn } from '../../models/column.model';
+import { IEditColumn } from '../../models/column.model';
 import { ITableData, ITableDataJob, ITableDataStudent, TableModule } from '../../models/table-data.model';
 import { IModule } from '../../models/module.model';
 
@@ -21,9 +21,9 @@ export class MarksEditTableComponent implements OnInit {
   @Input() public selectedDisciplineId: string;
   @Output() public setSaved: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  public columns: IColumn[];
-  public maxPointFuilds: IColumn[];
-  public moduleFuilds: IColumn[];
+  public columns: IEditColumn[];
+  public maxPointFuilds: IEditColumn[];
+  public moduleFuilds: IEditColumn[];
 
   public displayedModulesColumns: string[];
   public displayedColumns: string[];
