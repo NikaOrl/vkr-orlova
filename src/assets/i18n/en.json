@@ -40,7 +40,11 @@
     "modulesInformMessage": "On this tab you can drag&drop jobs between modules and in one module to order them. Also, you can  drag&drop modules to order them. To add/delete/edit jobs, please, use tab 'Marks settings'",
     "attendanceTab": "Attendance Journal",
     "attendanceTitle": "Attendance",
-    "attendancePointsTitle": "Attendance Sum Points"
+    "attendancePointsTitle": "Attendance Sum Points",
+    "allModulesAreHidden": "All modules are hidden",
+    "hiddenModules": "Hidden Modules",
+    "noHiddenModules": "No hidden modules",
+    "modules": "Modules"
   },
   "groups": {
     "editGroupButton": "Edit group",

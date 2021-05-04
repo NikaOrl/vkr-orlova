@@ -4,15 +4,17 @@
   </mat-form-field>
   <div class="edit-button">
     <mat-form-field>
-      <mat-label>{{ hiddenModules.length === modules.length ? 'All modules are hidden' : 'Hidden Modules' }}</mat-label>
+      <mat-label>
+        {{ hiddenModules.length === modules.length ? t('allModulesAreHidden') : t('hiddenModules') }}
+      </mat-label>
       <mat-select [formControl]="showModules" multiple (selectionChange)="showHideModules()">
         <mat-select-trigger>
-          {{ hiddenModules[0] ? hiddenModules[0].moduleName : 'No hidden modules' }}
+          {{ hiddenModules[0] ? hiddenModules[0].moduleName : t('noHiddenModules') }}
           <span *ngIf="hiddenModules.length > 1">
             (+{{ hiddenModules.length - 1 }} {{ hiddenModules.length === 2 ? 'other' : 'others' }})
           </span>
         </mat-select-trigger>
-        <mat-option *ngFor="let topping of modules" [value]="topping">{{ topping.moduleName }}</mat-option>
+        <mat-option *ngFor="let module of modules" [value]="module">{{ module.moduleName }}</mat-option>
       </mat-select>
     </mat-form-field>
   </div>
@@ -105,7 +107,7 @@
     </ng-container>
 
     <ng-container matColumnDef="moduleFuild" sticky>
-      <th class="student-cell" mat-header-cell *matHeaderCellDef>Modules</th>
+      <th class="student-cell" mat-header-cell *matHeaderCellDef>{{ t('modules') }}</th>
     </ng-container>
 
     <ng-container *ngFor="let column of moduleFuilds; let i = index" [cdkColumnDef]="column.columnDef(i).def">
