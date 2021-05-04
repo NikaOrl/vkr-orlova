@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
+import { FormControl } from '@angular/forms';
 
 import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
@@ -20,7 +21,7 @@ import { IModule } from '../../models/module.model';
   templateUrl: './marks-table.component.html',
   styleUrls: ['./marks-table.component.scss'],
 })
-export class MarksTableComponent implements OnInit {
+export class MarksTableComponent implements OnInit, AfterViewChecked {
   public ELEMENT_DATA: IStudentMark[] = [];
 
   public selectedGroup: IGroup;
@@ -32,9 +33,9 @@ export class MarksTableComponent implements OnInit {
   public maxPointFuilds: IColumn[];
   public moduleFuilds: IColumn[];
 
-  public displayedModulesColumns: string[];
-  public displayedColumns: string[];
-  public displayedMaxPointColumns: string[];
+  public displayedModulesColumns: { def: string; hide: boolean }[];
+  public displayedColumns: { def: string; hide: boolean }[];
+  public displayedMaxPointColumns: { def: string; hide: boolean }[];
 
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
   public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
@@ -45,8 +46,11 @@ export class MarksTableComponent implements OnInit {
   public editLink: string = '';
   public selectedDisciplineId: string;
 
+  public showModules: FormControl = new FormControl();
+
   @ViewChild(MatSort) public sort: MatSort;
   @ViewChild('scroller') public scroller: ElementRef;
+  @ViewChild('scroll') public scroll: ElementRef;
   @ViewChild('table') public table: ElementRef;
 
   private jobs: IJob[] = [];
@@ -56,7 +60,8 @@ export class MarksTableComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private renderer: Renderer2
   ) {}
 
   public ngOnInit(): void {
@@ -80,12 +85,27 @@ export class MarksTableComponent implements OnInit {
     });
   }
 
+  public ngAfterViewChecked(): void {
+    if (this.scroll && this.table) {
+      this.renderer.setStyle(
+        this.scroll.nativeElement,
+        'width',
+        `${this.table.nativeElement.children[0].offsetWidth}px`
+      );
+    }
+  }
+
+  public get hiddenModules(): IModule[] {
+    return this.modules.filter(module => !this.showModules.value.some(m => (m ? m.id === module.id : true)));
+  }
+
   public scrollTop(): void {
     this.table.nativeElement.scrollTo(this.scroller.nativeElement.scrollLeft, 0);
   }
 
   public scrollBottom(): void {
     this.scroller.nativeElement.scrollTo(this.table.nativeElement.scrollLeft, 0);
+    this.renderer.setStyle(this.scroll.nativeElement, 'width', `${this.table.nativeElement.children[0].offsetWidth}px`);
   }
 
   public applyFilter(filterValue: string): void {
@@ -139,10 +159,14 @@ export class MarksTableComponent implements OnInit {
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
           this.jobs = res.jobs;
           this.modules = res.modules;
+          this.showModules.setValue([{}, ...this.modules]);
           const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
           this.moduleFuilds = modules.map(row => {
             return {
-              columnDef: index => `module-${index}`,
+              columnDef: index => ({
+                def: `module-${index}`,
+                hide: this.showModules.value && !this.showModules.value.some(module => module && module.id === row.id),
+              }),
               header: `${row.moduleName}`,
               number: row.numberOfJobs,
               cell: () => null,
@@ -151,7 +175,12 @@ export class MarksTableComponent implements OnInit {
 
           this.maxPointFuilds = jobs.map(row => {
             return {
-              columnDef: index => `maxPoint-${index}`,
+              columnDef: index => ({
+                def: `maxPoint-${index}`,
+                hide:
+                  this.showModules.value &&
+                  !this.showModules.value.some(module => module && module.id === row.moduleId),
+              }),
               header: `${row.maxPoint}`,
               cell: () => null,
             };
@@ -159,7 +188,12 @@ export class MarksTableComponent implements OnInit {
 
           this.columns = jobs.map((row, index) => {
             return {
-              columnDef: columnIndex => `${row.jobValue}-${columnIndex}`,
+              columnDef: columnIndex => ({
+                def: `${row.jobValue}-${columnIndex}`,
+                hide:
+                  this.showModules.value &&
+                  !this.showModules.value.some(module => module && module.id === row.moduleId),
+              }),
               header: `${row.jobValue}`,
               cell: cellRow => {
                 if (!cellRow[index] || !cellRow[index].markValue) {
@@ -169,55 +203,19 @@ export class MarksTableComponent implements OnInit {
               },
             };
           });
-          this.displayedModulesColumns = this.countWithAttendance
-            ? [
-                'moduleFuild',
-                'emptyHeader',
-                'emptyHeader',
-                ...this.moduleFuilds.map((x, i) => x.columnDef(i)),
-                'emptyHeader',
-                'emptyStickyEndHeader',
-              ]
-            : [
-                'moduleFuild',
-                'emptyHeader',
-                ...this.moduleFuilds.map((x, i) => x.columnDef(i)),
-                'emptyHeader',
-                'emptyStickyEndHeader',
-              ];
-          this.displayedColumns = this.countWithAttendance
-            ? [
-                'studentName',
-                'attendance',
-                'attendancePoints',
-                ...this.columns.map((x, i) => x.columnDef(i)),
-                'sumPoints',
-                'mark',
-              ]
-            : ['studentName', 'attendance', ...this.columns.map((x, i) => x.columnDef(i)), 'sumPoints', 'mark'];
-          this.displayedMaxPointColumns = this.countWithAttendance
-            ? [
-                'maxPointFuild',
-                'maxAttendanceNumber',
-                'maxAttendancePointsNumber',
-                ...this.maxPointFuilds.map((x, i) => x.columnDef(i)),
-                'maxPointsSum',
-                'maxPointsResult',
-              ]
-            : [
-                'maxPointFuild',
-                'maxAttendanceNumber',
-                ...this.maxPointFuilds.map((x, i) => x.columnDef(i)),
-                'maxPointsSum',
-                'maxPointsResult',
-              ];
-
+          this.showHideModules();
           this.dataSource.sort = this.sort;
         },
         err => {
           console.log(err);
         }
       );
+    }
+  }
+
+  public getDisplayedColumns(columns: { def: string; hide: boolean }[]): string[] {
+    if (columns) {
+      return columns.filter(cd => !cd.hide).map(cd => cd.def);
     }
   }
 
@@ -288,6 +286,33 @@ export class MarksTableComponent implements OnInit {
 
   public getMaxAttendancePointsNumber(): number {
     return this.maxAttendance * this.attendanceWeight;
+  }
+
+  public showHideModules(): void {
+    this.displayedModulesColumns = [
+      { def: 'moduleFuild', hide: false },
+      { def: 'emptyHeader', hide: false },
+      { def: 'emptyHeader', hide: !this.countWithAttendance },
+      ...this.moduleFuilds.map((x, i) => x.columnDef(i)),
+      { def: 'emptyHeader', hide: false },
+      { def: 'emptyStickyEndHeader', hide: false },
+    ];
+    this.displayedColumns = [
+      { def: 'studentName', hide: false },
+      { def: 'attendance', hide: false },
+      { def: 'attendancePoints', hide: !this.countWithAttendance },
+      ...this.columns.map((x, i) => x.columnDef(i)),
+      { def: 'sumPoints', hide: false },
+      { def: 'mark', hide: false },
+    ];
+    this.displayedMaxPointColumns = [
+      { def: 'maxPointFuild', hide: false },
+      { def: 'maxAttendanceNumber', hide: false },
+      { def: 'maxAttendancePointsNumber', hide: !this.countWithAttendance },
+      ...this.maxPointFuilds.map((x, i) => x.columnDef(i)),
+      { def: 'maxPointsSum', hide: false },
+      { def: 'maxPointsResult', hide: false },
+    ];
   }
 
   private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {

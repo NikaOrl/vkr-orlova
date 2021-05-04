@@ -80,6 +80,9 @@ td.mat-footer-cell:last-of-type {
   .mat-sort-header-content {
     width: min-content;
   }
+  .mat-form-field-appearance-legacy .mat-form-field-label {
+    color: black;
+  }
 }
 
 .above-scroller {
