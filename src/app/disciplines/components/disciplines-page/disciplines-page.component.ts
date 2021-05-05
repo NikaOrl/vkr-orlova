@@ -114,4 +114,9 @@ export class DisciplinesPageComponent implements OnInit {
       data: { teachers: this.teachers, semesters: this.semesters },
     });
   }
+
+  public get isAdmin(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return user && `${user}` !== 'undefined' ? JSON.parse(user).isAdmin : false;
+  }
 }

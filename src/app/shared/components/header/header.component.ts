@@ -43,8 +43,13 @@ export class HeaderComponent implements OnInit {
     return o1 && o2 && o1.code === o2.code;
   }
 
-  public isTeachersShouldBeShown(): boolean {
+  public get isAdmin(): boolean {
     const user: string = localStorage.getItem('currentUser');
-    return user ? JSON.parse(user).isAdmin : false;
+    return user && `${user}` !== 'undefined' ? JSON.parse(user).isAdmin : false;
+  }
+
+  public get isLogin(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return !!user;
   }
 }

@@ -65,12 +65,15 @@ export class DisciplineDialogComponent implements OnInit {
     const selectedSemesterId: string = this.data.discipline
       ? this.discipline.semesterId
       : this.semesters[this.semesters.length - 1].id;
+    const currentSemester: ISemester = selectedSemesterId
+      ? this.semesters.find(semester => semester.id === selectedSemesterId)
+      : this.semesters[0];
     this.filteredSemesters = this.semesters;
     this.disciplineForm.controls.semesterAuto.valueChanges.subscribe(() => this.filter());
 
-    this.disciplineForm.controls.semesterAuto.setValue(
-      selectedSemesterId ? this.semesters.find(semester => semester.id === selectedSemesterId) : this.semesters[0]
-    );
+    this.disciplineForm.controls.semesterAuto.setValue(currentSemester);
+    this.disciplineForm.controls.semester.setValue(currentSemester);
+
     this.disciplineForm.controls.disciplineName.setValue(this.discipline ? this.discipline.disciplineValue : '');
     this.disciplineForm.controls.countWithAttendance.setValue(
       this.discipline ? this.discipline.countWithAttendance : false

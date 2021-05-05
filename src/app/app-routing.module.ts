@@ -13,7 +13,6 @@ const routes: Routes = [
   },
   {
     path: 'marks',
-    canLoad: [AuthGuard],
     loadChildren: () => import('./marks/marks.module').then(m => m.MarksModule),
   },
   {
@@ -23,7 +22,6 @@ const routes: Routes = [
   },
   {
     path: 'disciplines',
-    canLoad: [AuthGuard],
     loadChildren: () => import('./disciplines/disciplines.module').then(m => m.DisciplinesModule),
   },
   {

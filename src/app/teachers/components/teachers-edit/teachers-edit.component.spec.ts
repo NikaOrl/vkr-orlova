@@ -9,6 +9,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { MatIconModule } from '@angular/material/icon';
 
 import { TeachersEditComponent } from './teachers-edit.component';
 import { TeachersApiService } from '../../services/teachers-api.service';
@@ -31,6 +32,7 @@ describe('TeachersEditComponent', () => {
         MatTableModule,
         MatFormFieldModule,
         MatInputModule,
+        MatIconModule,
         MatButtonModule,
         MatSortModule,
         MatCheckboxModule,

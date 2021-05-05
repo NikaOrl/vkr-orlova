@@ -19,10 +19,14 @@
           </mat-autocomplete>
         </mat-form-field>
         <div>
-          <button class="add-button btn btn-success" (click)="addSemester()">{{ t('addSemesterButton') }}</button>
+          <button class="add-button btn btn-success" *ngIf="isAdmin" (click)="addSemester()">
+            {{ t('addSemesterButton') }}
+          </button>
         </div>
         <div>
-          <button class="add-button btn btn-success" (click)="addDiscipline()">{{ t('addButton') }}</button>
+          <button class="add-button btn btn-success" *ngIf="isAdmin" (click)="addDiscipline()">
+            {{ t('addButton') }}
+          </button>
         </div>
       </div>
     </div>
@@ -35,13 +39,18 @@
       <button mat-raised-button color="primary" routerLink="/marks/{{ discipline.id }}">
         {{ t('journalButton') }}
       </button>
-      <button mat-raised-button color="primary" (click)="openStudentsDialog(discipline.id, discipline.disciplineValue)">
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="isAdmin"
+        (click)="openStudentsDialog(discipline.id, discipline.disciplineValue)"
+      >
         {{ t('studentsGroupsButton') }}
       </button>
-      <button mat-raised-button color="primary" (click)="openEditDialog(discipline)">
+      <button mat-raised-button color="primary" *ngIf="isAdmin" (click)="openEditDialog(discipline)">
         {{ t('editButton') }}
       </button>
-      <button class="btn btn-danger" (click)="delete(discipline)">{{ t('deleteButton') }}</button>
+      <button class="btn btn-danger" *ngIf="isAdmin" (click)="delete(discipline)">{{ t('deleteButton') }}</button>
       <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>

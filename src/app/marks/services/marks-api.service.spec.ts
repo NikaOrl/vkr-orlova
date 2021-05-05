@@ -2,7 +2,7 @@ import { TestBed, getTestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@angular/common/http/testing';
 import { Observable, of } from 'rxjs';
 
-import { MarksApiService, mockAttendance } from './marks-api.service';
+import { MarksApiService } from './marks-api.service';
 import { IJob } from '../models/job.model';
 import { IMark } from '../models/mark.model';
 import {
@@ -16,6 +16,39 @@ import { DISCIPLINES, JOBS, MARKS } from '../../core/http-constants';
 import { IDiscipline } from '../../disciplines/models/discipline.model';
 import { IMarksModule } from '../models/module-jobs.model';
 import { IModule } from '../models/module.model';
+
+export const mockAttendance: IAttendancesTableData = {
+  students: [
+    {
+      id: '0',
+      firstName: 'Ivan',
+      lastName: 'Ivanov',
+      numberInList: 1,
+      email: 'ivan@stud.com',
+      groupId: '1',
+      headStudent: true,
+      deleted: false,
+    },
+  ],
+  attendances: [
+    {
+      id: '0',
+      disciplineId: '0',
+      attendanceName: '01/01',
+      deleted: false,
+      numberInList: 0,
+      attendanceMarks: [{ id: '0', studentId: '0', attendanceId: '0', attendanceMarkValue: true, deleted: false }],
+    },
+    {
+      id: '1',
+      disciplineId: '1',
+      attendanceName: '02/01',
+      deleted: false,
+      numberInList: 1,
+      attendanceMarks: [{ id: '3', studentId: '0', attendanceId: '1', attendanceMarkValue: false, deleted: false }],
+    },
+  ],
+};
 
 export class MarksApiServiceStub {
   public getMarks(disciplineId: number, groupId: number): Observable<ITableDataFromBE> {

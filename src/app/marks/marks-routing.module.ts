@@ -11,12 +11,12 @@ const routes: Routes = [
   {
     path: '',
     component: MarksPageComponent,
-    canActivate: [AuthGuard],
     children: [
       {
         path: 'edit/:disciplineId/:groupId',
         component: MarksEditComponent,
         canDeactivate: [CanDeactivateGuard],
+        canActivate: [AuthGuard],
       },
       {
         path: ':disciplineId/:groupId',

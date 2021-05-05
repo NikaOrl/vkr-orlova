@@ -6,6 +6,7 @@ import { AuthGuard } from '../core/guards/auth.guard';
 import { GroupTableComponent } from './components/group-table/group-table.component';
 import { GroupsEditComponent } from './components/groups-edit/groups-edit.component';
 import { CanDeactivateGuard } from '../core/guards/can-deactivate.guard';
+import { AdminGuard } from '../core/guards/admin.guard';
 
 const routes: Routes = [
   {
@@ -16,11 +17,13 @@ const routes: Routes = [
       {
         path: 'edit/:groupId',
         component: GroupsEditComponent,
+        canActivate: [AdminGuard],
         canDeactivate: [CanDeactivateGuard],
       },
       {
         path: 'edit',
         component: GroupsEditComponent,
+        canActivate: [AdminGuard],
         canDeactivate: [CanDeactivateGuard],
       },
       {

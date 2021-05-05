@@ -315,6 +315,11 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     ];
   }
 
+  public get isAuth(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return !!user;
+  }
+
   private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {
     const orderedModules: TableModule[] = [];
     const orderedJobs: IJob[] = [];

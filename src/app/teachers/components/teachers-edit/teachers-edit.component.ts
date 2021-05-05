@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Observable } from 'rxjs';
 
@@ -15,7 +15,7 @@ import { TeachersApiService } from '../../services/teachers-api.service';
   styleUrls: ['./teachers-edit.component.scss'],
 })
 export class TeachersEditComponent implements OnInit {
-  public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'delete', 'isAdmin'];
+  public displayedColumns: string[] = ['firstName', 'lastName', 'email', 'password', 'delete', 'isAdmin'];
   public dataSource: MatTableDataSource<ITeacher> = new MatTableDataSource([]);
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -24,12 +24,7 @@ export class TeachersEditComponent implements OnInit {
   private oldTeachersJSON: string[];
   private saved: boolean = true;
 
-  constructor(
-    private router: Router,
-    private route: ActivatedRoute,
-    private api: TeachersApiService,
-    private dialogService: DialogService
-  ) {}
+  constructor(private router: Router, private api: TeachersApiService, private dialogService: DialogService) {}
 
   public ngOnInit(): void {
     this.getTeachers();
@@ -43,6 +38,15 @@ export class TeachersEditComponent implements OnInit {
     const newTeachers: ITeacher[] = [];
     const addedTeachers: ITeacher[] = [];
     this.ELEMENT_DATA.forEach((value, index) => {
+      value = {
+        firstName: value.firstName,
+        lastName: value.lastName,
+        id: value.id,
+        password: value.password,
+        email: value.email,
+        isAdmin: value.isAdmin,
+        deleted: value.deleted,
+      };
       if (this.oldTeachersJSON[index] !== JSON.stringify(value)) {
         newTeachers.push(value);
       }
@@ -81,7 +85,7 @@ export class TeachersEditComponent implements OnInit {
       email: '',
       isAdmin: false,
       deleted: false,
-      password: 'admin123',
+      password: '',
     });
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
@@ -120,7 +124,7 @@ export class TeachersEditComponent implements OnInit {
   private getTeachers(): void {
     this.api.getTeachers().subscribe(
       res => {
-        this.ELEMENT_DATA = res;
+        this.ELEMENT_DATA = res.map(teacher => ({ ...teacher, hide: true }));
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
         this.oldTeachersJSON = this.ELEMENT_DATA.map(value => JSON.stringify(value));

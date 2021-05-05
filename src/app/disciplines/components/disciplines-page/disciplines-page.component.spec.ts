@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { FormsModule } from '@angular/forms';
 import { MockComponent } from 'ng-mocks';
 
 import { MatDialogModule } from '@angular/material/dialog';
@@ -28,6 +29,7 @@ describe('DisciplinesPageComponent', () => {
         MatAutocompleteModule,
         MatFormFieldModule,
         MatInputModule,
+        FormsModule,
         NoopAnimationsModule,
         getTranslocoModule(),
       ],

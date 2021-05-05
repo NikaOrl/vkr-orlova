@@ -1,6 +1,7 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 
 import { RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
@@ -20,7 +21,7 @@ describe('MarksEditJobsComponent', () => {
         { provide: MarksApiService, useClass: MarksApiServiceStub },
         { provide: Router, useClass: RouterStub },
       ],
-      imports: [DragDropModule, ReactiveFormsModule, getTranslocoModule()],
+      imports: [DragDropModule, MatIconModule, ReactiveFormsModule, getTranslocoModule()],
     }).compileComponents();
   });
 
