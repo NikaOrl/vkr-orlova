@@ -85,4 +85,9 @@ export class GroupTableComponent implements OnInit {
     );
     this.selectValue = filterValue;
   }
+
+  public get isAdmin(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return user && `${user}` !== 'undefined' ? JSON.parse(user).isAdmin : false;
+  }
 }

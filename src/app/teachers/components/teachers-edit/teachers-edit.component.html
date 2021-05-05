@@ -73,6 +73,39 @@
         </td>
       </ng-container>
 
+      <!-- password Column -->
+      <ng-container matColumnDef="password">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ t('password') }}</th>
+        <td
+          mat-cell
+          *matCellDef="let element; let i = index"
+          [ngClass]="{
+            'alert-danger': isDeleted(element),
+            'alert-success': isAdded(element)
+          }"
+          class="password-field"
+        >
+          <input
+            required
+            minlength="3"
+            [type]="element.hide ? 'password' : 'text'"
+            [(ngModel)]="element.password"
+            name="password-{{ i }}"
+            (change)="unsaved()"
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            (click)="element.hide = !element.hide"
+            [attr.aria-label]="'Hide password'"
+            [attr.aria-pressed]="element.hide"
+            class="eye-button"
+          >
+            <mat-icon>{{ element.hide ? 'visibility_off' : 'visibility' }}</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
       <!-- isAdmin Column -->
       <ng-container matColumnDef="isAdmin">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ t('isAdmin') }}</th>
@@ -109,11 +142,11 @@
             {{ t('delete') }}
           </button>
           <div class="message" *ngIf="isDeleted(element) && !isAdded(element)">
-            {{t('deteleMessage')}
+            {{ t('deteleMessage') }}
             <a (click)="cancelDelete(element)" class="cancel">{{ t('cancel') }}</a>
           </div>
           <div class="message" *ngIf="isAdded(element)">
-            {{t('addMessage')}
+            {{ t('addMessage') }}
             <a (click)="cancelAdd(element)" class="cancel">{{ t('cancel') }}</a>
           </div>
         </td>

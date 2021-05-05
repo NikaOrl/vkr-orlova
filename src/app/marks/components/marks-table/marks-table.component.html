@@ -19,7 +19,7 @@
     </mat-form-field>
   </div>
   <div class="edit-button">
-    <button *ngIf="selectedDisciplineId" mat-raised-button color="primary" [routerLink]="editLink">
+    <button *ngIf="selectedDisciplineId && isAuth" mat-raised-button color="primary" [routerLink]="editLink">
       {{ t('editMarksButton') }}
     </button>
   </div>

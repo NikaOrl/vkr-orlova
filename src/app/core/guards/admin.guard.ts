@@ -19,9 +19,6 @@ export class AdminGuard implements CanActivate, CanLoad {
 
   private isUserAdmin(): boolean {
     const user: IUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (user && user.isAdmin) {
-      return true;
-    }
-    return false;
+    return !!(user && user.isAdmin);
   }
 }

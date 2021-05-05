@@ -58,3 +58,14 @@ input {
   margin: 0 20px;
   font-size: 14px;
 }
+
+.password-field {
+  position: relative;
+
+  .eye-button {
+    position: absolute;
+    top: 3px;
+    right: 10px;
+    box-shadow: none;
+  }
+}

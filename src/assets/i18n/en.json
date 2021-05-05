@@ -6,7 +6,8 @@
     "teachers": "Teachers",
     "logout": "Logout",
     "english": "English",
-    "russian": "Russian"
+    "russian": "Russian",
+    "login": "Login"
   },
   "login": {
     "login": "Login",
@@ -86,7 +87,8 @@
     "editButton": "Edit teachers",
     "role": "Role",
     "admin": "Admin",
-    "teacher": "Teacher"
+    "teacher": "Teacher",
+    "password": "Password"
   },
   "disciplines": {
     "editDialogTitle": "Edit the discipline",

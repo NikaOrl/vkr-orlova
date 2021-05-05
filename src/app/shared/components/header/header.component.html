@@ -6,15 +6,10 @@
         <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
           <a routerLink="/disciplines" class="nav-link">{{ t('disciplines') }}</a>
         </li>
-        <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+        <li class="nav-item" routerLinkActive="active" *ngIf="isLogin" [routerLinkActiveOptions]="{ exact: true }">
           <a routerLink="/groups" class="nav-link">{{ t('groups') }}</a>
         </li>
-        <li
-          class="nav-item"
-          routerLinkActive="active"
-          *ngIf="isTeachersShouldBeShown()"
-          [routerLinkActiveOptions]="{ exact: true }"
-        >
+        <li class="nav-item" routerLinkActive="active" *ngIf="isAdmin" [routerLinkActiveOptions]="{ exact: true }">
           <a routerLink="/teachers" class="nav-link">{{ t('teachers') }}</a>
         </li>
       </ul>
@@ -33,7 +28,8 @@
           </mat-select>
         </mat-form-field>
       </div>
-      <button mat-raised-button color="primary" routerLink="/login">{{ t('logout') }}</button>
+      <button mat-raised-button color="primary" *ngIf="isLogin" routerLink="/login">{{ t('logout') }}</button>
+      <button mat-raised-button color="primary" *ngIf="!isLogin" routerLink="/login">{{ t('login') }}</button>
     </div>
   </div>
 </nav>
