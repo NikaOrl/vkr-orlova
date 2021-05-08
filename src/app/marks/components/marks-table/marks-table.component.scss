@@ -37,8 +37,18 @@ th {
   }
 }
 
+.info-message {
+  margin-bottom: 10px;
+  color: #000000de;
+  font-size: 12px;
+}
+
 .filters-container {
   display: flex;
+
+  .router-button {
+    margin: auto 20px auto 0;
+  }
 
   & .mat-form-field {
     font-size: 14px;

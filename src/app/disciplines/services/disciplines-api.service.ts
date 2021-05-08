@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, of, throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { DISCIPLINES, HTTP_OPTIONS, SEMESTERS, TEACHERS } from '../../core/http-constants';
@@ -10,12 +10,6 @@ import { IDisciplineGroup } from '../models/group-students.model';
 import { ITeacher } from '../../teachers/models/teacher.model';
 import { ISemester, ISemesterBase } from '../models/semester.model';
 
-const mockSemesters: ISemester[] = [
-  { semesterName: 'Весна 2020', id: '0' },
-  { semesterName: 'Осень 2020', id: '1' },
-  { semesterName: 'Весна 2021', id: '2' },
-  { semesterName: 'Осень 2021', id: '3' },
-];
 @Injectable({
   providedIn: 'root',
 })
@@ -23,20 +17,14 @@ export class DisciplinesApiService {
   constructor(private http: HttpClient) {}
 
   public getSemesters(): Observable<ISemester[]> {
-    return of(mockSemesters);
-    // return this.http
-    //   .get<ISemester[]>(`${SEMESTERS}`, HTTP_OPTIONS)
-    //   .pipe(map(this.extractData), catchError(this.handleError));
+    return this.http
+      .get<ISemester[]>(`${SEMESTERS}`, HTTP_OPTIONS)
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
   public getDisciplines(semesterId: string): Observable<IDiscipline[]> {
     return this.http
-      .get<IDiscipline[]>(`${DISCIPLINES}`, {
-        ...HTTP_OPTIONS,
-        params: {
-          semesterId: `${semesterId}`,
-        },
-      })
+      .get<IDiscipline[]>(`${DISCIPLINES}/${semesterId}`, HTTP_OPTIONS)
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 

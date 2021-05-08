@@ -24,15 +24,15 @@ export class GroupsApiService {
     return this.http.get<IGroup>(`${GROUPS}/${groupId}`, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public addGroup(groupName: string, addedStudents: IStudent[]): Observable<IGroup> {
+  public addGroup(groupNumber: string, addedStudents: IStudent[]): Observable<IGroup> {
     return this.http
-      .post<IGroup>(`${GROUPS}`, { groupName, students: addedStudents }, HTTP_OPTIONS)
+      .post<IGroup>(`${GROUPS}`, { groupNumber, students: addedStudents }, HTTP_OPTIONS)
       .pipe(catchError(this.handleError));
   }
 
-  public updateGroup(groupId: string, groupName: string): Observable<IGroup> {
+  public updateGroup(groupId: string, groupNumber: string): Observable<IGroup> {
     return this.http
-      .put<IGroup>(`${GROUPS}/${groupId}`, { groupName, id: groupId }, HTTP_OPTIONS)
+      .put<IGroup>(`${GROUPS}/${groupId}`, { groupNumber, id: groupId }, HTTP_OPTIONS)
       .pipe(catchError(this.handleError));
   }
 

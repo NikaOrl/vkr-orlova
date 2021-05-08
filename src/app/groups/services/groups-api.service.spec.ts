@@ -35,11 +35,11 @@ export class GroupsApiServiceStub {
     return of({ id: '1', groupNumber: '1' });
   }
 
-  public addGroup(groupName: string, addedStudents: IStudent[]): Observable<IGroup> {
+  public addGroup(groupNumber: string, addedStudents: IStudent[]): Observable<IGroup> {
     return of({ id: '1', groupNumber: '1' });
   }
 
-  public updateGroup(groupId: string, groupName: string): Observable<IGroup> {
+  public updateGroup(groupId: string, groupNumber: string): Observable<IGroup> {
     return of({ id: '1', groupNumber: '1' });
   }
 }

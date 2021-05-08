@@ -159,8 +159,8 @@ export class MarksEditTableComponent implements OnInit {
   private getMarks(): void {
     this.api.getMarks(this.selectedDisciplineId, this.selectedGroupId).subscribe(
       res => {
-        this.modules = [...res.modules];
-        this.jobs = [...res.jobs];
+        this.modules = res.modules.sort((m1, m2) => m1.numberInList - m2.numberInList);
+        this.jobs = res.jobs.sort((j1, j2) => (j1.moduleId === j2.moduleId ? j1.numberInList - j2.numberInList : 0));
         this.students = res.students;
         this.updateTableData(res);
       },

@@ -1,4 +1,7 @@
 <div class="filters-container" *transloco="let t; read: 'marks'">
+  <button mat-raised-button color="primary" type="button" routerLink="/disciplines" class="router-button">
+    {{ t('backButton') }}
+  </button>
   <mat-form-field class="students-filter">
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
@@ -42,7 +45,7 @@
     </mat-autocomplete>
   </mat-form-field>
 </div>
-
+<div class="info-message" *transloco="let t; read: 'marks'">{{ t('marksInformMessage') }}</div>
 <div class="above-scroller" #scroller (scroll)="scrollTop()">
   <div class="scroller" #scroll></div>
 </div>

@@ -249,8 +249,8 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
           this.marksAreas = res.marksAreas;
           this.ELEMENT_DATA = this.parseGetMarksResult(res);
           this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-          this.jobs = res.jobs;
-          this.modules = res.modules;
+          this.jobs = res.jobs.sort((j1, j2) => (j1.moduleId === j2.moduleId ? j1.numberInList - j2.numberInList : 0));
+          this.modules = res.modules.sort((m1, m2) => m1.numberInList - m2.numberInList);
           this.showModules.setValue([{}, ...this.modules]);
           const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
           this.moduleFuilds = modules.map(row => {

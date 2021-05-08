@@ -2,6 +2,24 @@
   <mat-form-field>
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
+  <div class="top-buttons">
+    <button
+      mat-raised-button
+      color="primary"
+      type="button"
+      routerLink="/marks/{{ selectedDisciplineId }}/{{ selectedGroupId }}"
+      class="router-button"
+    >
+      {{ t('backButton') }}
+    </button>
+    <button mat-raised-button color="primary" type="submit" class="router-button">
+      {{ t('saveButton') }}
+    </button>
+    <button mat-raised-button color="primary" id="redirect-button" type="submit" class="router-button">
+      {{ t('saveAndCloseButton') }}
+    </button>
+    <button (click)="add()" type="button" class="add-button btn btn-success">{{ t('addButton') }}</button>
+  </div>
 </div>
 <form ngNativeValidate (ngSubmit)="save()" *transloco="let t; read: 'marks'">
   <div class="scroll-table">

@@ -61,4 +61,13 @@ button {
 .students-filter {
   margin: 0 20px;
   font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+
+  .top-buttons {
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+    margin: auto 0;
+  }
 }

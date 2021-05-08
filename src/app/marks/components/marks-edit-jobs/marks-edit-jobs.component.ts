@@ -35,7 +35,9 @@ export class MarksEditJobsComponent implements OnInit {
 
   public ngOnInit(): void {
     this.marksApiService.getModulesAndGroups(this.selectedDisciplineId, this.selectedGroupId).subscribe(data => {
-      this.modules = data;
+      this.modules = data
+        .sort((m1, m2) => m1.numberInList - m2.numberInList)
+        .map(m => ({ ...m, jobs: m.jobs.sort((j1, j2) => j1.numberInList - j2.numberInList) }));
       for (const module of this.modules) {
         module.formControlName = `module-${module.id}`;
         this.modulesForm.addControl(`module-${module.id}`, new FormControl(module.moduleName, Validators.required));
@@ -69,7 +71,7 @@ export class MarksEditJobsComponent implements OnInit {
       id: m.id.match('added-') ? null : m.id,
       numberInList: index,
       moduleName: this.modulesForm.get(this.getControl(m)).value,
-      jobs: m.jobs.map((j, i) => ({ ...j, numberInList: i, moduleId: m.id })),
+      jobs: m.isDeleted ? [] : m.jobs.map((j, i) => ({ ...j, numberInList: i, moduleId: m.id })),
       deleted: m.isDeleted,
     }));
     if (this.modulesForm.valid && !(this.jobsOutOfModule.length > 0)) {

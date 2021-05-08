@@ -7,17 +7,24 @@
     </div>
     <div class="edit-name">
       <mat-form-field>
-        <mat-label>{{ t('groupName') }}</mat-label>
-        <input matInput type="text" [(ngModel)]="groupName" required name="groupName" />
-        <mat-error *ngIf="!groupName || groupName === ''">{{ t('requiredError') }}</mat-error>
+        <mat-label>{{ t('groupNumber') }}</mat-label>
+        <input matInput type="text" [(ngModel)]="groupNumber" required name="groupNumber" />
+        <mat-error *ngIf="!groupNumber || groupNumber === ''">{{ t('requiredError') }}</mat-error>
       </mat-form-field>
     </div>
   </div>
   <div class="scroll-table">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      class="mat-elevation-z8"
+      matSort
+      matSortActive="numberInList"
+      matSortDirection="asc"
+    >
       <!-- numberInList Column -->
       <ng-container matColumnDef="numberInList">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header>No.</th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="numberInList">No.</th>
         <td
           mat-cell
           *matCellDef="let element; let i = index"

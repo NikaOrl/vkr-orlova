@@ -1,6 +1,6 @@
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, Inject, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -45,10 +45,10 @@ export class DisciplineDialogComponent implements OnInit {
     semester: new FormControl('', [Validators.required]),
     semesterAuto: new FormControl(''),
     attendanceWeight: new FormControl(null, [Validators.min(1)]),
+    selectedTeachers: new FormControl([], [Validators.required, Validators.minLength(1)]),
   });
   public teacherCtrl: FormControl = new FormControl();
   public filteredTeachers: Observable<ITeacher[]>;
-  public selectedTeachers: ITeacher[] = [];
 
   @ViewChild('teacherInput') public teacherInput: ElementRef<HTMLInputElement>;
   @ViewChild('auto') public matAutocomplete: MatAutocomplete;
@@ -90,8 +90,10 @@ export class DisciplineDialogComponent implements OnInit {
     this.disciplineForm.controls.attendanceWeight.setValue(this.discipline ? this.discipline.attendanceWeight : null);
 
     if (this.data.teachers) {
-      this.selectedTeachers = this.data.teachers.filter(
-        (teacher: ITeacher) => this.discipline.teacherIds && this.discipline.teacherIds.includes(teacher.id)
+      this.disciplineForm.controls.selectedTeachers.setValue(
+        this.data.teachers.filter(
+          (teacher: ITeacher) => this.discipline.teacherIds && this.discipline.teacherIds.includes(teacher.id)
+        )
       );
 
       this.filteredTeachers = this.teacherCtrl.valueChanges.pipe(
@@ -99,7 +101,9 @@ export class DisciplineDialogComponent implements OnInit {
         map((teacher: string | ITeacher | null) =>
           teacher && !(teacher as ITeacher).id
             ? this._filter(teacher as string)
-            : this.data.teachers.filter((t: ITeacher) => !this.selectedTeachers.includes(t))
+            : this.data.teachers.filter(
+                (t: ITeacher) => !this.disciplineForm.controls.selectedTeachers.value.includes(t)
+              )
         )
       );
     }
@@ -129,15 +133,19 @@ export class DisciplineDialogComponent implements OnInit {
   }
 
   public remove(teacher: ITeacher): void {
-    const index: number = this.selectedTeachers.indexOf(teacher);
+    const index: number = this.disciplineForm.controls.selectedTeachers.value.indexOf(teacher);
 
     if (index >= 0) {
-      this.selectedTeachers.splice(index, 1);
+      this.disciplineForm.controls.selectedTeachers.value.splice(index, 1);
+      this.disciplineForm.controls.selectedTeachers.setValue(this.disciplineForm.controls.selectedTeachers.value);
     }
   }
 
   public selected(event: MatAutocompleteSelectedEvent): void {
-    this.selectedTeachers.push(event.option.value);
+    this.disciplineForm.controls.selectedTeachers.setValue([
+      ...this.disciplineForm.controls.selectedTeachers.value,
+      event.option.value,
+    ]);
     this.teacherInput.nativeElement.value = '';
     this.teacherCtrl.setValue(null);
   }
@@ -147,6 +155,10 @@ export class DisciplineDialogComponent implements OnInit {
   }
 
   public onSaveClick(): void {
+    Object.keys(this.disciplineForm.controls).forEach(field => {
+      const control: AbstractControl = this.disciplineForm.get(field);
+      control.markAsTouched({ onlySelf: true });
+    });
     if (this.disciplineForm.valid) {
       this.discipline.disciplineValue = this.disciplineForm.controls.disciplineName.value;
       this.discipline.attendanceWeight = this.disciplineForm.controls.attendanceWeight.value;
@@ -156,7 +168,7 @@ export class DisciplineDialogComponent implements OnInit {
         four: this.disciplineForm.controls.four.value,
         five: this.disciplineForm.controls.five.value,
       };
-      this.discipline.teacherIds = this.selectedTeachers.map(teacher => teacher.id);
+      this.discipline.teacherIds = this.disciplineForm.controls.selectedTeachers.value.map(teacher => teacher.id);
       this.discipline.semesterId = this.disciplineForm.controls.semester.value.id;
       if (this.data.discipline) {
         this.api.updateDiscipline(this.discipline as IDiscipline).subscribe(res => {
@@ -170,13 +182,18 @@ export class DisciplineDialogComponent implements OnInit {
     }
   }
 
+  public get isAdmin(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return user && `${user}` !== 'undefined' ? JSON.parse(user).isAdmin : false;
+  }
+
   private _filter(value: string): ITeacher[] {
     const filterValue: string = value.toLowerCase();
 
     return this.data.teachers.filter(
       teacher =>
         `${teacher.firstName} ${teacher.lastName}`.toLowerCase().indexOf(filterValue) === 0 &&
-        !this.selectedTeachers.includes(teacher)
+        !this.disciplineForm.controls.selectedTeachers.value.includes(teacher)
     );
   }
 }
