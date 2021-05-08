@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
 
 import { ITeacher } from '../../../teachers/models/teacher.model';
@@ -96,9 +96,17 @@ export class DisciplinesPageComponent implements OnInit {
   }
 
   public delete(discipline: IDiscipline): void {
-    this.dialog.open(DisciplineDeleteDialogComponent, {
-      width: '550px',
-      data: { discipline },
+    // tslint:disable-next-line: no-any
+    const dialogRef: MatDialogRef<DisciplineDeleteDialogComponent, any> = this.dialog.open(
+      DisciplineDeleteDialogComponent,
+      {
+        width: '550px',
+        data: { discipline },
+      }
+    );
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectSemester(this.selectedSemester);
     });
   }
 
@@ -109,9 +117,14 @@ export class DisciplinesPageComponent implements OnInit {
   }
 
   public addDiscipline(): void {
-    this.dialog.open(DisciplineDialogComponent, {
+    // tslint:disable-next-line: no-any
+    const dialogRef: MatDialogRef<DisciplineDialogComponent, any> = this.dialog.open(DisciplineDialogComponent, {
       width: '1000px',
       data: { teachers: this.teachers, semesters: this.semesters },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.selectSemester(this.selectedSemester);
     });
   }
 

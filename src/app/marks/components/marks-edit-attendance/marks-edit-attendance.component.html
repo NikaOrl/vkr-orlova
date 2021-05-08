@@ -47,7 +47,7 @@
         >
           <mat-checkbox
             [checked]="column.cell(row, column.attendanceId)"
-            (change)="attendanceMarkChange($event, column.attendanceId, ind)"
+            (change)="attendanceMarkChange($event, column.attendanceMark(row))"
             name="row-{{ ind }}-{{ i }}"
           ></mat-checkbox>
         </td>

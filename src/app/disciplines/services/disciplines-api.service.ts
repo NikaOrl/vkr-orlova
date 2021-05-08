@@ -76,14 +76,7 @@ export class DisciplinesApiService {
   }
 
   public deleteDiscipline(disciplineId: string): Observable<number> {
-    return this.http
-      .delete<number>(`${DISCIPLINES}`, {
-        ...HTTP_OPTIONS,
-        params: {
-          id: `${disciplineId}`,
-        },
-      })
-      .pipe(catchError(this.handleError));
+    return this.http.delete<number>(`${DISCIPLINES}/${disciplineId}`, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

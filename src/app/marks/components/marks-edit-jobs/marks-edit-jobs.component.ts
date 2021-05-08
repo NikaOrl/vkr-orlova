@@ -69,19 +69,17 @@ export class MarksEditJobsComponent implements OnInit {
       id: m.id.match('added-') ? null : m.id,
       numberInList: index,
       moduleName: this.modulesForm.get(this.getControl(m)).value,
-      jobs: m.jobs.map((j, i) => ({ ...j, numberInList: i })),
+      jobs: m.jobs.map((j, i) => ({ ...j, numberInList: i, moduleId: m.id })),
       deleted: m.isDeleted,
     }));
     if (this.modulesForm.valid && !(this.jobsOutOfModule.length > 0)) {
-      this.marksApiService
-        .updateModulesAndGroups(this.selectedDisciplineId, this.selectedGroupId, modulesToSend)
-        .subscribe(data => {
-          this.saved = true;
+      this.marksApiService.updateModules(modulesToSend).subscribe(data => {
+        this.saved = true;
 
-          if (redirect) {
-            this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroupId}`]);
-          }
-        });
+        if (redirect) {
+          this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroupId}`]);
+        }
+      });
     }
   }
 

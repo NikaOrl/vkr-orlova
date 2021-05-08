@@ -10,9 +10,7 @@
       <mat-select [formControl]="showModules" multiple (selectionChange)="showHideModules()">
         <mat-select-trigger>
           {{ hiddenModules[0] ? hiddenModules[0].moduleName : t('noHiddenModules') }}
-          <span *ngIf="hiddenModules.length > 1">
-            (+{{ hiddenModules.length - 1 }} {{ hiddenModules.length === 2 ? 'other' : 'others' }})
-          </span>
+          <span *ngIf="hiddenModules.length > 1">,... (+{{ hiddenModules.length - 1 }})</span>
         </mat-select-trigger>
         <mat-option *ngFor="let module of modules" [value]="module">{{ module.moduleName }}</mat-option>
       </mat-select>
@@ -72,7 +70,7 @@
     <ng-container matColumnDef="attendancePoints">
       <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>{{ t('attendancePointsTitle') }}</th>
       <td class="student-cell" mat-cell *matCellDef="let element">
-        {{ getAttendancePoints(element.attendance) }}
+        {{ element.attendancePoints }}
       </td>
     </ng-container>
 
@@ -82,7 +80,7 @@
         {{ column.header }}
       </th>
       <td class="mark-cell" md-cell *cdkCellDef="let row">
-        {{ column.cell(row) }}
+        {{ column.cell(row, column.jobId) }}
       </td>
     </ng-container>
 
@@ -92,7 +90,7 @@
         <b>{{ t('sumPoint') }}</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">
-        {{ getSumPoints(element, element.attendance) }}
+        {{ element.sumPoints }}
       </td>
     </ng-container>
 
@@ -102,7 +100,7 @@
         <b>{{ t('result') }}</b>
       </th>
       <td class="student-cell" mat-cell *matCellDef="let element">
-        {{ getResultCellMark(element, element.attendance) }}
+        {{ element.resultCellMark }}
       </td>
     </ng-container>
 

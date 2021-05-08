@@ -76,7 +76,7 @@ export class MarksEditTableComponent implements OnInit {
 
   public save(): void {
     if (!this.saved) {
-      this.api.updateJobs(this.jobs).subscribe(res => {
+      this.api.updateMarks(this.jobs).subscribe(res => {
         this.saved = true;
         if (document.activeElement.id === 'redirect-button') {
           this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroupId}`]);
@@ -106,7 +106,7 @@ export class MarksEditTableComponent implements OnInit {
       jobValue: `added-${this.addedJobsNumber}`,
       deleted: false,
       numberInList: 0,
-      moduleId: 'TODO',
+      moduleId: this.modules[this.modules.length - 1].id,
       maxPoint: 0,
       marks: [
         ...this.students.map(student => ({
@@ -204,7 +204,7 @@ export class MarksEditTableComponent implements OnInit {
       };
     });
 
-    this.columns = jobs.map((row, index) => {
+    this.columns = jobs.map(row => {
       return {
         columnDef: i => `${row.jobValue}-${i}`,
         header: `${row.jobValue}`,

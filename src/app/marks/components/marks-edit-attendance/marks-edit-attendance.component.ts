@@ -50,12 +50,16 @@ export class MarksEditAttendanceComponent implements OnInit {
     this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 
-  public attendanceMarkChange(e: MatCheckbox, attendanceId: string, ind: number): void {
+  public attendanceMarkChange(e: MatCheckbox, attendanceMark: IAttendanceMark): void {
     this.saved = false;
     this.attendances = this.attendances.map(a => ({
       ...a,
-      attendanceMarks: a.attendanceMarks.map((mark, index) =>
-        ind === index && mark.attendanceId === attendanceId ? { ...mark, attendanceMarkValue: e.checked } : mark
+      attendanceMarks: a.attendanceMarks.map(mark =>
+        mark.id === attendanceMark.id &&
+        mark.attendanceId === attendanceMark.attendanceId &&
+        mark.studentId === attendanceMark.studentId
+          ? { ...mark, attendanceMarkValue: e.checked }
+          : mark
       ),
     }));
 
