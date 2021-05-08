@@ -18,6 +18,7 @@ import { MarksApiService } from '../../services/marks-api.service';
 import { ActivatedRouteStub, RouterLinkStubDirective, RouterStub } from '../../../shared/utils/tests-stubs';
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
+import { IAttendanceMark } from '../../models/attendance-mark.model';
 
 describe('MarksEditAttendanceComponent', () => {
   let component: MarksEditAttendanceComponent;
@@ -76,7 +77,7 @@ describe('MarksEditAttendanceComponent', () => {
     expect(component.isDeleted('1')).toBe(true);
     expect(component.isDeleted('0')).toBe(false);
 
-    component.attendanceMarkChange({ checked: true } as MatCheckbox, '1', 1);
+    component.attendanceMarkChange({ checked: true } as MatCheckbox, { id: '1' } as IAttendanceMark);
     component.attendanceChange('5', 1);
 
     component.cancelDelete('1');

@@ -167,7 +167,7 @@ export class DisciplineStudentsDialogComponent implements OnInit {
     flatNode.parentId = node.groupId ? node.groupId : null;
 
     this.nestedNodeMap.set(node, flatNode);
-    if (node.isInDiscipline) {
+    if (node.isInDiscipline || (node.students && node.students.every(student => student.isInDiscipline))) {
       this.checklistSelection.select(flatNode);
     }
     return flatNode;

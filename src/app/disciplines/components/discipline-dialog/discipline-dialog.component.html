@@ -7,7 +7,7 @@
       <div>
         <mat-form-field appearance="outline">
           <mat-label>{{ t('disciplineName') }}</mat-label>
-          <input matInput formControlName="disciplineName" required />
+          <input matInput formControlName="disciplineName" required [readonly]="!isAdmin" />
           <mat-error *ngIf="disciplineForm.controls.disciplineName.invalid">{{ t('requiredError') }}</mat-error>
         </mat-form-field>
       </div>
@@ -31,11 +31,11 @@
           <mat-error *ngIf="disciplineForm.controls.attendanceWeight.invalid">{{ t('requiredMinError') }}</mat-error>
         </mat-form-field>
       </div>
-      <div>
+      <div *ngIf="isAdmin">
         <mat-form-field class="example-chip-list">
           <mat-chip-list #chipList ariaOrientation="vertical">
             <mat-chip
-              *ngFor="let teacher of selectedTeachers"
+              *ngFor="let teacher of disciplineForm.controls.selectedTeachers.value"
               [selectable]="selectable"
               [removable]="removable"
               (removed)="remove(teacher)"
@@ -58,6 +58,12 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+        <mat-error
+          class="mat-error"
+          *ngIf="disciplineForm.controls.selectedTeachers.touched && disciplineForm.controls.selectedTeachers.invalid"
+        >
+          {{ t('requiredError') }}
+        </mat-error>
       </div>
     </div>
     <div class="right-fields">
@@ -83,7 +89,7 @@
           <mat-error *ngIf="disciplineForm.controls.five.invalid">{{ t('requiredMinError') }}</mat-error>
         </mat-form-field>
       </div>
-      <div>
+      <div *ngIf="isAdmin">
         <mat-form-field class="semesters-filter">
           <mat-label>{{ t('selectSemesterDropDown') }}</mat-label>
           <input type="text" matInput formControlName="semesterAuto" [matAutocomplete]="autoSemester" />
@@ -98,6 +104,12 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+        <mat-error
+          class="mat-error"
+          *ngIf="disciplineForm.controls.semesterAuto.touched && disciplineForm.controls.semester.invalid"
+        >
+          {{ t('requiredError') }}
+        </mat-error>
       </div>
     </div>
   </div>

@@ -35,17 +35,19 @@ export class MarksApiService {
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public getGroups(): Observable<IGroup[]> {
-    return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
+  public getGroups(selectedDisciplineId: string): Observable<IGroup[]> {
+    return this.http
+      .get<IGroup[]>(`${DISCIPLINES}/${selectedDisciplineId}/groups`, HTTP_OPTIONS)
+      .pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public updateJobs(jobs: IJob[]): Observable<{ status: string }> {
-    return this.http.put<{ status: string }>(`${JOBS}`, jobs, HTTP_OPTIONS).pipe(catchError(this.handleError));
+  public updateMarks(jobs: IJob[]): Observable<{ status: string }> {
+    return this.http.put<{ status: string }>(`${MARKS}`, jobs, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
   public getModulesAndGroups(disciplineId: string, groupId: string): Observable<IMarksModule[]> {
     return this.http
-      .get<IMarksModule[]>(`${MODULES}/jobs`, {
+      .get<IMarksModule[]>(`${MODULES}`, {
         ...HTTP_OPTIONS,
         params: {
           groupId: groupId.toString(),
@@ -55,14 +57,8 @@ export class MarksApiService {
       .pipe(map(this.extractData), catchError(this.handleError));
   }
 
-  public updateModulesAndGroups(
-    disciplineId: string,
-    groupId: string,
-    modules: IMarksModule[]
-  ): Observable<{ status: string }> {
-    return this.http
-      .put<{ status: string }>(`${MARKS}/${disciplineId}/${groupId}/jobs`, modules, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError));
+  public updateModules(modules: IMarksModule[]): Observable<{ status: string }> {
+    return this.http.put<{ status: string }>(`${MODULES}`, modules, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
   public getAttendanceMarks(disciplineId: string, groupId: string): Observable<IAttendancesTableData> {

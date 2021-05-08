@@ -80,6 +80,7 @@ export class MarksApiServiceStub {
       maxAttendance: 10,
       attendanceWeight: 10,
       countWithAttendance: false,
+      marksAreas: { five: 30, four: 20, three: 10 },
     });
   }
 
@@ -108,24 +109,6 @@ export class MarksApiServiceStub {
 
   public updateMarks(marks: IMark[]): Observable<{ result: IMark[] }> {
     return of({ result: [{ id: '1' } as IMark, { id: '2' } as IMark] });
-  }
-
-  public updateJobs(jobs: IJob[]): Observable<{ result: IJob[] }> {
-    return of({ result: [{ id: '1' } as IJob, { id: '2' } as IJob] });
-  }
-
-  public addJobsAndMarks(jobs: IJob[], marks: IMark[]): Promise<{ result: IMark[] }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: [{ id: '1' } as IMark, { id: '2' } as IMark] }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  public deleteJobs(jobsIds: Set<number>): Promise<{ result: number }> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve({ result: 2 }));
-      setTimeout(() => reject(new Error('ignored')));
-    });
   }
 }
 
@@ -182,14 +165,14 @@ describe('MarksApiService', () => {
     req.flush(dummyUsers);
   });
 
-  it('should updateJobs', () => {
+  it('should updateMarks', () => {
     const dummyUsers: { status: string } = { status: 'success' };
 
-    service.updateJobs([]).subscribe(users => {
+    service.updateMarks([]).subscribe(users => {
       expect(users).toEqual(dummyUsers);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${JOBS}`);
+    const req: TestRequest = httpMock.expectOne(`${MARKS}`);
     expect(req.request.method).toBe('PUT');
     req.flush(dummyUsers);
   });

@@ -47,7 +47,8 @@
     "allModulesAreHidden": "All modules are hidden",
     "hiddenModules": "Hidden Modules",
     "noHiddenModules": "No hidden modules",
-    "modules": "Modules"
+    "modules": "Modules",
+    "marksInformMessage": "The marks on this page are relative to the discipline settings. To change the number of points for each job, turn on/off the attendance tracking or change the number of points for each attendance, please use the \"Disciplines\" page."
   },
   "groups": {
     "editGroupButton": "Edit group",
@@ -66,7 +67,7 @@
     "backButton": "Back",
     "saveButton": "Save",
     "addGroupButton": "Add group",
-    "groupName": "Group Number",
+    "groupNumber": "Group Number",
     "requiredError": "Group Number is required",
     "starostaRole": "Starosta",
     "studentRole": "Student"

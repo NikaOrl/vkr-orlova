@@ -21,7 +21,7 @@ export class GroupsEditComponent implements OnInit {
   @ViewChild(MatSort) public sort: MatSort;
   public selectedGroupId: string;
 
-  public groupName: string = '';
+  public groupNumber: string = '';
   public group: IGroup;
 
   private ELEMENT_DATA: IStudent[] = [];
@@ -41,7 +41,7 @@ export class GroupsEditComponent implements OnInit {
     if (this.selectedGroupId) {
       this.api.getGroup(this.selectedGroupId).subscribe((group: IGroup) => {
         this.group = group;
-        this.groupName = group.groupNumber;
+        this.groupNumber = group.groupNumber;
       });
 
       this.getStudents(this.selectedGroupId);
@@ -56,24 +56,25 @@ export class GroupsEditComponent implements OnInit {
     const newStudents: IStudent[] = [];
     const addedStudents: IStudent[] = [];
     this.ELEMENT_DATA.forEach((value, index) => {
-      if (this.oldStudentsJSON && this.oldStudentsJSON[index] !== JSON.stringify(value)) {
+      if (value.id && this.oldStudentsJSON && this.oldStudentsJSON[index] !== JSON.stringify(value)) {
         newStudents.push(value);
       }
-      if (value.id === null) {
+      if (!value.id) {
         addedStudents.push(value);
       }
     });
     if (
       !this.group ||
-      this.group.groupNumber !== this.groupName ||
+      this.group.groupNumber !== this.groupNumber ||
       newStudents.length > 0 ||
       addedStudents.length > 0 ||
       this.deletedStudentsIds.size > 0
     ) {
       if (!this.group) {
         this.addGroup(addedStudents);
+        this.router.navigate([`/groups`]);
       } else {
-        if (this.group.groupNumber !== this.groupName) {
+        if (this.group.groupNumber !== this.groupNumber) {
           this.updateGroup();
         }
         if (newStudents.length > 0) {
@@ -101,10 +102,9 @@ export class GroupsEditComponent implements OnInit {
   public add(): void {
     this.saved = false;
     this.ELEMENT_DATA.push({
-      id: null,
       firstName: '',
       lastName: '',
-      numberInList: null,
+      numberInList: this.ELEMENT_DATA.length + 1,
       email: '',
       groupId: this.selectedGroupId,
       headStudent: false,
@@ -126,19 +126,11 @@ export class GroupsEditComponent implements OnInit {
   }
 
   public isDeleted(row: IStudent): boolean {
-    if (this.deletedStudentsIds.has(row.id)) {
-      return true;
-    } else {
-      return false;
-    }
+    return this.deletedStudentsIds.has(row.id);
   }
 
   public isAdded(row: IStudent): boolean {
-    if (row.id === null) {
-      return true;
-    } else {
-      return false;
-    }
+    return !!!row.id;
   }
 
   public unsaved(): void {
@@ -200,7 +192,7 @@ export class GroupsEditComponent implements OnInit {
   }
 
   private addGroup(addedStudents: IStudent[]): void {
-    this.api.addGroup(this.groupName, addedStudents).subscribe(
+    this.api.addGroup(this.groupNumber, addedStudents).subscribe(
       res => {
         console.log('group was added');
         this.router.navigate([`/groups/${res.id}`]);
@@ -212,7 +204,7 @@ export class GroupsEditComponent implements OnInit {
   }
 
   private updateGroup(): void {
-    this.api.updateGroup(this.group.id, this.groupName).subscribe(
+    this.api.updateGroup(this.group.id, this.groupNumber).subscribe(
       res => {
         console.log('group was added');
       },

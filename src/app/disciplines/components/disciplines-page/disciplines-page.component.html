@@ -47,7 +47,7 @@
       >
         {{ t('studentsGroupsButton') }}
       </button>
-      <button mat-raised-button color="primary" *ngIf="isAdmin" (click)="openEditDialog(discipline)">
+      <button mat-raised-button color="primary" (click)="openEditDialog(discipline)">
         {{ t('editButton') }}
       </button>
       <button class="btn btn-danger" *ngIf="isAdmin" (click)="delete(discipline)">{{ t('deleteButton') }}</button>

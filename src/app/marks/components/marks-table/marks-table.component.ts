@@ -2,7 +2,6 @@ import { AfterViewChecked, Component, ElementRef, OnInit, Renderer2, ViewChild }
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 
-import { MatDialog } from '@angular/material/dialog';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 
@@ -38,7 +37,6 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   public displayedMaxPointColumns: { def: string; hide: boolean }[];
 
   public dataSource: MatTableDataSource<IStudentMark> = new MatTableDataSource(this.ELEMENT_DATA);
-  public marksAreas: IDialogData = { three: 60, four: 75, five: 90 };
   public maxAttendance: number = 0;
   public attendanceWeight: number = 1;
   public countWithAttendance: boolean = false;
@@ -53,6 +51,7 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   @ViewChild('scroll') public scroll: ElementRef;
   @ViewChild('table') public table: ElementRef;
 
+  private marksAreas: IDialogData;
   private jobs: IJob[] = [];
   private modules: IModule[] = [];
 
@@ -60,7 +59,6 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
-    public dialog: MatDialog,
     private renderer: Renderer2
   ) {}
 
@@ -75,7 +73,7 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
       });
     }
 
-    this.api.getGroups().subscribe(groups => {
+    this.api.getGroups(this.selectedDisciplineId).subscribe(groups => {
       this.groups = groups;
       const selectedGroupId: string = this.route.snapshot.paramMap.get('groupId');
       this.selectedGroup = selectedGroupId ? this.groups.find(d => d.id === selectedGroupId) : this.groups[0];
@@ -97,6 +95,33 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
 
   public get hiddenModules(): IModule[] {
     return this.modules.filter(module => !this.showModules.value.some(m => (m ? m.id === module.id : true)));
+  }
+
+  public get isAuth(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return !!user;
+  }
+
+  private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {
+    const orderedModules: TableModule[] = [];
+    const orderedJobs: IJob[] = [];
+    let lastModuleInListNumber: number = 0;
+    this.modules.forEach(module => {
+      if (module.numberInList > lastModuleInListNumber) {
+        lastModuleInListNumber = module.numberInList;
+      }
+    });
+    for (let i: number = 0; i <= lastModuleInListNumber; ++i) {
+      const module: IModule = this.modules.find(m => m.numberInList === i);
+      if (module) {
+        const moduleJobs: IJob[] = this.jobs.filter(job => job.moduleId === module.id);
+
+        const tableModule: TableModule = { ...module, numberOfJobs: moduleJobs.length };
+        orderedModules.push(tableModule);
+        orderedJobs.push(...moduleJobs);
+      }
+    }
+    return { jobs: orderedJobs, modules: orderedModules };
   }
 
   public scrollTop(): void {
@@ -124,119 +149,10 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     return '';
   }
 
-  public onSelectChange(): void {
-    this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroup.id}`]);
-    this.getMarks();
-  }
-
-  public parseGetMarksResult(result: ITableDataFromBE): IStudentMark[] {
-    const marksAndStudents: IStudentMark[] = result.students.map(student => {
-      const studentMarks: IMark[] = result.jobs.map(job => job.marks.find(mark => mark.studentId === student.id));
-      const markObject: { [key: number]: IMark } = {};
-      studentMarks.forEach(mark => {
-        const jobIndex: number = result.jobs.findIndex(job => mark.jobId === job.id);
-        markObject[jobIndex] = mark;
-      });
-      return {
-        studentName: `${student.firstName} ${student.lastName}`,
-        attendance: `${student.attendance}`,
-        ...markObject,
-      };
-    });
-    return marksAndStudents;
-  }
-
-  public getMarks(): void {
-    if (this.selectedDisciplineId && this.selectedGroup) {
-      this.editLink = `/marks/edit/${this.selectedDisciplineId}/${this.selectedGroup.id}`;
-
-      this.api.getMarks(this.selectedDisciplineId, this.selectedGroup.id).subscribe(
-        res => {
-          this.maxAttendance = res.maxAttendance;
-          this.attendanceWeight = res.attendanceWeight;
-          this.countWithAttendance = res.countWithAttendance;
-          this.ELEMENT_DATA = this.parseGetMarksResult(res);
-          this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
-          this.jobs = res.jobs;
-          this.modules = res.modules;
-          this.showModules.setValue([{}, ...this.modules]);
-          const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
-          this.moduleFuilds = modules.map(row => {
-            return {
-              columnDef: index => ({
-                def: `module-${index}`,
-                hide: this.showModules.value && !this.showModules.value.some(module => module && module.id === row.id),
-              }),
-              header: `${row.moduleName}`,
-              number: row.numberOfJobs,
-              cell: () => null,
-            };
-          });
-
-          this.maxPointFuilds = jobs.map(row => {
-            return {
-              columnDef: index => ({
-                def: `maxPoint-${index}`,
-                hide:
-                  this.showModules.value &&
-                  !this.showModules.value.some(module => module && module.id === row.moduleId),
-              }),
-              header: `${row.maxPoint}`,
-              cell: () => null,
-            };
-          });
-
-          this.columns = jobs.map((row, index) => {
-            return {
-              columnDef: columnIndex => ({
-                def: `${row.jobValue}-${columnIndex}`,
-                hide:
-                  this.showModules.value &&
-                  !this.showModules.value.some(module => module && module.id === row.moduleId),
-              }),
-              header: `${row.jobValue}`,
-              cell: cellRow => {
-                if (!cellRow[index] || !cellRow[index].markValue) {
-                  return null;
-                }
-                return cellRow[index].markValue;
-              },
-            };
-          });
-          this.showHideModules();
-          this.dataSource.sort = this.sort;
-        },
-        err => {
-          console.log(err);
-        }
-      );
-    }
-  }
-
   public getDisplayedColumns(columns: { def: string; hide: boolean }[]): string[] {
     if (columns) {
       return columns.filter(cd => !cd.hide).map(cd => cd.def);
     }
-  }
-
-  public getSumPoints(element: IMark[], attendance: number): number {
-    let sumPoints: number = 0;
-    let index: number = 0;
-    let mark: IMark = element[index];
-    while (mark !== undefined) {
-      if (!isNaN(+mark.markValue)) {
-        sumPoints += +mark.markValue;
-      }
-      if (mark.markValue === '+') {
-        sumPoints += 1;
-      }
-      index++;
-      mark = element[index];
-    }
-    if (this.countWithAttendance && attendance) {
-      sumPoints += this.getAttendancePoints(attendance);
-    }
-    return sumPoints;
   }
 
   public getSumMaxPoints(): number {
@@ -250,26 +166,9 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     return sumPoints;
   }
 
-  public getResultCellMark(element: IMark[], attendance: number): string {
-    const sumPoints: number = this.getSumPoints(element, attendance);
-    return this.getResultMark(sumPoints);
-  }
-
   public getResultMaxMark(): string {
     const sumPoints: number = this.getSumMaxPoints();
     return this.getResultMark(sumPoints);
-  }
-
-  public getResultMark(sumPoints: number): string {
-    if (sumPoints < this.marksAreas.three) {
-      return 'неуд.';
-    } else if (sumPoints > this.marksAreas.three && sumPoints < this.marksAreas.four) {
-      return 'удовл.';
-    } else if (sumPoints > this.marksAreas.four && sumPoints < this.marksAreas.five) {
-      return 'хор.';
-    } else if (sumPoints > this.marksAreas.five) {
-      return 'отл.';
-    }
   }
 
   public filterGroups(): void {
@@ -278,10 +177,6 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
       option => `${option.groupNumber}`.toLowerCase().indexOf(filterValue) === 0
     );
     this.groupSelectValue = filterValue;
-  }
-
-  public getAttendancePoints(attendance: number): number {
-    return attendance * this.attendanceWeight;
   }
 
   public getMaxAttendancePointsNumber(): number {
@@ -315,30 +210,140 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     ];
   }
 
-  public get isAuth(): boolean {
-    const user: string = localStorage.getItem('currentUser');
-    return !!user;
+  private onSelectChange(): void {
+    this.router.navigate([`/marks/${this.selectedDisciplineId}/${this.selectedGroup.id}`]);
+    this.getMarks();
   }
 
-  private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {
-    const orderedModules: TableModule[] = [];
-    const orderedJobs: IJob[] = [];
-    let lastModuleInListNumber: number = 0;
-    this.modules.forEach(module => {
-      if (module.numberInList > lastModuleInListNumber) {
-        lastModuleInListNumber = module.numberInList;
-      }
+  private parseGetMarksResult(result: ITableDataFromBE): IStudentMark[] {
+    const marksAndStudents: IStudentMark[] = result.students.map(student => {
+      const studentMarks: IMark[] = result.jobs.map(job => job.marks.find(mark => mark.studentId === student.id));
+      const markObject: { [key: number]: IMark } = {};
+      studentMarks.forEach(mark => {
+        const jobV: IJob = result.jobs.find(job => mark && mark.jobId === job.id);
+        if (jobV) {
+          markObject[jobV.id] = mark;
+        }
+      });
+      return {
+        studentName: `${student.firstName} ${student.lastName}`,
+        attendance: `${student.attendance}`,
+        attendancePoints: `${this.getAttendancePoints(student.attendance)}`,
+        sumPoints: `${this.getSumPoints(studentMarks, student.attendance)}`,
+        resultCellMark: `${this.getResultCellMark(studentMarks, student.attendance)}`,
+        ...markObject,
+      };
     });
-    for (let i: number = 0; i <= lastModuleInListNumber; ++i) {
-      const module: IModule = this.modules.find(m => m.numberInList === i);
-      if (module) {
-        const moduleJobs: IJob[] = this.jobs.filter(job => job.moduleId === module.id);
+    return marksAndStudents;
+  }
 
-        const tableModule: TableModule = { ...module, numberOfJobs: moduleJobs.length };
-        orderedModules.push(tableModule);
-        orderedJobs.push(...moduleJobs);
+  private getMarks(): void {
+    if (this.selectedDisciplineId && this.selectedGroup) {
+      this.editLink = `/marks/edit/${this.selectedDisciplineId}/${this.selectedGroup.id}`;
+
+      this.api.getMarks(this.selectedDisciplineId, this.selectedGroup.id).subscribe(
+        res => {
+          this.maxAttendance = res.maxAttendance;
+          this.attendanceWeight = res.attendanceWeight;
+          this.countWithAttendance = res.countWithAttendance;
+          this.marksAreas = res.marksAreas;
+          this.ELEMENT_DATA = this.parseGetMarksResult(res);
+          this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
+          this.jobs = res.jobs.sort((j1, j2) => (j1.moduleId === j2.moduleId ? j1.numberInList - j2.numberInList : 0));
+          this.modules = res.modules.sort((m1, m2) => m1.numberInList - m2.numberInList);
+          this.showModules.setValue([{}, ...this.modules]);
+          const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
+          this.moduleFuilds = modules.map(row => {
+            return {
+              columnDef: index => ({
+                def: `module-${index}`,
+                hide: this.showModules.value && !this.showModules.value.some(module => module && module.id === row.id),
+              }),
+              header: `${row.moduleName}`,
+              number: row.numberOfJobs,
+              cell: () => null,
+            };
+          });
+
+          this.maxPointFuilds = jobs.map(row => {
+            return {
+              columnDef: index => ({
+                def: `maxPoint-${index}`,
+                hide:
+                  this.showModules.value &&
+                  !this.showModules.value.some(module => module && module.id === row.moduleId),
+              }),
+              header: `${row.maxPoint}`,
+              cell: () => null,
+            };
+          });
+
+          this.columns = jobs.map(row => {
+            return {
+              columnDef: columnIndex => ({
+                def: `${row.jobValue}-${columnIndex}`,
+                hide:
+                  this.showModules.value &&
+                  !this.showModules.value.some(module => module && module.id === row.moduleId),
+              }),
+              header: `${row.jobValue}`,
+              cell: (cellRow, jobId) => {
+                const mark: string = cellRow[jobId] && cellRow[jobId].markValue;
+                return mark && +mark ? +mark : null;
+              },
+              jobId: row.id,
+            };
+          });
+          this.showHideModules();
+          this.dataSource.sort = this.sort;
+        },
+        err => {
+          console.log(err);
+        }
+      );
+    }
+  }
+
+  private getSumPoints(element: IMark[], attendance: number): number {
+    let sumPoints: number = 0;
+    let index: number = 0;
+    let mark: IMark = element[index];
+    while (mark !== undefined) {
+      if (!isNaN(+mark.markValue)) {
+        sumPoints += +mark.markValue;
+      }
+      if (mark.markValue === '+') {
+        sumPoints += 1;
+      }
+      index++;
+      mark = element[index];
+    }
+    if (this.countWithAttendance && attendance) {
+      sumPoints += this.getAttendancePoints(attendance);
+    }
+    return sumPoints;
+  }
+
+  private getResultCellMark(element: IMark[], attendance: number): string {
+    const sumPoints: number = this.getSumPoints(element, attendance);
+    return this.getResultMark(sumPoints);
+  }
+
+  private getAttendancePoints(attendance: number): number {
+    return attendance * this.attendanceWeight;
+  }
+
+  private getResultMark(sumPoints: number): string {
+    if (this.marksAreas) {
+      if (sumPoints < this.marksAreas.three) {
+        return 'неуд.';
+      } else if (sumPoints > this.marksAreas.three && sumPoints < this.marksAreas.four) {
+        return 'удовл.';
+      } else if (sumPoints > this.marksAreas.four && sumPoints < this.marksAreas.five) {
+        return 'хор.';
+      } else if (sumPoints > this.marksAreas.five) {
+        return 'отл.';
       }
     }
-    return { jobs: orderedJobs, modules: orderedModules };
   }
 }

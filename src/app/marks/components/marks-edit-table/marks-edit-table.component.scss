@@ -62,8 +62,17 @@ button {
 }
 
 .students-filter {
+  display: flex;
+  justify-content: space-between;
   margin: 0 20px;
   font-size: 14px;
+
+  .top-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin: auto 0;
+    gap: 5px;
+  }
 }
 
 th.mat-header-cell:first-of-type,
