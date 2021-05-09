@@ -14,6 +14,10 @@
     >
       {{ t('editGroupButton') }}
     </button>
+    <button *ngIf="selectedGroup && isAdmin" mat-raised-button color="primary" click="uploadStudents()">
+      Browse
+      <input type="file" id="upload-excel-input" (change)="onFilesBrowse($event)" />
+    </button>
   </div>
   <mat-form-field class="groups-filter">
     <mat-label>{{ t('selectGroupDropDown') }}</mat-label>
