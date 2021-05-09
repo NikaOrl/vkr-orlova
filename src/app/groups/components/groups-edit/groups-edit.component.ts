@@ -25,8 +25,6 @@ export class GroupsEditComponent implements OnInit {
   public group: IGroup;
 
   private ELEMENT_DATA: IStudent[] = [];
-  private deletedStudentsIds: Set<string> = new Set();
-  private oldStudentsJSON: string[];
   private saved: boolean = true;
 
   constructor(
@@ -39,12 +37,7 @@ export class GroupsEditComponent implements OnInit {
   public ngOnInit(): void {
     this.selectedGroupId = this.route.snapshot.paramMap.get('groupId');
     if (this.selectedGroupId) {
-      this.api.getGroup(this.selectedGroupId).subscribe((group: IGroup) => {
-        this.group = group;
-        this.groupNumber = group.groupNumber;
-      });
-
-      this.getStudents(this.selectedGroupId);
+      this.getGroup(this.selectedGroupId);
     }
   }
 
@@ -53,40 +46,26 @@ export class GroupsEditComponent implements OnInit {
   }
 
   public save(): void {
-    const newStudents: IStudent[] = [];
-    const addedStudents: IStudent[] = [];
-    this.ELEMENT_DATA.forEach((value, index) => {
-      if (value.id && this.oldStudentsJSON && this.oldStudentsJSON[index] !== JSON.stringify(value)) {
-        newStudents.push(value);
-      }
-      if (!value.id) {
-        addedStudents.push(value);
-      }
-    });
-    if (
-      !this.group ||
-      this.group.groupNumber !== this.groupNumber ||
-      newStudents.length > 0 ||
-      addedStudents.length > 0 ||
-      this.deletedStudentsIds.size > 0
-    ) {
+    if (!this.saved) {
       if (!this.group) {
-        this.addGroup(addedStudents);
-        this.router.navigate([`/groups`]);
+        this.api
+          .addGroup({
+            groupNumber: this.groupNumber,
+            students: this.ELEMENT_DATA.map(student => ({ ...student, id: +student.id < 0 ? null : student.id })),
+          })
+          .subscribe(res => {
+            this.router.navigate([`/groups`]);
+          });
       } else {
-        if (this.group.groupNumber !== this.groupNumber) {
-          this.updateGroup();
-        }
-        if (newStudents.length > 0) {
-          this.updateStudents(newStudents);
-        }
-        if (addedStudents.length > 0) {
-          this.addStudents(addedStudents);
-        }
-        if (this.deletedStudentsIds.size > 0) {
-          this.deleteStudents();
-        }
-        this.router.navigate([`/groups/${this.selectedGroupId}`]);
+        this.api
+          .updateGroup({
+            groupNumber: this.groupNumber,
+            id: this.group.id,
+            students: this.ELEMENT_DATA.map(student => ({ ...student, id: +student.id < 0 ? null : student.id })),
+          })
+          .subscribe(res => {
+            this.router.navigate([`/groups/${this.selectedGroupId}`]);
+          });
       }
       this.saved = true;
     } else {
@@ -94,9 +73,9 @@ export class GroupsEditComponent implements OnInit {
     }
   }
 
-  public delete(e: IStudent): void {
+  public delete(e: string): void {
     this.saved = false;
-    this.deletedStudentsIds.add(e.id);
+    this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(student => student.id === e)].deleted = true;
   }
 
   public add(): void {
@@ -109,28 +88,29 @@ export class GroupsEditComponent implements OnInit {
       groupId: this.selectedGroupId,
       headStudent: false,
       deleted: false,
+      id: `${-(this.ELEMENT_DATA.length + 1)}`,
     });
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  public cancelDelete(e: IStudent): void {
-    this.deletedStudentsIds.delete(e.id);
+  public cancelDelete(e: string): void {
+    this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(student => student.id === e)].deleted = false;
   }
 
-  public cancelAdd(e: IStudent): void {
-    const index: number = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
+  public cancelAdd(e: string): void {
+    const index: number = this.ELEMENT_DATA.findIndex(v => v.id === e);
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  public isDeleted(row: IStudent): boolean {
-    return this.deletedStudentsIds.has(row.id);
+  public isDeleted(e: string): boolean {
+    return !!this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(teacher => teacher && teacher.id === e)].deleted;
   }
 
-  public isAdded(row: IStudent): boolean {
-    return !!!row.id;
+  public isAdded(e: string): boolean {
+    return +this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(teacher => teacher && teacher.id === e)].id < 0;
   }
 
   public unsaved(): void {
@@ -144,69 +124,14 @@ export class GroupsEditComponent implements OnInit {
     return this.dialogService.confirm('Discard changes?');
   }
 
-  private getStudents(groupId: string): void {
-    this.api.getStudents(groupId).subscribe(
+  private getGroup(groupId: string): void {
+    this.api.getGroup(groupId).subscribe(
       res => {
-        this.ELEMENT_DATA = res;
+        this.group = res;
+        this.groupNumber = res.groupNumber;
+        this.ELEMENT_DATA = res.students;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
-        this.oldStudentsJSON = this.ELEMENT_DATA.map(value => JSON.stringify(value));
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private updateStudents(newStudents: IStudent[]): void {
-    this.api.updateStudents(newStudents).subscribe(
-      res => {
-        console.log('students were updated');
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private addStudents(addedStudents: IStudent[]): void {
-    this.api.addStudents(addedStudents).subscribe(
-      res => {
-        console.log('students were added');
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private deleteStudents(): void {
-    this.api.deleteStudents(this.deletedStudentsIds).subscribe(
-      res => {
-        console.log('students were deleted');
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private addGroup(addedStudents: IStudent[]): void {
-    this.api.addGroup(this.groupNumber, addedStudents).subscribe(
-      res => {
-        console.log('group was added');
-        this.router.navigate([`/groups/${res.id}`]);
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private updateGroup(): void {
-    this.api.updateGroup(this.group.id, this.groupNumber).subscribe(
-      res => {
-        console.log('group was added');
       },
       err => {
         console.log(err);

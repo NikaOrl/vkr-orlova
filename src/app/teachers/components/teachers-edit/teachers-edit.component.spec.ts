@@ -70,19 +70,19 @@ describe('TeachersEditComponent', () => {
     component.save();
 
     component.add();
-    expect(component.isAdded({ id: null } as ITeacher)).toBe(true);
-    expect(component.isAdded({ id: '2' } as ITeacher)).toBe(false);
+    expect(component.isAdded('-3')).toBe(true);
+    expect(component.isAdded('2')).toBe(false);
 
-    component.delete({ id: '1' } as ITeacher);
-    expect(component.isDeleted({ id: '1' } as ITeacher)).toBe(true);
-    expect(component.isDeleted({ id: '2' } as ITeacher)).toBe(false);
+    component.delete('1');
+    expect(component.isDeleted('1')).toBe(true);
+    expect(component.isDeleted('2')).toBe(false);
     component.unsaved();
     component.save();
 
     expect(component.canDeactivate()).toBe(true);
-    component.cancelAdd({ id: null } as ITeacher);
+    component.cancelAdd('-3');
 
-    component.cancelDelete({ id: '1' } as ITeacher);
-    expect(component.isDeleted({ id: '1' } as ITeacher)).toBe(false);
+    component.cancelDelete('1');
+    expect(component.isDeleted('1')).toBe(false);
   });
 });

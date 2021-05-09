@@ -6,7 +6,7 @@ import { catchError, map } from 'rxjs/operators';
 
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
-import { GROUPS, HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
+import { GROUPS, HTTP_OPTIONS } from '../../core/http-constants';
 
 @Injectable({
   providedIn: 'root',
@@ -14,49 +14,22 @@ import { GROUPS, HTTP_OPTIONS, STUDENTS } from '../../core/http-constants';
 export class GroupsApiService {
   constructor(private http: HttpClient) {}
 
-  public getStudents(groupId: string): Observable<IStudent[]> {
-    return this.http
-      .get<IStudent[]>(`${STUDENTS}/${groupId}`, HTTP_OPTIONS)
-      .pipe(map(this.extractData), catchError(this.handleError));
-  }
-
   public getGroup(groupId: string): Observable<IGroup> {
     return this.http.get<IGroup>(`${GROUPS}/${groupId}`, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public addGroup(groupNumber: string, addedStudents: IStudent[]): Observable<IGroup> {
-    return this.http
-      .post<IGroup>(`${GROUPS}`, { groupNumber, students: addedStudents }, HTTP_OPTIONS)
-      .pipe(catchError(this.handleError));
+  public addGroup(group: IGroup): Observable<{ status: string }> {
+    return this.http.post<{ status: string }>(`${GROUPS}`, group, HTTP_OPTIONS).pipe(catchError(this.handleError));
   }
 
-  public updateGroup(groupId: string, groupNumber: string): Observable<IGroup> {
+  public updateGroup(group: IGroup): Observable<{ status: string }> {
     return this.http
-      .put<IGroup>(`${GROUPS}/${groupId}`, { groupNumber, id: groupId }, HTTP_OPTIONS)
+      .put<{ status: string }>(`${GROUPS}/${group.id}`, group, HTTP_OPTIONS)
       .pipe(catchError(this.handleError));
   }
 
   public getGroups(): Observable<IGroup[]> {
     return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
-  }
-
-  public updateStudents(students: IStudent[]): Observable<{ status: string }> {
-    return this.http.put<{ status: string }>(`${STUDENTS}`, students, HTTP_OPTIONS).pipe(catchError(this.handleError));
-  }
-
-  public addStudents(students: IStudent[]): Observable<number[]> {
-    return this.http.post<number[]>(`${STUDENTS}`, students, HTTP_OPTIONS).pipe(catchError(this.handleError));
-  }
-
-  public deleteStudents(studentsIds: Set<string>): Observable<number> {
-    return this.http
-      .delete<number>(`${STUDENTS}`, {
-        ...HTTP_OPTIONS,
-        params: {
-          ids: [...studentsIds].map(id => id.toString()),
-        },
-      })
-      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

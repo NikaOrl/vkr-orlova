@@ -4,12 +4,12 @@ import { HttpClientTestingModule, HttpTestingController, TestRequest } from '@an
 import { GroupsApiService } from './groups-api.service';
 import { IStudent } from '../models/student.model';
 import { IGroup } from '../models/group.model';
-import { GROUPS, STUDENTS } from '../../core/http-constants';
+import { GROUPS } from '../../core/http-constants';
 import { Observable, of } from 'rxjs';
 
 export class GroupsApiServiceStub {
-  public getStudents(groupId: number): Observable<unknown> {
-    return of([{ id: 1 }, { id: 2 }]);
+  public getGroup(groupId: number): Observable<IGroup> {
+    return of({ groupNumber: '', id: '1', students: [{ id: '1' } as IStudent, { id: '2' } as IStudent] });
   }
 
   public getGroups(): Observable<unknown> {
@@ -19,28 +19,8 @@ export class GroupsApiServiceStub {
     ]);
   }
 
-  public updateStudents(students: IStudent[]): Observable<unknown> {
+  public updateGroup(students: IStudent[]): Observable<unknown> {
     return of('groups');
-  }
-
-  public addStudents(students: IStudent[]): Observable<unknown> {
-    return of('groups');
-  }
-
-  public deleteStudents(studentsIds: Set<number>): Observable<unknown> {
-    return of('groups');
-  }
-
-  public getGroup(groupId: string): Observable<IGroup> {
-    return of({ id: '1', groupNumber: '1' });
-  }
-
-  public addGroup(groupNumber: string, addedStudents: IStudent[]): Observable<IGroup> {
-    return of({ id: '1', groupNumber: '1' });
-  }
-
-  public updateGroup(groupId: string, groupNumber: string): Observable<IGroup> {
-    return of({ id: '1', groupNumber: '1' });
   }
 }
 
@@ -67,17 +47,20 @@ describe('GroupsApiService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('should getStudents', () => {
-    const dummyUsers: IStudent[] = [{ lastName: 'John' } as IStudent, { lastName: 'Doe' } as IStudent];
+  it('should getGroup', () => {
+    const dummyGroup: IGroup = {
+      groupNumber: '',
+      students: [{ lastName: 'John' } as IStudent, { lastName: 'Doe' } as IStudent],
+    };
 
-    service.getStudents('1').subscribe(users => {
-      expect(users.length).toBe(2);
-      expect(users).toEqual(dummyUsers);
+    service.getGroup('1').subscribe(users => {
+      expect(users.students.length).toBe(2);
+      expect(users).toEqual(dummyGroup);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}/1`);
+    const req: TestRequest = httpMock.expectOne(`${GROUPS}/1`);
     expect(req.request.method).toBe('GET');
-    req.flush(dummyUsers);
+    req.flush(dummyGroup);
   });
 
   it('should getGroups', () => {
@@ -93,38 +76,15 @@ describe('GroupsApiService', () => {
     req.flush(dummyUsers);
   });
 
-  it('should updateStudents', () => {
+  it('should updateGroup', () => {
     const status: { status: string } = { status: 'success' };
 
-    service.updateStudents([]).subscribe(users => {
+    service.updateGroup({ groupNumber: '', id: '1', students: [] }).subscribe(users => {
       expect(users).toEqual(status);
     });
 
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}`);
+    const req: TestRequest = httpMock.expectOne(`${GROUPS}/1`);
     expect(req.request.method).toBe('PUT');
     req.flush(status);
-  });
-
-  it('should addStudents', () => {
-    const dummyUsers: number[] = [1, 2];
-
-    service.addStudents([]).subscribe(users => {
-      expect(users.length).toBe(2);
-      expect(users).toEqual(dummyUsers);
-    });
-
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}`);
-    expect(req.request.method).toBe('POST');
-    req.flush(dummyUsers);
-  });
-
-  it('should deleteStudents', () => {
-    service.deleteStudents(new Set(['1', '2'])).subscribe(users => {
-      expect(users).toEqual(2);
-    });
-
-    const req: TestRequest = httpMock.expectOne(`${STUDENTS}?ids=1&ids=2`);
-    expect(req.request.method).toBe('DELETE');
-    req.flush(2);
   });
 });

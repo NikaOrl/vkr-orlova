@@ -20,8 +20,6 @@ export class TeachersEditComponent implements OnInit {
   @ViewChild(MatSort) public sort: MatSort;
 
   private ELEMENT_DATA: ITeacher[] = [];
-  private deletedTeachersIds: Set<string> = new Set();
-  private oldTeachersJSON: string[];
   private saved: boolean = true;
 
   constructor(private router: Router, private api: TeachersApiService, private dialogService: DialogService) {}
@@ -35,79 +33,62 @@ export class TeachersEditComponent implements OnInit {
   }
 
   public save(): void {
-    const newTeachers: ITeacher[] = [];
-    const addedTeachers: ITeacher[] = [];
-    this.ELEMENT_DATA.forEach((value, index) => {
-      value = {
-        firstName: value.firstName,
-        lastName: value.lastName,
-        id: value.id,
-        password: value.password,
-        email: value.email,
-        isAdmin: value.isAdmin,
-        deleted: value.deleted,
-      };
-      if (this.oldTeachersJSON[index] !== JSON.stringify(value)) {
-        newTeachers.push(value);
-      }
-      if (value.id === null) {
-        addedTeachers.push(value);
-      }
-    });
-    if (newTeachers.length > 0 || addedTeachers.length > 0 || this.deletedTeachersIds.size > 0) {
-      if (newTeachers.length > 0) {
-        this.updateTeachers(newTeachers);
-      }
-      if (addedTeachers.length > 0) {
-        this.addTeachers(addedTeachers);
-      }
-      if (this.deletedTeachersIds.size > 0) {
-        this.deleteTeachers();
-      }
-      this.saved = true;
-      this.router.navigate(['/teachers']);
+    const teachers: ITeacher[] = this.ELEMENT_DATA.map(value => ({
+      firstName: value.firstName,
+      lastName: value.lastName,
+      id: +value.id < 0 ? null : value.id,
+      password: value.password,
+      email: value.email,
+      isAdmin: value.isAdmin,
+      deleted: value.deleted,
+    }));
+    if (!this.saved) {
+      this.api.updateTeachers(teachers).subscribe(res => {
+        this.saved = true;
+        this.router.navigate(['/teachers']);
+      });
     } else {
       alert('no changes to save!');
     }
   }
 
-  public delete(e: ITeacher): void {
+  public delete(e: string): void {
     this.saved = false;
-    this.deletedTeachersIds.add(e.id);
+    this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(teacher => teacher.id === e)].deleted = true;
   }
 
   public add(): void {
     this.saved = false;
     this.ELEMENT_DATA.push({
-      id: null,
       firstName: '',
       lastName: '',
       email: '',
       isAdmin: false,
       deleted: false,
       password: '',
+      id: `${-(this.ELEMENT_DATA.length + 1)}`,
     });
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  public cancelDelete(e: ITeacher): void {
-    this.deletedTeachersIds.delete(e.id);
+  public cancelDelete(e: string): void {
+    this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(teacher => teacher.id === e)].deleted = false;
   }
 
-  public cancelAdd(e: ITeacher): void {
-    const index: number = this.ELEMENT_DATA.findIndex(v => JSON.stringify(v) === JSON.stringify(e));
+  public cancelAdd(e: string): void {
+    const index: number = this.ELEMENT_DATA.findIndex(v => v.id === e);
     this.ELEMENT_DATA.splice(index, 1);
     this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
     this.dataSource.sort = this.sort;
   }
 
-  public isDeleted(row: ITeacher): boolean {
-    return this.deletedTeachersIds.has(row.id);
+  public isDeleted(e: string): boolean {
+    return !!this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(teacher => teacher && teacher.id === e)].deleted;
   }
 
-  public isAdded(row: ITeacher): boolean {
-    return row.id === null;
+  public isAdded(e: string): boolean {
+    return +this.ELEMENT_DATA[this.ELEMENT_DATA.findIndex(teacher => teacher && teacher.id === e)].id < 0;
   }
 
   public unsaved(): void {
@@ -127,40 +108,6 @@ export class TeachersEditComponent implements OnInit {
         this.ELEMENT_DATA = res.map(teacher => ({ ...teacher, hide: true }));
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
-        this.oldTeachersJSON = this.ELEMENT_DATA.map(value => JSON.stringify(value));
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private updateTeachers(newTeachers: ITeacher[]): void {
-    this.api.updateTeachers(newTeachers).subscribe(
-      res => {
-        console.log('Teachers were updated');
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private addTeachers(addedTeachers: ITeacher[]): void {
-    this.api.addTeachers(addedTeachers).then(
-      res => {
-        console.log('Teachers were added');
-      },
-      err => {
-        console.log(err);
-      }
-    );
-  }
-
-  private deleteTeachers(): void {
-    this.api.deleteTeachers(this.deletedTeachersIds).subscribe(
-      res => {
-        console.log('Teachers were deleted');
       },
       err => {
         console.log(err);

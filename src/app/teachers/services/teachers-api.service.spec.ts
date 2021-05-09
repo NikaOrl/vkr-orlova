@@ -14,18 +14,6 @@ export class TeachersApiServiceStub {
   public updateTeachers(teachers: ITeacher[]): Observable<{ status: string }> {
     return of({ status: 'test' });
   }
-
-  // tslint:disable-next-line: no-any
-  public addTeachers(teachers: ITeacher[]): Promise<any> {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => resolve('test'));
-      setTimeout(() => reject(new Error('ignored')));
-    });
-  }
-
-  public deleteTeachers(teachersIds: Set<number>): Observable<number> {
-    return of(1);
-  }
 }
 
 describe('TeachersApiService', () => {
@@ -73,30 +61,6 @@ describe('TeachersApiService', () => {
 
     const req: TestRequest = httpMock.expectOne(`${TEACHERS}`);
     expect(req.request.method).toBe('PUT');
-    req.flush(dummyUsers);
-  });
-
-  it('should addTeachers', () => {
-    const dummyUsers: ITeacher[] = [{ lastName: '1' } as ITeacher];
-
-    service.addTeachers(([{ first: '1' }] as unknown) as ITeacher[]).then(users => {
-      expect(users.length).toBe(1);
-    });
-
-    const req: TestRequest = httpMock.expectOne(`${TEACHERS}`);
-    expect(req.request.method).toBe('POST');
-    req.flush(dummyUsers);
-  });
-
-  it('should deleteTeachers', () => {
-    const dummyUsers: number = 2;
-
-    service.deleteTeachers(new Set(['1', '2'])).subscribe(users => {
-      expect(users).toEqual(dummyUsers);
-    });
-
-    const req: TestRequest = httpMock.expectOne(`${TEACHERS}?ids=1&ids=2`);
-    expect(req.request.method).toBe('DELETE');
     req.flush(dummyUsers);
   });
 });
