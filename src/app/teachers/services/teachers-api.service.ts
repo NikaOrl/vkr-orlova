@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -20,26 +20,6 @@ export class TeachersApiService {
 
   public updateTeachers(teachers: ITeacher[]): Observable<{ status: string }> {
     return this.http.put<{ status: string }>(`${TEACHERS}`, teachers, HTTP_OPTIONS).pipe(catchError(this.handleError));
-  }
-
-  // tslint:disable-next-line: no-any
-  public addTeachers(teachers: ITeacher[]): any {
-    return Promise.all(
-      teachers.map(teacher => {
-        this.http.post<ITeacher[]>(`${TEACHERS}`, teacher, HTTP_OPTIONS).pipe(catchError(this.handleError)).toPromise();
-      })
-    );
-  }
-
-  public deleteTeachers(teachersIds: Set<string>): Observable<number> {
-    return this.http
-      .delete<number>(`${TEACHERS}`, {
-        ...HTTP_OPTIONS,
-        params: {
-          ids: [...teachersIds],
-        },
-      })
-      .pipe(catchError(this.handleError));
   }
 
   private handleError(error: HttpErrorResponse): Observable<never> {

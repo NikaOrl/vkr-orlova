@@ -35,7 +35,7 @@ export class GroupTableComponent implements OnInit {
         this.filteredGroups = this.groups;
 
         if (this.selectedGroup) {
-          this.getStudents(this.selectedGroup.id);
+          this.getGroup(this.selectedGroup.id);
         }
       },
       err => {
@@ -62,13 +62,13 @@ export class GroupTableComponent implements OnInit {
 
   public onSelectedGroupChange(): void {
     this.router.navigate([`/groups/${this.selectedGroup.id}`]);
-    this.getStudents(this.selectedGroup.id);
+    this.getGroup(this.selectedGroup.id);
   }
 
-  public getStudents(groupId: string): void {
-    this.api.getStudents(groupId).subscribe(
+  public getGroup(groupId: string): void {
+    this.api.getGroup(groupId).subscribe(
       res => {
-        this.ELEMENT_DATA = res;
+        this.ELEMENT_DATA = res.students;
         this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
         this.dataSource.sort = this.sort;
       },

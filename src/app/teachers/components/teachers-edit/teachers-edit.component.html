@@ -14,8 +14,8 @@
           mat-cell
           *matCellDef="let element; let i = index"
           [ngClass]="{
-            'alert-danger': isDeleted(element),
-            'alert-success': isAdded(element)
+            'alert-danger': isDeleted(element.id),
+            'alert-success': isAdded(element.id)
           }"
         >
           <input
@@ -36,8 +36,8 @@
           mat-cell
           *matCellDef="let element; let i = index"
           [ngClass]="{
-            'alert-danger': isDeleted(element),
-            'alert-success': isAdded(element)
+            'alert-danger': isDeleted(element.id),
+            'alert-success': isAdded(element.id)
           }"
         >
           <input
@@ -58,8 +58,8 @@
           mat-cell
           *matCellDef="let element; let i = index"
           [ngClass]="{
-            'alert-danger': isDeleted(element),
-            'alert-success': isAdded(element)
+            'alert-danger': isDeleted(element.id),
+            'alert-success': isAdded(element.id)
           }"
         >
           <input
@@ -80,8 +80,8 @@
           mat-cell
           *matCellDef="let element; let i = index"
           [ngClass]="{
-            'alert-danger': isDeleted(element),
-            'alert-success': isAdded(element)
+            'alert-danger': isDeleted(element.id),
+            'alert-success': isAdded(element.id)
           }"
           class="password-field"
         >
@@ -113,8 +113,8 @@
           mat-cell
           *matCellDef="let element; let i = index"
           [ngClass]="{
-            'alert-danger': isDeleted(element),
-            'alert-success': isAdded(element)
+            'alert-danger': isDeleted(element.id),
+            'alert-success': isAdded(element.id)
           }"
         >
           <mat-checkbox [(ngModel)]="element.isAdmin" name="isAdmin-{{ i }}" (change)="unsaved()"></mat-checkbox>
@@ -128,26 +128,26 @@
           mat-cell
           *matCellDef="let element"
           [ngClass]="{
-            'alert-danger': isDeleted(element),
-            'alert-success': isAdded(element)
+            'alert-danger': isDeleted(element.id),
+            'alert-success': isAdded(element.id)
           }"
           class="delete-td"
         >
           <button
-            *ngIf="!isDeleted(element) && !isAdded(element)"
-            (click)="delete(element)"
+            *ngIf="!isDeleted(element.id) && !isAdded(element.id)"
+            (click)="delete(element.id)"
             type="button"
             class="btn btn-danger"
           >
             {{ t('delete') }}
           </button>
-          <div class="message" *ngIf="isDeleted(element) && !isAdded(element)">
+          <div class="message" *ngIf="isDeleted(element.id) && !isAdded(element.id)">
             {{ t('deteleMessage') }}
-            <a (click)="cancelDelete(element)" class="cancel">{{ t('cancel') }}</a>
+            <a (click)="cancelDelete(element.id)" class="cancel">{{ t('cancel') }}</a>
           </div>
-          <div class="message" *ngIf="isAdded(element)">
+          <div class="message" *ngIf="isAdded(element.id)">
             {{ t('addMessage') }}
-            <a (click)="cancelAdd(element)" class="cancel">{{ t('cancel') }}</a>
+            <a (click)="cancelAdd(element.id)" class="cancel">{{ t('cancel') }}</a>
           </div>
         </td>
       </ng-container>
