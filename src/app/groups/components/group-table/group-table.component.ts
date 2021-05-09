@@ -118,6 +118,7 @@ export class GroupTableComponent implements OnInit {
           return of(null);
         })
       )
+      // tslint:disable-next-line: no-any
       .subscribe((event: HttpEvent<any>) => {
         if (event?.type === HttpEventType.UploadProgress && event.total) {
           this.progress = Math.round((event.loaded / event.total) * 100);
