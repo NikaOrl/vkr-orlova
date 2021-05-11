@@ -32,6 +32,13 @@ export class GroupsApiService {
     return this.http.get<IGroup[]>(`${GROUPS}`, HTTP_OPTIONS).pipe(map(this.extractData), catchError(this.handleError));
   }
 
+  public uploadExcel(file: File, groupId: string): Observable<unknown> {
+    const formData: FormData = new FormData();
+    formData.append('file', file);
+
+    return this.http.post(`${GROUPS}/${groupId}/table`, formData, { reportProgress: true, observe: 'events' });
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

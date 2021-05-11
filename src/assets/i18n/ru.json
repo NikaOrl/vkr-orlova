@@ -70,7 +70,8 @@
     "groupNumber": "Номер группы",
     "requiredError": "Заполните обязательное поле",
     "starostaRole": "Староста",
-    "studentRole": "Студент"
+    "studentRole": "Студент",
+    "upload": "Загрузить таблицу"
   },
   "teachers": {
     "teachersFilter": "Поиск по имени",

@@ -2,6 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
+import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
+import { of } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
 import { GroupsApiService } from '../../services/groups-api.service';
 import { IGroup } from '../../models/group.model';
@@ -20,6 +23,10 @@ export class GroupTableComponent implements OnInit {
   public displayedColumns: string[] = ['numberInList', 'firstName', 'lastName', 'email', 'headStudent'];
   public dataSource: MatTableDataSource<IStudent> = new MatTableDataSource(this.ELEMENT_DATA);
   public selectValue: string | IGroup;
+
+  public fileToUpload: File | null;
+  public progress: number = 0;
+  public errorMessage: string;
 
   @ViewChild(MatSort) public sort: MatSort;
 
@@ -89,5 +96,37 @@ export class GroupTableComponent implements OnInit {
   public get isAdmin(): boolean {
     const user: string = localStorage.getItem('currentUser');
     return user && `${user}` !== 'undefined' ? JSON.parse(user).isAdmin : false;
+  }
+
+  public onFilesBrowse(event: Event): void {
+    const target: HTMLInputElement = event.target as HTMLInputElement;
+    if (target.files) {
+      this.onFilesDrop(target.files);
+    }
+  }
+
+  public onFilesDrop(files: FileList): void {
+    this.errorMessage = '';
+    this.fileToUpload = files[0];
+
+    this.api
+      .uploadExcel(this.fileToUpload, this.selectedGroup.id)
+      .pipe(
+        catchError((errorResponse: HttpErrorResponse) => {
+          // TODO: Consider better error message constructing
+          this.errorMessage = errorResponse.error.error;
+          return of(null);
+        })
+      )
+      // tslint:disable-next-line: no-any
+      .subscribe((event: HttpEvent<any>) => {
+        if (event?.type === HttpEventType.UploadProgress && event.total) {
+          this.progress = Math.round((event.loaded / event.total) * 100);
+        }
+
+        if (event?.type === HttpEventType.Response) {
+          // TODO: Share event.body to some service in order to define form table fields
+        }
+      });
   }
 }
