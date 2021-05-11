@@ -19,11 +19,7 @@
       </mat-select>
     </mat-form-field>
   </div>
-  <div class="edit-button">
-    <button *ngIf="selectedDisciplineId && isAuth" mat-raised-button color="primary" [routerLink]="editLink">
-      {{ t('editMarksButton') }}
-    </button>
-  </div>
+
   <mat-form-field class="groups-filter">
     <mat-label>{{ t('selectGroupDropDown') }}</mat-label>
     <input
@@ -44,6 +40,11 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
+  <div class="edit-button">
+    <button *ngIf="selectedDisciplineId && isAuth" mat-raised-button color="primary" [routerLink]="editLink">
+      {{ t('editMarksButton') }}
+    </button>
+  </div>
 </div>
 <div class="info-message" *transloco="let t; read: 'marks'">{{ t('marksInformMessage') }}</div>
 <div class="above-scroller" #scroller (scroll)="scrollTop()">

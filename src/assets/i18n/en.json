@@ -70,7 +70,8 @@
     "groupNumber": "Group Number",
     "requiredError": "Group Number is required",
     "starostaRole": "Starosta",
-    "studentRole": "Student"
+    "studentRole": "Student",
+    "upload": "Upload table"
   },
   "teachers": {
     "teachersFilter": "Teachers filter",

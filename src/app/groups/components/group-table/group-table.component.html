@@ -10,12 +10,13 @@
       *ngIf="selectedGroup && isAdmin"
       mat-raised-button
       color="primary"
+      class="add-button"
       routerLink="/groups/edit/{{ selectedGroup.id }}"
     >
       {{ t('editGroupButton') }}
     </button>
     <button *ngIf="selectedGroup && isAdmin" mat-raised-button color="primary" click="uploadStudents()">
-      Browse
+      {{ t('upload') }}
       <input type="file" id="upload-excel-input" (change)="onFilesBrowse($event)" />
     </button>
   </div>
