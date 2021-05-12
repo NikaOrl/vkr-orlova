@@ -12,10 +12,10 @@
     "lint:prettier": "prettier --config .prettierrc --write src/**/*.{ts,scss,html}",
     "lint:commit": "node ./githooks/commit-msg.js",
     "lint": "npm run lint:ts && npm run lint:style && npm run lint:prettier",
-    "docker:build": "docker build --target build -t nikaorl/vkr-orlova .",
+    "docker:build": "docker build -t nikaorl/vkr-orlova .",
     "docker:db": "cd ./db && docker-compose up",
     "docker:db:down": "cd ./db && docker-compose down -v",
-    "docker:run": " docker run --name nikaorl/vkr-orlova-container -d -p 3000:3000 -p 4200:4200 vkr-orlova"
+    "docker:run": "docker run --rm -it -p 4200:96 -e APP_SERVER=http://localhost:3000 nikaorl/vkr-orlova"
   },
   "dependencies": {
     "@angular/animations": "^11.2.6",
