@@ -4,7 +4,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Router, ActivatedRoute } from '@angular/router';
 import { HttpErrorResponse, HttpEvent, HttpEventType } from '@angular/common/http';
 import { of } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, take } from 'rxjs/operators';
+import { saveAs } from 'file-saver';
 
 import { GroupsApiService } from '../../services/groups-api.service';
 import { IGroup } from '../../models/group.model';
@@ -127,6 +128,16 @@ export class GroupTableComponent implements OnInit {
         if (event?.type === HttpEventType.Response) {
           // TODO: Share event.body to some service in order to define form table fields
         }
+      });
+  }
+
+  public downloadExcelFile(): void {
+    this.api
+      .downloadExcelTemplate(this.selectedGroup.id)
+      .pipe(take(1))
+      .subscribe(blob => {
+        const file: File = new File([blob], `${this.selectedGroup.groupNumber}.xlsx`);
+        saveAs(file);
       });
   }
 }

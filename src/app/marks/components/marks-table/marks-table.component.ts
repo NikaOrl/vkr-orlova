@@ -186,24 +186,24 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   public showHideModules(): void {
     this.displayedModulesColumns = [
       { def: 'moduleFuild', hide: false },
-      { def: 'emptyHeader', hide: false },
-      { def: 'emptyHeader', hide: !this.countWithAttendance },
+      { def: 'emptyHeader', hide: this.maxAttendance === 0 },
+      { def: 'emptyHeader', hide: !this.countWithAttendance || this.maxAttendance === 0 },
       ...this.moduleFuilds.map((x, i) => x.columnDef(i)),
       { def: 'emptyHeader', hide: false },
       { def: 'emptyStickyEndHeader', hide: false },
     ];
     this.displayedColumns = [
       { def: 'studentName', hide: false },
-      { def: 'attendance', hide: false },
-      { def: 'attendancePoints', hide: !this.countWithAttendance },
+      { def: 'attendance', hide: this.maxAttendance === 0 },
+      { def: 'attendancePoints', hide: !this.countWithAttendance || this.maxAttendance === 0 },
       ...this.columns.map((x, i) => x.columnDef(i)),
       { def: 'sumPoints', hide: false },
       { def: 'mark', hide: false },
     ];
     this.displayedMaxPointColumns = [
       { def: 'maxPointFuild', hide: false },
-      { def: 'maxAttendanceNumber', hide: false },
-      { def: 'maxAttendancePointsNumber', hide: !this.countWithAttendance },
+      { def: 'maxAttendanceNumber', hide: this.maxAttendance === 0 },
+      { def: 'maxAttendancePointsNumber', hide: !this.countWithAttendance || this.maxAttendance === 0 },
       ...this.maxPointFuilds.map((x, i) => x.columnDef(i)),
       { def: 'maxPointsSum', hide: false },
       { def: 'maxPointsResult', hide: false },

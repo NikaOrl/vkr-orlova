@@ -28,7 +28,7 @@
             formControlName="attendanceWeight"
             [readonly]="!disciplineForm.controls.countWithAttendance.value"
           />
-          <mat-error *ngIf="disciplineForm.controls.attendanceWeight.invalid">{{ t('requiredMinError') }}</mat-error>
+          <mat-error *ngIf="disciplineForm.controls.attendanceWeight.invalid">{{ t('requiredMin0Error') }}</mat-error>
         </mat-form-field>
       </div>
       <div *ngIf="isAdmin">
@@ -72,21 +72,21 @@
         <span>3:</span>
         <mat-form-field>
           <input matInput type="number" formControlName="three" />
-          <mat-error *ngIf="disciplineForm.controls.four.invalid">{{ t('requiredMinError') }}</mat-error>
+          <mat-error *ngIf="disciplineForm.controls.four.invalid">{{ t('requiredMin1Error') }}</mat-error>
         </mat-form-field>
       </div>
       <div>
         <span>4:</span>
         <mat-form-field>
           <input matInput type="number" formControlName="four" />
-          <mat-error *ngIf="disciplineForm.controls.four.invalid">{{ t('requiredMinError') }}</mat-error>
+          <mat-error *ngIf="disciplineForm.controls.four.invalid">{{ t('requiredMin1Error') }}</mat-error>
         </mat-form-field>
       </div>
       <div>
         <span>5:</span>
         <mat-form-field>
           <input matInput type="number" formControlName="five" />
-          <mat-error *ngIf="disciplineForm.controls.five.invalid">{{ t('requiredMinError') }}</mat-error>
+          <mat-error *ngIf="disciplineForm.controls.five.invalid">{{ t('requiredMin1Error') }}</mat-error>
         </mat-form-field>
       </div>
       <div *ngIf="isAdmin">
