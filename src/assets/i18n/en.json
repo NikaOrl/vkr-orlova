@@ -71,7 +71,8 @@
     "requiredError": "Group Number is required",
     "starostaRole": "Starosta",
     "studentRole": "Student",
-    "upload": "Upload table"
+    "upload": "Upload table",
+    "download": "Download table"
   },
   "teachers": {
     "teachersFilter": "Teachers filter",
@@ -109,7 +110,8 @@
     "deleteButton": "Delete",
     "addButton": "Add discipline",
     "pointsTitle": "Points required for a grade:",
-    "requiredMinError": "This field is required and must be bigger than 1",
+    "requiredMin1Error": "This field is required and must be bigger than 1",
+    "requiredMin0Error": "This field is required and must be bigger than 0",
     "attendanceWeight": "Attendance weight",
     "attendanceSwitcher": "Counting with points for a attendance",
     "selectSemesterDropDown": "Select semester",

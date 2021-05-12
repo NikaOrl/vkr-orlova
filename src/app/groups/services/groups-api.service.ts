@@ -39,6 +39,10 @@ export class GroupsApiService {
     return this.http.post(`${GROUPS}/${groupId}/table`, formData, { reportProgress: true, observe: 'events' });
   }
 
+  public downloadExcelTemplate(groupId: string): Observable<Blob> {
+    return this.http.get(`${GROUPS}/${groupId}/table`, { responseType: 'blob' });
+  }
+
   private handleError(error: HttpErrorResponse): Observable<never> {
     if (error.error instanceof ErrorEvent) {
       // A client-side or network error occurred. Handle it accordingly.

@@ -132,4 +132,9 @@ export class DisciplinesPageComponent implements OnInit {
     const user: string = localStorage.getItem('currentUser');
     return user && `${user}` !== 'undefined' ? JSON.parse(user).isAdmin : false;
   }
+
+  public get isAuth(): boolean {
+    const user: string = localStorage.getItem('currentUser');
+    return !!user;
+  }
 }
