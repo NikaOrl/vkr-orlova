@@ -44,7 +44,7 @@ export class DisciplineDialogComponent implements OnInit {
     five: new FormControl('', [Validators.required, Validators.min(1)]),
     semester: new FormControl('', [Validators.required]),
     semesterAuto: new FormControl(''),
-    attendanceWeight: new FormControl(null, [Validators.min(1)]),
+    attendanceWeight: new FormControl(null, [Validators.min(0)]),
     selectedTeachers: new FormControl([], [Validators.required, Validators.minLength(1)]),
   });
   public teacherCtrl: FormControl = new FormControl();

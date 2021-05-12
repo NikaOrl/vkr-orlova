@@ -71,7 +71,8 @@
     "requiredError": "Заполните обязательное поле",
     "starostaRole": "Староста",
     "studentRole": "Студент",
-    "upload": "Загрузить таблицу"
+    "upload": "Загрузить таблицу",
+    "download": "Скачать таблицу"
   },
   "teachers": {
     "teachersFilter": "Поиск по имени",
@@ -109,7 +110,8 @@
     "deleteButton": "Удалить",
     "addButton": "Добавить дисциплину",
     "pointsTitle": "Необходимое количество баллов для оценки:",
-    "requiredMinError": "Это поле обязательно и должно быть больше 1",
+    "requiredMin1Error": "Это поле обязательно и должно быть больше 1",
+    "requiredMin0Error": "Это поле обязательно и должно быть больше 0",
     "attendanceWeight": "Балл за одно посещение",
     "attendanceSwitcher": "Учет баллов за посещение",
     "selectSemesterDropDown": "Выберете семестр",
