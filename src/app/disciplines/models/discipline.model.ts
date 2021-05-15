@@ -5,7 +5,9 @@ export interface IDisciplineBase {
   attendanceWeight?: number;
   marksAreas: { three: number; four: number; five: number };
   countWithAttendance: boolean;
+  countAsAverage: boolean;
 }
+
 export interface IDiscipline extends IDisciplineBase {
   id: string;
 }

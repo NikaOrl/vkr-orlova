@@ -42,6 +42,7 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   public maxAttendance: number = 0;
   public attendanceWeight: number = 1;
   public countWithAttendance: boolean = false;
+  public countAsAverage: boolean = false;
 
   public editLink: string = '';
   public selectedDisciplineId: string;
@@ -160,6 +161,9 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     this.jobs.forEach((job: IJob) => {
       sumPoints += job.maxPoint;
     });
+    if (this.countAsAverage) {
+      sumPoints = +(sumPoints / this.modules.length).toFixed(2);
+    }
     if (this.countWithAttendance) {
       sumPoints += this.getMaxAttendancePointsNumber();
     }
@@ -310,6 +314,7 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
           this.maxAttendance = res.maxAttendance;
           this.attendanceWeight = res.attendanceWeight;
           this.countWithAttendance = res.countWithAttendance;
+          this.countAsAverage = res.countAsAverage;
           this.marksAreas = res.marksAreas;
           this.jobs = res.jobs.sort((j1, j2) => (j1.moduleId === j2.moduleId ? j1.numberInList - j2.numberInList : 0));
           this.modules = res.modules.sort((m1, m2) => m1.numberInList - m2.numberInList);
@@ -389,14 +394,14 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     let index: number = 0;
     let mark: IMark = element[index];
     while (mark !== undefined) {
-      if (!isNaN(+mark.markValue)) {
+      if (mark.id && !isNaN(+mark.markValue)) {
         sumPoints += +mark.markValue;
-      }
-      if (mark.markValue === '+') {
-        sumPoints += 1;
       }
       index++;
       mark = element[index];
+    }
+    if (this.countAsAverage) {
+      sumPoints = +(sumPoints / this.modules.length).toFixed(2);
     }
     if (this.countWithAttendance && attendance) {
       sumPoints += this.getAttendancePoints(attendance);

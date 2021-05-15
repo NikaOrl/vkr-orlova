@@ -1,7 +1,9 @@
 <div class="filters-container" *transloco="let t; read: 'marks'">
-  <button mat-raised-button color="primary" type="button" routerLink="/disciplines" class="router-button">
-    {{ t('backButton') }}
-  </button>
+  <div class="edit-button">
+    <button mat-raised-button color="primary" type="button" routerLink="/disciplines">
+      {{ t('backButton') }}
+    </button>
+  </div>
   <mat-form-field class="students-filter">
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
@@ -82,8 +84,10 @@
 
     <!-- attendancePoints Column -->
     <ng-container matColumnDef="attendancePoints">
-      <th class="student-cell" mat-header-cell *matHeaderCellDef mat-sort-header>{{ t('attendancePointsTitle') }}</th>
-      <td class="student-cell" mat-cell *matCellDef="let element">
+      <th class="student-cell bold" mat-header-cell *matHeaderCellDef mat-sort-header>
+        {{ t('attendancePointsTitle') }}
+      </th>
+      <td class="student-cell bold" mat-cell *matCellDef="let element">
         {{ element.attendancePoints }}
       </td>
     </ng-container>
@@ -93,7 +97,14 @@
       <th class="mark-cell" md-header-cell *cdkHeaderCellDef>
         {{ column.header }}
       </th>
-      <td class="mark-cell" md-cell *cdkCellDef="let row">
+      <td
+        class="mark-cell"
+        [ngClass]="{
+          bold: +column.jobId < 0
+        }"
+        md-cell
+        *cdkCellDef="let row"
+      >
         {{ column.cell(row, column.jobId) }}
       </td>
     </ng-container>
