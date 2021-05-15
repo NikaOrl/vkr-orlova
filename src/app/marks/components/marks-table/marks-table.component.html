@@ -5,6 +5,16 @@
   <mat-form-field class="students-filter">
     <input matInput (keyup)="applyFilter($event.target.value)" [placeholder]="t('studentsFilter')" />
   </mat-form-field>
+  <div class="module-results-toggle">
+    <mat-slide-toggle
+      color="primary"
+      labelPosition="before"
+      [formControl]="showModulesResult"
+      (change)="switchShowModulesResult($event)"
+    >
+      {{ t('showModulesResultSwitcher') }}
+    </mat-slide-toggle>
+  </div>
   <div class="edit-button">
     <mat-form-field>
       <mat-label>

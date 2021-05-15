@@ -12,7 +12,7 @@
     "selector-type-no-unknown": [
       true,
       {
-        "ignoreTypes": ["rdci-root", "pdf-viewer"]
+        "ignoreTypes": ["mat-slide-toggle"]
       }
     ],
     "selector-pseudo-element-no-unknown": [

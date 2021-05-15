@@ -16,6 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { MarksTableComponent } from './components/marks-table/marks-table.component';
 import { MarksPageComponent } from './components/marks-page/marks-page.component';
@@ -49,6 +50,7 @@ import { MarksEditAttendanceComponent } from './components/marks-edit-attendance
     MatTabsModule,
     MatIconModule,
     MatCheckboxModule,
+    MatSlideToggleModule,
     DragDropModule,
     HttpClientModule,
     CdkTableModule,

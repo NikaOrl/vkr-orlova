@@ -104,3 +104,12 @@ td.mat-footer-cell:last-of-type {
     height: 1px;
   }
 }
+
+.module-results-toggle {
+  display: flex;
+  padding: 0 12px;
+
+  mat-slide-toggle {
+    margin: auto;
+  }
+}

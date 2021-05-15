@@ -17,6 +17,7 @@ import { MarksApiService } from '../../services/marks-api.service';
 import { MarksApiServiceStub } from '../../services/marks-api.service.spec';
 import { IGroup } from '../../../groups/models/group.model';
 import { getTranslocoModule } from '../../../transloco/transloco-testing.module';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 describe('MarksTableComponent', () => {
   let component: MarksTableComponent;
@@ -35,6 +36,7 @@ describe('MarksTableComponent', () => {
         MatAutocompleteModule,
         NoopAnimationsModule,
         MatDialogModule,
+        MatSlideToggleModule,
         CdkTableModule,
         getTranslocoModule(),
       ],

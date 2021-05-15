@@ -11,12 +11,7 @@
           <mat-error *ngIf="disciplineForm.controls.disciplineName.invalid">{{ t('requiredError') }}</mat-error>
         </mat-form-field>
       </div>
-      <mat-slide-toggle
-        class="example-margin"
-        color="primary"
-        labelPosition="before"
-        formControlName="countWithAttendance"
-      >
+      <mat-slide-toggle color="primary" labelPosition="before" formControlName="countWithAttendance">
         {{ t('attendanceSwitcher') }}
       </mat-slide-toggle>
       <div>
