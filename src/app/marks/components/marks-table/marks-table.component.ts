@@ -1,19 +1,21 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslocoService } from '@ngneat/transloco';
 
-import { MarksApiService } from '../../services/marks-api.service';
-import { IStudentMark } from '../../models/student-marks.model';
-import { IDialogData } from '../../models/dialog-data.model';
-import { IColumn } from '../../models/column.model';
-import { ITableDataFromBE, TableModule } from '../../models/table-data.model';
-import { IMark } from '../../models/mark.model';
-import { IJob } from '../../models/job.model';
 import { IGroup } from '../../../groups/models/group.model';
+import { IStudent } from '../../../groups/models/student.model';
+import { IColumn } from '../../models/column.model';
+import { IDialogData } from '../../models/dialog-data.model';
+import { IJob } from '../../models/job.model';
+import { IMark } from '../../models/mark.model';
 import { IModule } from '../../models/module.model';
+import { IStudentMark } from '../../models/student-marks.model';
+import { ITableDataFromBE, ITableDataJob, TableModule } from '../../models/table-data.model';
+import { MarksApiService } from '../../services/marks-api.service';
 
 @Component({
   selector: 'app-marks-table',
@@ -45,6 +47,7 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   public selectedDisciplineId: string;
 
   public showModules: FormControl = new FormControl();
+  public showModulesResult: FormControl = new FormControl(false);
 
   @ViewChild(MatSort) public sort: MatSort;
   @ViewChild('scroller') public scroller: ElementRef;
@@ -52,25 +55,30 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   @ViewChild('table') public table: ElementRef;
 
   private marksAreas: IDialogData;
-  private jobs: IJob[] = [];
+  private jobs: ITableDataJob[] = [];
   private modules: IModule[] = [];
 
   constructor(
     private router: Router,
     private route: ActivatedRoute,
     private api: MarksApiService,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private translocoService: TranslocoService
   ) {}
 
   public ngOnInit(): void {
     this.selectedDisciplineId = this.route.snapshot.paramMap.get('disciplineId');
     if (!this.selectedDisciplineId) {
-      this.api.getDisciplines().subscribe(disciplines => {
-        if (disciplines[0]) {
-          this.selectedDisciplineId = disciplines[0].id;
-          this.router.navigate([`/marks/${this.selectedDisciplineId}`]);
-        }
-      });
+      this.router.navigate([`/disciplines`]);
+    }
+
+    const showModulesResult: string = localStorage.getItem('showModulesResult');
+    if (`${showModulesResult}` !== 'null' && `${showModulesResult}` !== 'undefined') {
+      const showModulesResultByDisciplines: Record<string, boolean> = JSON.parse(showModulesResult);
+      const disciplineShowModulesResult: boolean = showModulesResultByDisciplines[this.selectedDisciplineId];
+      if (disciplineShowModulesResult) {
+        this.showModulesResult.setValue(true);
+      }
     }
 
     this.api.getGroups(this.selectedDisciplineId).subscribe(groups => {
@@ -102,26 +110,18 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
     return !!user;
   }
 
-  private get orderedByModuleJobs(): { jobs: IJob[]; modules: TableModule[] } {
-    const orderedModules: TableModule[] = [];
-    const orderedJobs: IJob[] = [];
-    let lastModuleInListNumber: number = 0;
-    this.modules.forEach(module => {
-      if (module.numberInList > lastModuleInListNumber) {
-        lastModuleInListNumber = module.numberInList;
-      }
-    });
-    for (let i: number = 0; i <= lastModuleInListNumber; ++i) {
-      const module: IModule = this.modules.find(m => m.numberInList === i);
-      if (module) {
-        const moduleJobs: IJob[] = this.jobs.filter(job => job.moduleId === module.id);
-
-        const tableModule: TableModule = { ...module, numberOfJobs: moduleJobs.length };
-        orderedModules.push(tableModule);
-        orderedJobs.push(...moduleJobs);
-      }
+  public switchShowModulesResult(e: MatSlideToggleChange): void {
+    const showModulesResult: string = localStorage.getItem('showModulesResult');
+    if (`${showModulesResult}` !== 'null' && `${showModulesResult}` !== 'undefined') {
+      const showModulesResultByDisciplines: Record<string, boolean> = JSON.parse(showModulesResult);
+      localStorage.setItem(
+        'showModulesResult',
+        JSON.stringify({ ...showModulesResultByDisciplines, [this.selectedDisciplineId]: e.checked })
+      );
+    } else {
+      localStorage.setItem('showModulesResult', JSON.stringify({ [this.selectedDisciplineId]: e.checked }));
     }
-    return { jobs: orderedJobs, modules: orderedModules };
+    this.getMarks();
   }
 
   public scrollTop(): void {
@@ -184,6 +184,22 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
   }
 
   public showHideModules(): void {
+    const hiddenModulesIdsString: string = localStorage.getItem('hiddenModulesIds');
+
+    if (`${hiddenModulesIdsString}` !== 'null' && `${hiddenModulesIdsString}` !== 'undefined') {
+      const hiddenModulesIds: Record<string, string[]> = JSON.parse(localStorage.getItem('hiddenModulesIds'));
+
+      localStorage.setItem(
+        'hiddenModulesIds',
+        JSON.stringify({ ...hiddenModulesIds, [this.selectedDisciplineId]: this.hiddenModules.map(m => m.id) })
+      );
+    } else {
+      localStorage.setItem(
+        'hiddenModulesIds',
+        JSON.stringify({ [this.selectedDisciplineId]: this.hiddenModules.map(m => m.id) })
+      );
+    }
+
     this.displayedModulesColumns = [
       { def: 'moduleFuild', hide: false },
       { def: 'emptyHeader', hide: this.maxAttendance === 0 },
@@ -208,6 +224,54 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
       { def: 'maxPointsSum', hide: false },
       { def: 'maxPointsResult', hide: false },
     ];
+  }
+
+  private orderedByModuleJobs(students: IStudent[]): { jobs: ITableDataJob[]; modules: TableModule[] } {
+    const orderedModules: TableModule[] = [];
+    const orderedJobs: ITableDataJob[] = [];
+    let lastModuleInListNumber: number = 0;
+    this.modules.forEach(module => {
+      if (module.numberInList > lastModuleInListNumber) {
+        lastModuleInListNumber = module.numberInList;
+      }
+    });
+    for (let i: number = 0; i <= lastModuleInListNumber; ++i) {
+      const module: IModule = this.modules.find(m => m.numberInList === i);
+      if (module) {
+        const moduleJobs: ITableDataJob[] = this.jobs.filter(job => job.moduleId === module.id);
+        if (this.showModulesResult.value) {
+          moduleJobs.push({
+            id: `${-i}`,
+            disciplineId: null,
+            moduleId: module.id,
+            jobValue: this.translocoService.translateObject('marks.sumModulePoint'),
+            deleted: false,
+            maxPoint: moduleJobs.reduce((a, b) => a + (b.maxPoint || 0), 0), //  sum of jobs maxpoints
+            marks: [
+              ...students.map(row => ({
+                id: null,
+                studentId: row.id,
+                jobId: `${-i}`,
+                deleted: false,
+                markValue: `${moduleJobs.reduce(
+                  (a, b) => a + (+b.marks.find(m => m.studentId === row.id).markValue || 0),
+                  0
+                )}`,
+              })),
+            ],
+            numberInList: moduleJobs.length + 1,
+          });
+        }
+
+        const tableModule: TableModule = {
+          ...module,
+          numberOfJobs: moduleJobs.length,
+        };
+        orderedModules.push(tableModule);
+        orderedJobs.push(...moduleJobs);
+      }
+    }
+    return { jobs: orderedJobs, modules: orderedModules };
   }
 
   private onSelectChange(): void {
@@ -247,12 +311,28 @@ export class MarksTableComponent implements OnInit, AfterViewChecked {
           this.attendanceWeight = res.attendanceWeight;
           this.countWithAttendance = res.countWithAttendance;
           this.marksAreas = res.marksAreas;
-          this.ELEMENT_DATA = this.parseGetMarksResult(res);
-          this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
           this.jobs = res.jobs.sort((j1, j2) => (j1.moduleId === j2.moduleId ? j1.numberInList - j2.numberInList : 0));
           this.modules = res.modules.sort((m1, m2) => m1.numberInList - m2.numberInList);
-          this.showModules.setValue([{}, ...this.modules]);
-          const { jobs, modules }: { jobs: IJob[]; modules: TableModule[] } = this.orderedByModuleJobs;
+          this.showModules.setValue(this.modules);
+
+          const hiddenModulesIdsString: string = localStorage.getItem('hiddenModulesIds');
+          if (`${hiddenModulesIdsString}` !== 'null' && `${hiddenModulesIdsString}` !== 'undefined') {
+            const hiddenModulesIds: Record<string, string[]> = JSON.parse(localStorage.getItem('hiddenModulesIds'));
+            const disciplineHiddenModulesIds: string[] = hiddenModulesIds[this.selectedDisciplineId];
+            if (disciplineHiddenModulesIds && disciplineHiddenModulesIds.length > 0) {
+              this.showModules.setValue(this.modules.filter(m => !disciplineHiddenModulesIds.find(id => id === m.id)));
+            }
+          }
+
+          const { jobs, modules }: { jobs: ITableDataJob[]; modules: TableModule[] } = this.orderedByModuleJobs(
+            res.students
+          );
+          this.ELEMENT_DATA = this.parseGetMarksResult(({
+            students: res.students,
+            jobs,
+            modules,
+          } as unknown) as ITableDataFromBE);
+          this.dataSource = new MatTableDataSource(this.ELEMENT_DATA);
           this.moduleFuilds = modules.map(row => {
             return {
               columnDef: index => ({
