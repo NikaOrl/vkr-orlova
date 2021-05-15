@@ -26,3 +26,15 @@ span {
 .mat-error {
   font-size: 12px;
 }
+
+::ng-deep .count-way-toggle {
+  margin-bottom: 30px;
+
+  .mat-slide-toggle .mat-slide-toggle-bar {
+    background-color: rgba(103, 58, 183, 0.54);
+  }
+
+  .mat-slide-toggle.mat-primary .mat-slide-toggle-thumb {
+    background-color: #673ab7;
+  }
+}

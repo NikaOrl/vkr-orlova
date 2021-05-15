@@ -80,6 +80,7 @@ export class MarksApiServiceStub {
       maxAttendance: 10,
       attendanceWeight: 10,
       countWithAttendance: false,
+      countAsAverage: false,
       marksAreas: { five: 30, four: 20, three: 10 },
     });
   }

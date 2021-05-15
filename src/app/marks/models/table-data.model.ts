@@ -32,6 +32,7 @@ export interface ITableDataFromBE extends ITableData {
   maxAttendance: number;
   attendanceWeight: number;
   countWithAttendance: boolean;
+  countAsAverage: boolean;
   marksAreas: { three: number; four: number; five: number };
 }
 

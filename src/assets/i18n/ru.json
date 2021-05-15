@@ -119,6 +119,9 @@
     "selectSemesterDropDown": "Выберете семестр",
     "addSemesterButton": "Добавить семестр",
     "addDialogTitle": "Добавить дисциплину",
-    "semesterName": "Название семестра"
+    "semesterName": "Название семестра",
+    "countAsAveragePreview": "Считать результат как:",
+    "countAsAverageSum": "Сумму",
+    "countAsAverageAverage": "Среднее арифметическое"
   }
 }

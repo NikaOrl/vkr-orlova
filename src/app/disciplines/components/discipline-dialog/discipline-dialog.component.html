@@ -26,6 +26,14 @@
           <mat-error *ngIf="disciplineForm.controls.attendanceWeight.invalid">{{ t('requiredMin0Error') }}</mat-error>
         </mat-form-field>
       </div>
+      {{ t('countAsAveragePreview') }}
+      <div class="count-way-toggle">
+        <mat-slide-toggle color="primary" labelPosition="before" formControlName="countAsAverage">
+          {{ t('countAsAverageSum') }}
+        </mat-slide-toggle>
+        {{ t('countAsAverageAverage') }}
+      </div>
+
       <div *ngIf="isAdmin">
         <mat-form-field class="example-chip-list">
           <mat-chip-list #chipList ariaOrientation="vertical">

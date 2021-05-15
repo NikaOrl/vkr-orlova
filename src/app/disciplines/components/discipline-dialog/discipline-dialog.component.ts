@@ -16,6 +16,7 @@ const newDiscipline: IDisciplineBase = {
   disciplineValue: '',
   semesterId: null,
   teacherIds: [],
+  countAsAverage: false,
   countWithAttendance: true,
   marksAreas: { three: 0, four: 0, five: 0 },
 };
@@ -39,6 +40,7 @@ export class DisciplineDialogComponent implements OnInit {
   public disciplineForm: FormGroup = new FormGroup({
     disciplineName: new FormControl('', [Validators.required]),
     countWithAttendance: new FormControl(true),
+    countAsAverage: new FormControl(false),
     three: new FormControl('', [Validators.required, Validators.min(1)]),
     four: new FormControl('', [Validators.required, Validators.min(1)]),
     five: new FormControl('', [Validators.required, Validators.min(1)]),
@@ -78,6 +80,8 @@ export class DisciplineDialogComponent implements OnInit {
     this.disciplineForm.controls.countWithAttendance.setValue(
       this.discipline ? this.discipline.countWithAttendance : false
     );
+    this.disciplineForm.controls.countAsAverage.setValue(this.discipline ? this.discipline.countAsAverage : false);
+
     this.disciplineForm.controls.three.setValue(
       this.discipline && this.discipline.marksAreas ? this.discipline.marksAreas.three : 0
     );
@@ -163,6 +167,7 @@ export class DisciplineDialogComponent implements OnInit {
       this.discipline.disciplineValue = this.disciplineForm.controls.disciplineName.value;
       this.discipline.attendanceWeight = this.disciplineForm.controls.attendanceWeight.value;
       this.discipline.countWithAttendance = this.disciplineForm.controls.countWithAttendance.value;
+      this.discipline.countAsAverage = this.disciplineForm.controls.countAsAverage.value;
       this.discipline.marksAreas = {
         three: this.disciplineForm.controls.three.value,
         four: this.disciplineForm.controls.four.value,

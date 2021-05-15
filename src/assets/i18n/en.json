@@ -119,6 +119,9 @@
     "selectSemesterDropDown": "Select semester",
     "addSemesterButton": "Add semester",
     "addDialogTitle": "Add discipline",
-    "semesterName": "Semester name"
+    "semesterName": "Semester name",
+    "countAsAveragePreview": "Count the result as:",
+    "countAsAverageSum": "Sum",
+    "countAsAverageAverage": "Average"
   }
 }
